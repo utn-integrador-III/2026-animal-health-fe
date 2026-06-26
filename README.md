@@ -1,20 +1,3 @@
-# Animal Health
-
-Web platform for veterinary account and pet management.
-
-## Release 1
-
-This release includes:
-
-- Secure login for clients and pre-authorized veterinarians.
-- Public client registration with mandatory first-pet registration.
-- Role-based navigation and API authorization.
-- Client pet list, profile, edit, deletion and additional-pet registration.
-- Minimal client dashboard.
-- Minimal veterinarian dashboard with patients assigned for the current day.
-
-Clinical consultations, diagnoses, treatments, allergies, medications and laboratory documents are intentionally reserved for later releases.
-
 ## Requirements
 
 - Node.js 20+
