@@ -1,13 +1,11 @@
 import { forwardRef } from 'react';
 
-const Select = forwardRef(function Select(
+const Input = forwardRef(function Input(
   {
     id,
     label,
     error,
     required = false,
-    options = [],
-    placeholder = 'Select an option',
     className = '',
     labelClassName = '',
     containerClassName = '',
@@ -26,7 +24,7 @@ const Select = forwardRef(function Select(
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>
       )}
-      <select
+      <input
         ref={ref}
         id={id}
         aria-invalid={Boolean(error)}
@@ -37,14 +35,7 @@ const Select = forwardRef(function Select(
           className,
         ].join(' ')}
         {...props}
-      >
-        <option value="">{placeholder}</option>
-        {options.map(({ value, label: optionLabel }) => (
-          <option key={value} value={value}>
-            {optionLabel}
-          </option>
-        ))}
-      </select>
+      />
       {error && (
         <p id={`${id}-error`} className="form-error">
           {error}
@@ -54,4 +45,4 @@ const Select = forwardRef(function Select(
   );
 });
 
-export default Select;
+export default Input;
