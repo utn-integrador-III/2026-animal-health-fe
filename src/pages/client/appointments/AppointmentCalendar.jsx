@@ -1,6 +1,4 @@
-import React from 'react';
-
-/**
+﻿/**
  * Calendario de Citas
  */
 export default function AppointmentCalendar() {
@@ -11,3 +9,4 @@ export default function AppointmentCalendar() {
     </div>
   );
 }
+

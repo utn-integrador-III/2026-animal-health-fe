@@ -1,6 +1,4 @@
-import React from 'react';
-
-/**
+﻿/**
  * Historial de Citas
  */
 export default function AppointmentHistory() {
@@ -11,3 +9,4 @@ export default function AppointmentHistory() {
     </div>
   );
 }
+
