@@ -1,6 +1,4 @@
-import React from 'react';
-
-/**
+﻿/**
  * Panel de Consulta
  * Incluye panel lateral de alertas de raza por IA
  */
@@ -13,3 +11,4 @@ export default function CreateConsultation() {
     </div>
   );
 }
+
