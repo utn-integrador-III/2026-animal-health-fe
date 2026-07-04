@@ -196,3 +196,7 @@ npm run lint
 npm run test
 npm run build
 ```
+
+## Vitest + React Testing Library
+```npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
+```

@@ -9,6 +9,7 @@ import { ROUTES } from '../../constants/routes';
 import { loginUser } from '../../services/authService';
 import { getApiErrorMessage } from '../../services/apiError';
 import useAuthStore from '../../stores/useAuthStore';
+import { getHomeRouteByRole } from '../../utils/roleRedirect';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function Login() {
         user: authData.user,
         token: authData.access_token,
       });
-      navigate(ROUTES.CLIENT.PETS, { replace: true });
+      navigate(getHomeRouteByRole(authData.user?.role), { replace: true });
     } catch (err) {
       setError(getApiErrorMessage(err, 'Invalid email or password.'));
     } finally {

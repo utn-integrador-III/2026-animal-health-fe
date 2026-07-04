@@ -29,6 +29,7 @@ const Select = forwardRef(function Select(
       <select
         ref={ref}
         id={id}
+        required={required}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         className={[

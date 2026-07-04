@@ -10,3 +10,17 @@ export const getPets = async () => {
   const response = await api.get(API_ROUTES.PETS.BASE);
   return response.data;
 };
+
+export const getPet = async (petId) => {
+  const response = await api.get(`${API_ROUTES.PETS.BASE}/${petId}`);
+  return response.data;
+};
+
+export const updatePet = async ({ petId, petData }) => {
+  const response = await api.put(`${API_ROUTES.PETS.BASE}/${petId}`, petData);
+  return response.data;
+};
+
+export const deletePet = async (petId) => {
+  await api.delete(`${API_ROUTES.PETS.BASE}/${petId}`);
+};
