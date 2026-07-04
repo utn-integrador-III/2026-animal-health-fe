@@ -27,6 +27,7 @@ const Input = forwardRef(function Input(
       <input
         ref={ref}
         id={id}
+        required={required}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         className={[
