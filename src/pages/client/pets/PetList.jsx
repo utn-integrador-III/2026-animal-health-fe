@@ -1,91 +1,244 @@
-import { useState } from 'react';
-import { HiPlus } from 'react-icons/hi';
+import { useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  HiBeaker,
+  HiCalendar,
+  HiChevronDown,
+  HiClipboardList,
+  HiHeart,
+  HiLightBulb,
+  HiPlus,
+  HiShieldCheck,
+  HiSparkles,
+} from 'react-icons/hi';
 
 import AddPetModal from '../../../components/modals/AddPetModal';
 import Button from '../../../components/common/Button';
 import Loader from '../../../components/common/Loader';
 import { DEFAULT_PET_ICON, SPECIES_ICON } from '../../../constants/petConstants';
+import { ROUTES } from '../../../constants/routes';
 import { usePetsList } from '../../../hooks/usePets';
+import useTranslation from '../../../hooks/useTranslation';
+import useAuthStore from '../../../stores/useAuthStore';
+import petsHeroImage from '../../../assets/images/mtajmr-animals-7862112.jpg';
+
+function withPetId(route, petId) {
+  return petId ? `${route}?petId=${encodeURIComponent(petId)}` : route;
+}
+
+const HEALTH_SECTIONS = [
+  {
+    titleKey: 'pets.section.appointments.title',
+    descriptionKey: 'pets.section.appointments.description',
+    route: ROUTES.CLIENT.APPOINTMENTS,
+    icon: HiCalendar,
+  },
+  {
+    titleKey: 'pets.section.vaccines.title',
+    descriptionKey: 'pets.section.vaccines.description',
+    route: ROUTES.CLIENT.VACCINES,
+    icon: HiShieldCheck,
+  },
+  {
+    titleKey: 'pets.section.medications.title',
+    descriptionKey: 'pets.section.medications.description',
+    route: ROUTES.CLIENT.MEDICATIONS,
+    icon: HiSparkles,
+  },
+  {
+    titleKey: 'pets.section.diagnostics.title',
+    descriptionKey: 'pets.section.diagnostics.description',
+    route: ROUTES.CLIENT.DIAGNOSTICS,
+    icon: HiClipboardList,
+  },
+  {
+    titleKey: 'pets.section.allergies.title',
+    descriptionKey: 'pets.section.allergies.description',
+    route: ROUTES.CLIENT.ALLERGIES,
+    icon: HiHeart,
+  },
+  {
+    titleKey: 'pets.section.labResults.title',
+    descriptionKey: 'pets.section.labResults.description',
+    route: ROUTES.CLIENT.LAB_RESULTS,
+    icon: HiBeaker,
+  },
+  {
+    titleKey: 'pets.section.recommendations.title',
+    descriptionKey: 'pets.section.recommendations.description',
+    route: ROUTES.CLIENT.RECOMMENDATIONS,
+    icon: HiLightBulb,
+  },
+];
 
 export default function PetList() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const { data: pets = [], isLoading, isError } = usePetsList();
+  const [selectedPetId, setSelectedPetId] = useState('');
+  const [isPetProfileOpen, setIsPetProfileOpen] = useState(false);
+  const petProfileRef = useRef(null);
+  const { t } = useTranslation();
+  const user = useAuthStore((state) => state.user);
+  const { data: pets = [], isLoading, isError, error } = usePetsList();
 
-  if (isLoading) return <Loader label="Loading your pets..." />;
+  const selectedPet = useMemo(
+    () => pets.find((pet) => pet.id === selectedPetId) ?? pets[0],
+    [pets, selectedPetId],
+  );
+
+  const displayName = user?.full_name?.split(' ')[0]
+    ?? user?.name?.split(' ')[0]
+    ?? t('pets.there');
+
+  const handleSelectPet = (petId) => {
+    setSelectedPetId(petId);
+    setIsPetProfileOpen((isOpen) => (selectedPet?.id === petId ? !isOpen : true));
+  };
+
+  if (isLoading) return <Loader label={t('pets.loading')} />;
 
   return (
-    <main className="page-container">
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+    <main className="pets-screen page-container">
+      <section className="pets-hero" id="about">
         <div>
-          <p className="page-eyebrow">DB-US-02 / FE-US-02</p>
-          <h1 className="page-title">Pet Profiles</h1>
-          <p className="page-subtitle">
-            View your registered pets or add another pet profile.
-          </p>
+          <p className="pets-section-title">{t('pets.title')}</p>
+          <h1>{t('pets.greeting')} {displayName},</h1>
+          <p>{t('pets.heroSubtitle')}</p>
         </div>
-        <Button onClick={() => setIsAddModalOpen(true)}>
-          <HiPlus />
-          Register pet
-        </Button>
-      </header>
+        <img src={petsHeroImage} alt="" className="pets-hero-image" />
+      </section>
 
       {isError && (
         <p className="status-error">
-          Pet profiles could not be loaded. Verify that the backend is running.
+          {error?.response?.status === 403 ? t('pets.forbiddenError') : t('pets.loadError')}
         </p>
       )}
 
-      {!isError && pets.length === 0 && (
-        <div className="empty-state">
-          <span className="mb-4 text-5xl">{DEFAULT_PET_ICON}</span>
-          <h2 className="empty-state-title">No pets registered</h2>
-          <p className="empty-state-description">
-            Register a pet to create its profile.
-          </p>
-          <Button onClick={() => setIsAddModalOpen(true)}>
-            <HiPlus />
-            Add first pet
-          </Button>
-        </div>
-      )}
+      {!isError && (
+        <>
+          <section className="pet-selector-bar" aria-label={t('pets.registeredPets')} ref={petProfileRef}>
+            {pets.length === 0 && (
+              <article className="pet-selector-card pet-selector-card-empty">
+                <span>{DEFAULT_PET_ICON}</span>
+                <p>{t('pets.noPets')}</p>
+              </article>
+            )}
 
-      {!isError && pets.length > 0 && (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {pets.map((pet) => {
-            const breed = pet.breed_secondary
-              ? `${pet.breed_primary} / ${pet.breed_secondary}`
-              : pet.breed_primary;
-            return (
-              <article key={pet.id} className="pet-card">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-50 text-3xl">
-                    {SPECIES_ICON[pet.species] ?? DEFAULT_PET_ICON}
-                  </div>
+            {pets.map((pet) => {
+              const isSelected = selectedPet?.id === pet.id;
+              return (
+                <button
+                  key={pet.id}
+                  type="button"
+                  className={isSelected ? 'pet-selector-card pet-selector-card-active' : 'pet-selector-card'}
+                  onClick={() => handleSelectPet(pet.id)}
+                >
+                  {pet.photo_url ? (
+                    <img className="pet-selector-photo" src={pet.photo_url} alt={pet.name} />
+                  ) : (
+                    <span className="pet-selector-icon">
+                      {SPECIES_ICON[pet.species] ?? DEFAULT_PET_ICON}
+                    </span>
+                  )}
+                  <span className="pet-selector-name">{pet.name}</span>
+                  {isSelected && <HiChevronDown aria-hidden="true" />}
+                </button>
+              );
+            })}
+
+            {selectedPet && isPetProfileOpen && (
+              <div className="pet-mini-profile" role="dialog" aria-label={`${selectedPet.name} ${t('pets.profileSummary')}`}>
+                <div className="pet-mini-profile-header">
+                  {selectedPet.photo_url ? (
+                    <img src={selectedPet.photo_url} alt={selectedPet.name} />
+                  ) : (
+                    <span>{SPECIES_ICON[selectedPet.species] ?? DEFAULT_PET_ICON}</span>
+                  )}
                   <div>
-                    <h2 className="font-bold text-slate-900">{pet.name}</h2>
-                    <p className="text-sm font-medium text-teal-700">{pet.species}</p>
-                    <p className="text-xs text-slate-500">{breed}</p>
+                    <h2>{selectedPet.name}</h2>
+                    <p>{t(`petSpecies.${selectedPet.species}`)} - {t(`petSex.${selectedPet.sex}`)}</p>
                   </div>
                 </div>
-                <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                  <div className="info-tile">
-                    <dt className="text-xs text-slate-400">Sex</dt>
-                    <dd className="font-medium text-slate-700">{pet.sex}</dd>
+                <dl className="pet-mini-profile-list">
+                  <div>
+                    <dt>{t('pets.birthDate')}</dt>
+                    <dd>{selectedPet.birth_date}</dd>
                   </div>
-                  <div className="info-tile">
-                    <dt className="text-xs text-slate-400">Weight</dt>
-                    <dd className="font-medium text-slate-700">{pet.weight_kg} kg</dd>
+                  <div>
+                    <dt>{t('pets.weight')}</dt>
+                    <dd>{selectedPet.weight_kg} kg</dd>
                   </div>
-                  <div className="info-tile col-span-2">
-                    <dt className="text-xs text-slate-400">Date of birth</dt>
-                    <dd className="font-medium text-slate-700">{pet.birth_date}</dd>
+                  <div>
+                    <dt>{t('pets.primaryBreed')}</dt>
+                    <dd>{selectedPet.breed_primary}</dd>
                   </div>
+                  {selectedPet.breed_secondary && (
+                    <div>
+                      <dt>{t('pets.secondaryBreed')}</dt>
+                      <dd>{selectedPet.breed_secondary}</dd>
+                    </div>
+                  )}
                 </dl>
-              </article>
-            );
-          })}
-        </div>
+                <Link className="pet-mini-profile-action" to={`/client/pets/${selectedPet.id}`}>
+                  {t('pets.viewFullProfile')}
+                </Link>
+              </div>
+            )}
+
+            {[0, 1, 2].map((slot) => (
+              <button
+                key={slot}
+                type="button"
+                className="pet-selector-add"
+                onClick={() => setIsAddModalOpen(true)}
+              >
+                <HiPlus aria-hidden="true" />
+                <span>{t('pets.addPet')}</span>
+              </button>
+            ))}
+          </section>
+
+          {pets.length === 0 ? (
+            <div className="empty-state">
+              <span className="mb-4 text-5xl">{DEFAULT_PET_ICON}</span>
+              <h2 className="empty-state-title">{t('pets.noPets')}</h2>
+              <p className="empty-state-description">
+                {t('pets.emptyDescription')}
+              </p>
+              <Button onClick={() => setIsAddModalOpen(true)}>
+                <HiPlus />
+                {t('pets.addFirstPet')}
+              </Button>
+            </div>
+          ) : (
+            <section className="health-card-grid" id="services" aria-label={`${selectedPet.name} ${t('pets.healthSections')}`}>
+              {HEALTH_SECTIONS.map((section) => {
+                const Icon = section.icon;
+                const title = t(section.titleKey);
+                return (
+                  <Link
+                    key={section.titleKey}
+                    className="health-section-card"
+                    to={withPetId(section.route, selectedPet.id)}
+                  >
+                    <span className="health-section-image">
+                      <Icon aria-hidden="true" />
+                    </span>
+                    <div>
+                      <h2>{title}</h2>
+                      <p>{t(section.descriptionKey)}</p>
+                      <span className="health-section-action">{t('pets.details')}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </section>
+          )}
+        </>
       )}
+
+      <section className="pets-contact-strip" id="contact">
+        {t('pets.contactStrip')}
+      </section>
 
       <AddPetModal
         isOpen={isAddModalOpen}

@@ -21,6 +21,18 @@ export const updatePet = async ({ petId, petData }) => {
   return response.data;
 };
 
+export const uploadPetPhoto = async ({ petId, photo }) => {
+  const formData = new FormData();
+  formData.append('photo', photo);
+
+  const response = await api.post(`${API_ROUTES.PETS.BASE}/${petId}/photo`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
 export const deletePet = async (petId) => {
   await api.delete(`${API_ROUTES.PETS.BASE}/${petId}`);
 };

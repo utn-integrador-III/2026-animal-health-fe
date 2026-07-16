@@ -4,6 +4,7 @@ import PetForm from '../forms/PetForm';
 import { useCreatePet } from '../../hooks/usePets';
 import { SWAL_PRESETS } from '../../constants/swalConfig';
 import { getApiErrorMessage } from '../../services/apiError';
+import useTranslation from '../../hooks/useTranslation';
 
 /**
  * AddPetModal — FE-US-02: Pet Registration
@@ -18,6 +19,7 @@ import { getApiErrorMessage } from '../../services/apiError';
  */
 export default function AddPetModal({ isOpen, onClose }) {
   const { mutate: createPet, isPending } = useCreatePet();
+  const { t } = useTranslation();
 
   /**
    * Handles form submission.
@@ -44,18 +46,18 @@ export default function AddPetModal({ isOpen, onClose }) {
         onClose();
         Swal.fire({
           ...SWAL_PRESETS.SUCCESS,
-          title: 'Pet registered!',
-          text: `${formData.name} has been added to your profile.`,
+          title: t('petForm.successTitle'),
+          text: `${formData.name} ${t('petForm.successText')}`,
         });
       },
       onError: (error) => {
         const message = getApiErrorMessage(
           error,
-          'Something went wrong. Please try again.',
+          t('petForm.errorText'),
         );
         Swal.fire({
           ...SWAL_PRESETS.ERROR,
-          title: 'Registration failed',
+          title: t('petForm.errorTitle'),
           text: message,
         });
       },
@@ -66,12 +68,11 @@ export default function AddPetModal({ isOpen, onClose }) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Register a New Pet"
+      title={t('petForm.registerTitle')}
       maxWidth="max-w-xl"
     >
       <p className="mb-5 text-sm text-gray-500">
-        Fill in your pet&apos;s details below. Fields marked with{' '}
-        <span className="text-red-500 font-medium">*</span> are required.
+        {t('petForm.intro')}
       </p>
 
       <PetForm
