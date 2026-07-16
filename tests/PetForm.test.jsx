@@ -55,8 +55,24 @@ describe('PetForm', () => {
         sex: 'Female',
         breed_primary: 'Mixed',
         weight_kg: 8.5,
-      }), expect.anything());
+      }), null);
     });
+  });
+
+  test('previews selected pet photo when upload is enabled', async () => {
+    const user = userEvent.setup();
+    const createObjectURL = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:pet-photo');
+    const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    render(<PetForm onSubmit={vi.fn()} showPhotoUpload />);
+
+    const photo = new File(['image'], 'luna.png', { type: 'image/png' });
+    await user.upload(screen.getByLabelText(/upload pet image/i), photo);
+
+    expect(createObjectURL).toHaveBeenCalledWith(photo);
+    expect(screen.getByAltText(/selected pet preview/i)).toHaveAttribute('src', 'blob:pet-photo');
+
+    createObjectURL.mockRestore();
+    revokeObjectURL.mockRestore();
   });
 
   test('shows secondary breed field when mixed breed is checked', async () => {

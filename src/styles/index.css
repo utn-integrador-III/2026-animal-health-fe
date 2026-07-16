@@ -12,7 +12,99 @@
   }
 
   .app-navbar-inner {
-    @apply mx-auto flex min-h-20 max-w-6xl items-center gap-3 px-4 sm:px-8;
+    @apply relative mx-auto flex min-h-24 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-8;
+  }
+
+  .navbar-brand {
+    @apply flex shrink-0 items-center;
+  }
+
+  .navbar-logo {
+    @apply h-16 w-16 rounded-full bg-white object-contain sm:h-20 sm:w-20;
+  }
+
+  .navbar-navigation {
+    @apply hidden items-center justify-center gap-4 text-base font-medium text-slate-600 md:flex;
+  }
+
+  .vet-navbar-navigation {
+    @apply hidden flex-1 items-center justify-center gap-12 text-2xl font-semibold text-slate-900 md:flex;
+  }
+
+  .vet-navbar-link {
+    @apply rounded-full px-8 py-3 transition-colors hover:bg-teal-50 hover:text-teal-700;
+  }
+
+  .vet-navbar-link-active {
+    @apply bg-teal-500 text-white shadow-sm hover:bg-teal-500 hover:text-white;
+  }
+
+  .vet-signout-button {
+    @apply rounded-full bg-slate-900 px-8 py-4 text-base font-bold text-white shadow-sm transition-colors hover:bg-slate-800;
+  }
+
+  .navbar-link {
+    @apply rounded-full px-5 py-3 transition-colors hover:bg-teal-50 hover:text-teal-700;
+  }
+
+  .navbar-link-active {
+    @apply bg-teal-600 text-white hover:bg-teal-600 hover:text-white;
+  }
+
+  .navbar-auth-actions {
+    @apply ml-auto flex items-center gap-4;
+  }
+
+  .navbar-language {
+    @apply ml-auto hidden items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-500 sm:flex;
+  }
+
+  .navbar-language select {
+    @apply rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold normal-case tracking-normal text-slate-700 outline-none transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .navbar-account {
+    @apply relative;
+  }
+
+  .navbar-profile-button {
+    @apply inline-flex h-14 items-center gap-3 rounded-full bg-indigo-500 px-5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-indigo-600;
+  }
+
+  .navbar-avatar {
+    @apply flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-800 ring-4 ring-indigo-500;
+  }
+
+  .navbar-avatar-image {
+    @apply object-cover;
+  }
+
+  .profile-menu {
+    @apply absolute right-0 top-16 z-20 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white py-3 text-slate-700 shadow-xl;
+  }
+
+  .profile-menu-header {
+    @apply border-b border-slate-100 px-6 pb-4 pt-2;
+  }
+
+  .profile-menu-name {
+    @apply text-base font-bold text-slate-900;
+  }
+
+  .profile-menu-email {
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .profile-menu-item {
+    @apply flex w-full items-center gap-4 px-6 py-4 text-left text-lg text-slate-600 transition-colors hover:bg-slate-50;
+  }
+
+  .profile-menu-item-danger {
+    @apply text-red-600 hover:bg-red-50;
+  }
+
+  .profile-notification-count {
+    @apply ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-sm font-bold text-slate-900;
   }
 
   .page-container {
@@ -70,5 +162,849 @@
 
   .info-tile {
     @apply rounded-xl bg-slate-50 p-3;
+  }
+
+  .client-dashboard {
+    @apply pb-20 pt-10;
+  }
+
+  .client-dashboard-header {
+    @apply mb-10;
+  }
+
+  .client-dashboard-title {
+    @apply mt-2 text-4xl font-extrabold text-slate-950;
+  }
+
+  .dashboard-card-grid {
+    @apply grid gap-6 md:grid-cols-3;
+  }
+
+  .dashboard-metric-card {
+    @apply min-h-52 rounded-3xl bg-teal-600 p-8 text-white shadow-md;
+  }
+
+  .dashboard-card-icon {
+    @apply mb-9 h-9 w-9;
+  }
+
+  .dashboard-card-label {
+    @apply text-base font-medium;
+  }
+
+  .dashboard-card-number {
+    @apply mt-2 block text-5xl font-extrabold;
+  }
+
+  .dashboard-action-card {
+    @apply min-h-52 rounded-3xl border border-slate-200 bg-white p-8 text-slate-900 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md;
+  }
+
+  .dashboard-action-card h2 {
+    @apply text-2xl font-extrabold;
+  }
+
+  .dashboard-action-card p {
+    @apply mt-4 max-w-xs text-base leading-7 text-slate-500;
+  }
+
+  .dashboard-action-card-soft {
+    @apply border-dashed border-teal-300 bg-teal-50/60 text-teal-900 shadow-none;
+  }
+
+  .dashboard-plus-icon {
+    @apply mb-6 h-9 w-9 text-teal-700;
+  }
+
+  .profile-summary-card {
+    @apply mt-8 grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-3;
+  }
+
+  .profile-summary-label {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400;
+  }
+
+  .profile-edit-card {
+    @apply mt-8 grid gap-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:grid-cols-[18rem_1fr];
+  }
+
+  .profile-password-card {
+    @apply block max-w-2xl;
+  }
+
+  .profile-photo-panel {
+    @apply flex flex-col items-center gap-4 rounded-2xl bg-slate-50 p-6;
+  }
+
+  .profile-photo-preview {
+    @apply flex h-36 w-36 items-center justify-center overflow-hidden rounded-full bg-teal-100 text-5xl font-extrabold text-teal-800 ring-4 ring-white shadow-sm;
+  }
+
+  .profile-photo-preview img {
+    @apply h-full w-full object-cover;
+  }
+
+  .profile-photo-button {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-teal-600 bg-white px-4 py-2 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-50;
+  }
+
+  .profile-edit-form {
+    @apply grid gap-4;
+  }
+
+  .profile-edit-form h2 {
+    @apply text-xl font-extrabold text-slate-900;
+  }
+
+  .profile-form-help {
+    @apply text-sm text-slate-500;
+  }
+
+  .status-success {
+    @apply mt-6 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-semibold text-teal-800;
+  }
+
+  .pets-screen {
+    @apply pb-16;
+  }
+
+  .pets-hero {
+    @apply grid items-center gap-8 py-10 text-center md:grid-cols-[1fr_auto] md:text-left;
+  }
+
+  .pets-section-title {
+    @apply text-4xl font-semibold text-slate-950;
+  }
+
+  .pets-hero h1 {
+    @apply mt-5 text-4xl font-semibold text-slate-950;
+  }
+
+  .pets-hero p:last-child {
+    @apply mt-2 text-3xl text-slate-950;
+  }
+
+  .pets-hero-image {
+    @apply mx-auto h-40 w-32 rounded-3xl object-cover md:h-44 md:w-36;
+  }
+
+  .pet-selector-bar {
+    @apply relative mb-8 grid gap-3 rounded-3xl bg-teal-600 p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4;
+  }
+
+  .pet-selector-card,
+  .pet-selector-add {
+    @apply flex min-h-36 flex-col items-center justify-center gap-2 rounded-3xl px-4 py-5 text-center text-slate-950 transition-transform hover:-translate-y-1;
+  }
+
+  .pet-selector-card {
+    @apply bg-white/20;
+  }
+
+  .pet-selector-card-active {
+    @apply bg-stone-300 shadow-md;
+  }
+
+  .pet-selector-card-empty {
+    @apply bg-white/25 text-white;
+  }
+
+  .pet-selector-icon {
+    @apply text-6xl;
+  }
+
+  .pet-selector-photo {
+    @apply h-20 w-20 rounded-2xl object-cover;
+  }
+
+  .pet-selector-name {
+    @apply text-xl font-semibold;
+  }
+
+  .pet-selector-add {
+    @apply border border-white/10 text-white;
+  }
+
+  .pet-selector-add svg {
+    @apply h-9 w-9 rounded-full border-4 border-white p-1;
+  }
+
+  .pet-mini-profile {
+    @apply absolute left-4 top-[calc(100%+0.75rem)] z-20 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white py-3 text-slate-700 shadow-xl;
+  }
+
+  .pet-mini-profile-header {
+    @apply flex items-center gap-4 border-b border-slate-100 px-6 pb-4 pt-2;
+  }
+
+  .pet-mini-profile-header > span,
+  .pet-mini-profile-header > img {
+    @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-4xl;
+  }
+
+  .pet-mini-profile-header > img {
+    @apply object-cover;
+  }
+
+  .pet-mini-profile-header h2 {
+    @apply text-lg font-bold text-slate-900;
+  }
+
+  .pet-mini-profile-header p {
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .pet-mini-profile-list {
+    @apply divide-y divide-slate-100 px-6;
+  }
+
+  .pet-mini-profile-list div {
+    @apply grid grid-cols-[7rem_1fr] gap-3 py-3 text-sm;
+  }
+
+  .pet-mini-profile-list dt {
+    @apply font-medium text-slate-400;
+  }
+
+  .pet-mini-profile-list dd {
+    @apply font-semibold text-slate-700;
+  }
+
+  .pet-mini-profile-action {
+    @apply mx-6 mt-3 flex justify-center rounded-full bg-teal-600 px-5 py-2 text-sm font-semibold text-white hover:bg-teal-700;
+  }
+
+  .pets-overview-grid {
+    @apply grid gap-6 md:grid-cols-3;
+  }
+
+  .pets-summary-card,
+  .pets-feature-card {
+    @apply min-h-48 rounded-3xl bg-stone-300 p-7 shadow-sm;
+  }
+
+  .pets-summary-card {
+    @apply flex flex-col justify-between bg-teal-600 text-white;
+  }
+
+  .pets-summary-card svg {
+    @apply h-10 w-10;
+  }
+
+  .pets-summary-card h2 {
+    @apply text-3xl font-bold;
+  }
+
+  .pets-feature-card {
+    @apply flex flex-col justify-between text-slate-950 transition-transform hover:-translate-y-1 hover:shadow-md;
+  }
+
+  .pets-feature-card h2 {
+    @apply text-2xl font-semibold;
+  }
+
+  .pets-feature-card p {
+    @apply my-5 text-sm leading-6 text-slate-600;
+  }
+
+  .pets-feature-card span,
+  .dashboard-detail-button,
+  .health-section-action {
+    @apply inline-flex items-center justify-center rounded-full bg-white px-8 py-2 text-sm font-semibold text-slate-900;
+  }
+
+  .pets-contact-strip {
+    @apply mt-10 rounded-2xl bg-white p-5 text-center text-sm text-slate-500 shadow-sm;
+  }
+
+  .pet-dashboard {
+    @apply pb-16;
+  }
+
+  .pet-dashboard-header {
+    @apply mb-8 rounded-3xl bg-white p-6 shadow-sm;
+  }
+
+  .pet-dashboard-back {
+    @apply mb-4 inline-flex text-sm font-semibold text-teal-700 hover:text-teal-900;
+  }
+
+  .pet-dashboard-identity {
+    @apply flex items-center gap-5;
+  }
+
+  .pet-dashboard-identity > span {
+    @apply flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-teal-50 text-5xl;
+  }
+
+  .pet-dashboard-identity h1 {
+    @apply text-4xl font-extrabold text-slate-950;
+  }
+
+  .pet-dashboard-identity p:last-child {
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .health-card-grid {
+    @apply grid gap-5 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .health-section-card {
+    @apply grid min-h-44 grid-cols-[7rem_1fr] items-center gap-5 rounded-3xl bg-stone-300 p-4 text-slate-950 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md;
+  }
+
+  .health-section-image {
+    @apply flex h-28 w-28 items-center justify-center rounded-3xl bg-white text-teal-700;
+  }
+
+  .health-section-image svg {
+    @apply h-12 w-12;
+  }
+
+  .health-section-card h2 {
+    @apply text-2xl font-semibold;
+  }
+
+  .health-section-card p {
+    @apply mt-2 text-sm leading-6 text-slate-600;
+  }
+
+  .health-section-action {
+    @apply mt-4;
+  }
+
+  .health-section-page {
+    @apply rounded-3xl bg-white p-8 shadow-sm;
+  }
+
+  .appointment-page {
+    @apply max-w-4xl pb-16;
+  }
+
+  .appointment-page-header {
+    @apply mb-6 flex flex-wrap items-start justify-between gap-4;
+  }
+
+  .appointment-page-header h1 {
+    @apply text-3xl font-extrabold text-slate-950;
+  }
+
+  .appointment-page-header p {
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .appointment-pet-banner {
+    @apply mb-5 flex items-center justify-between gap-4 rounded-2xl bg-teal-600 p-6 text-white shadow-sm;
+  }
+
+  .appointment-pet-summary {
+    @apply flex items-center gap-4;
+  }
+
+  .appointment-pet-summary > span,
+  .appointment-pet-summary > img,
+  .appointment-card-icon {
+    @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-3xl;
+  }
+
+  .appointment-pet-summary > img,
+  img.appointment-card-icon {
+    @apply object-cover;
+  }
+
+  .appointment-pet-summary h2 {
+    @apply text-xl font-bold;
+  }
+
+  .appointment-pet-summary p {
+    @apply mt-1 text-sm text-teal-50;
+  }
+
+  .appointment-next {
+    @apply text-right text-sm;
+  }
+
+  .appointment-next span {
+    @apply text-xs text-teal-100;
+  }
+
+  .appointment-next strong {
+    @apply mt-1 block text-base;
+  }
+
+  .appointment-reminder {
+    @apply mb-5 rounded-2xl border border-teal-100 bg-teal-50 p-4 text-sm font-medium text-teal-800;
+  }
+
+  .appointment-tabs {
+    @apply mb-5 inline-flex rounded-full bg-white p-1 shadow-sm;
+  }
+
+  .appointment-tabs button {
+    @apply rounded-full px-5 py-2 text-sm font-semibold text-slate-500;
+  }
+
+  .appointment-tabs .appointment-tab-active {
+    @apply bg-teal-600 text-white;
+  }
+
+  .appointment-card {
+    @apply mb-5 rounded-2xl border border-teal-100 bg-white p-5 shadow-sm;
+  }
+
+  .appointment-card-main {
+    @apply mb-4 flex items-start gap-4;
+  }
+
+  .appointment-card-main h2 {
+    @apply text-lg font-bold text-slate-900;
+  }
+
+  .appointment-card-main p {
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .appointment-status {
+    @apply ml-auto rounded-full bg-teal-50 px-3 py-1 text-xs font-bold capitalize text-teal-700;
+  }
+
+  .appointment-card-details {
+    @apply grid gap-3 text-sm text-slate-600 sm:grid-cols-2;
+  }
+
+  .appointment-card-details div {
+    @apply flex items-center gap-2;
+  }
+
+  .appointment-card-details svg {
+    @apply text-teal-600;
+  }
+
+  .appointment-vet-observation {
+    @apply mt-5 rounded-2xl border border-teal-100 bg-teal-50 p-4;
+  }
+
+  .appointment-vet-observation h3 {
+    @apply text-sm font-extrabold uppercase tracking-wide text-teal-800;
+  }
+
+  .appointment-vet-observation p {
+    @apply mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700;
+  }
+
+  .appointment-card-actions {
+    @apply mt-5 grid gap-3 sm:grid-cols-2;
+  }
+
+  .appointment-modal-backdrop {
+    @apply fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-slate-950/40 px-4 py-6 backdrop-blur-sm;
+  }
+
+  .appointment-modal {
+    @apply relative max-h-[calc(100vh-3rem)] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl;
+  }
+
+  .appointment-modal-close {
+    @apply absolute right-6 top-6 text-3xl leading-none text-slate-400 hover:text-slate-700;
+  }
+
+  .appointment-modal h2 {
+    @apply mb-6 text-2xl font-extrabold text-slate-900;
+  }
+
+  .appointment-form {
+    @apply grid gap-5 sm:grid-cols-2;
+  }
+
+  .appointment-form label {
+    @apply text-sm font-bold text-slate-500;
+  }
+
+  .appointment-duration-guide {
+    @apply rounded-2xl border border-teal-100 bg-teal-50 p-4 text-sm text-slate-600;
+  }
+
+  .appointment-duration-guide h3 {
+    @apply text-base font-extrabold text-slate-900;
+  }
+
+  .appointment-duration-guide p {
+    @apply mt-1 leading-relaxed text-slate-600;
+  }
+
+  .appointment-duration-guide ul {
+    @apply mt-3 grid gap-2;
+  }
+
+  .appointment-duration-guide li {
+    @apply rounded-xl border border-transparent bg-white/70 p-3;
+  }
+
+  .appointment-duration-guide strong {
+    @apply block text-sm font-extrabold text-slate-900;
+  }
+
+  .appointment-duration-guide span {
+    @apply mt-1 block text-xs leading-relaxed text-slate-500;
+  }
+
+  .appointment-duration-guide .appointment-duration-active {
+    @apply border-teal-300 bg-white shadow-sm;
+  }
+
+  .appointment-form input,
+  .appointment-form select,
+  .appointment-form textarea {
+    @apply mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .appointment-form textarea {
+    @apply min-h-28 resize-none;
+  }
+
+  .appointment-form-wide {
+    @apply sm:col-span-2;
+  }
+
+  .appointment-modal-actions {
+    @apply grid gap-3 sm:col-span-2 sm:grid-cols-2;
+  }
+
+  .vet-dashboard {
+    @apply max-w-none px-6 py-10 sm:px-10;
+  }
+
+  .vet-dashboard-header {
+    @apply mb-12;
+  }
+
+  .vet-dashboard-header h1 {
+    @apply text-5xl font-extrabold text-slate-900;
+  }
+
+  .vet-dashboard-header p {
+    @apply mt-3 text-3xl font-bold text-teal-600;
+  }
+
+  .vet-summary-grid {
+    @apply mb-16 grid max-w-4xl gap-8 md:grid-cols-2;
+  }
+
+  .vet-summary-card {
+    @apply grid min-h-44 grid-cols-[5rem_1fr] items-center rounded-2xl bg-teal-600 p-8 text-white shadow-md;
+  }
+
+  .vet-summary-card > span {
+    @apply flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-4xl;
+  }
+
+  .vet-summary-card strong {
+    @apply justify-self-end text-5xl font-extrabold;
+  }
+
+  .vet-summary-card p {
+    @apply col-span-2 mt-5 text-2xl font-bold;
+  }
+
+  .vet-calendar-card {
+    @apply mb-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
+  }
+
+  .vet-calendar-header {
+    @apply mb-6 flex flex-wrap items-start justify-between gap-4;
+  }
+
+  .vet-calendar-header h2 {
+    @apply text-3xl font-extrabold text-slate-900;
+  }
+
+  .vet-calendar-header p {
+    @apply mt-1 text-base text-slate-500;
+  }
+
+  .vet-calendar-header label {
+    @apply text-sm font-bold text-slate-500;
+  }
+
+  .vet-calendar-header input {
+    @apply mt-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .vet-calendar-monthbar {
+    @apply mb-4 flex items-center justify-center gap-4;
+  }
+
+  .vet-calendar-monthbar button {
+    @apply flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition-colors hover:bg-teal-50 hover:text-teal-700;
+  }
+
+  .vet-calendar-monthbar strong {
+    @apply min-w-48 text-center text-xl font-extrabold text-slate-900;
+  }
+
+  .vet-calendar-weekdays {
+    @apply grid grid-cols-7 gap-2 pb-2 text-center text-xs font-extrabold uppercase tracking-wide text-slate-400;
+  }
+
+  .vet-calendar-grid {
+    @apply grid grid-cols-7 gap-2;
+  }
+
+  .vet-calendar-empty {
+    @apply min-h-20 rounded-xl bg-slate-50;
+  }
+
+  .vet-calendar-day {
+    @apply flex min-h-20 flex-col items-start justify-between rounded-xl border border-slate-200 bg-white p-3 text-left font-bold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50;
+  }
+
+  .vet-calendar-day strong {
+    @apply rounded-full bg-teal-600 px-2 py-1 text-xs text-white;
+  }
+
+  .vet-calendar-day-selected {
+    @apply border-teal-500 bg-teal-50 text-teal-800 ring-2 ring-teal-100;
+  }
+
+  .vet-calendar-day-today span {
+    @apply rounded-full bg-slate-900 px-2 py-1 text-white;
+  }
+
+  .vet-patient-table-card {
+    @apply overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  .vet-patient-table-card h2 {
+    @apply border-b border-slate-100 px-8 py-7 text-3xl font-extrabold text-slate-900;
+  }
+
+  .vet-patient-table-wrap {
+    @apply overflow-x-auto;
+  }
+
+  .vet-patient-table {
+    @apply w-full min-w-[62rem] border-collapse text-left;
+  }
+
+  .vet-patient-table th {
+    @apply bg-slate-50 px-8 py-5 text-lg font-extrabold text-slate-800;
+  }
+
+  .vet-patient-table td {
+    @apply border-t border-slate-100 px-8 py-6 text-lg text-slate-700;
+  }
+
+  .vet-patient-name {
+    @apply flex items-center gap-3 font-extrabold text-slate-900;
+  }
+
+  .vet-patient-name span,
+  .vet-patient-name img {
+    @apply flex h-10 w-10 items-center justify-center rounded-full bg-teal-50 text-2xl;
+  }
+
+  .vet-patient-name img {
+    @apply object-cover;
+  }
+
+  .vet-status-confirmed {
+    @apply rounded-full bg-emerald-100 px-5 py-2 text-base font-bold text-emerald-700;
+  }
+
+  .vet-start-link {
+    @apply inline-flex min-w-40 items-center justify-center rounded-xl bg-teal-600 px-5 py-4 text-center text-base font-bold text-white shadow-sm transition-colors hover:bg-teal-700;
+  }
+
+  .vet-empty-patients {
+    @apply m-8 rounded-2xl bg-slate-50 p-8 text-center text-slate-500;
+  }
+
+  .vet-patient-profile {
+    @apply max-w-none px-6 py-8 sm:px-10;
+  }
+
+  .vet-patient-hero {
+    @apply mb-10 grid items-center gap-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm lg:grid-cols-[11rem_1fr_auto];
+  }
+
+  .vet-patient-hero > img,
+  .vet-patient-hero > span {
+    @apply flex h-36 w-36 items-center justify-center rounded-3xl bg-teal-50 object-cover text-7xl;
+  }
+
+  .vet-patient-hero dl {
+    @apply grid gap-6 sm:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .vet-patient-hero dt,
+  .vet-current-appointment dt {
+    @apply text-sm font-extrabold uppercase tracking-wide text-slate-400;
+  }
+
+  .vet-patient-hero dd {
+    @apply mt-1 text-3xl font-semibold text-slate-900;
+  }
+
+  .vet-patient-actions {
+    @apply grid gap-3;
+  }
+
+  .vet-clinical-card-grid {
+    @apply grid gap-6 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .vet-clinical-card {
+    @apply grid min-h-52 grid-cols-[4rem_1fr] items-start rounded-2xl bg-teal-600 p-7 text-left text-white shadow-md transition-transform hover:-translate-y-1 hover:bg-teal-700;
+  }
+
+  .vet-clinical-card > span {
+    @apply flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-4xl;
+  }
+
+  .vet-clinical-card > strong {
+    @apply justify-self-end text-5xl font-extrabold;
+  }
+
+  .vet-clinical-card h2 {
+    @apply col-span-2 mt-4 text-2xl font-extrabold;
+  }
+
+  .vet-clinical-card p {
+    @apply col-span-2 mt-2 text-lg text-teal-50;
+  }
+
+  .vet-current-appointment {
+    @apply mt-10 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm;
+  }
+
+  .vet-current-appointment h2 {
+    @apply mb-6 text-3xl font-extrabold text-slate-900;
+  }
+
+  .vet-current-appointment dl {
+    @apply grid gap-5 sm:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .vet-current-appointment dd {
+    @apply mt-1 text-xl font-semibold text-slate-800;
+  }
+
+  .vet-current-appointment-wide {
+    @apply sm:col-span-2 xl:col-span-3;
+  }
+
+  .vet-clinical-observation {
+    @apply mt-7 block text-sm font-extrabold uppercase tracking-wide text-slate-400;
+  }
+
+  .vet-clinical-observation textarea {
+    @apply mt-3 min-h-32 w-full resize-y rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base font-medium normal-case tracking-normal text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-100 disabled:text-slate-400;
+  }
+
+  .vet-consultation-modal-backdrop {
+    @apply fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-slate-950/40 px-4 py-6 backdrop-blur-sm;
+  }
+
+  .vet-consultation-modal {
+    @apply relative max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl;
+  }
+
+  .vet-consultation-close {
+    @apply absolute right-6 top-6 text-2xl text-slate-400 transition-colors hover:text-slate-700;
+  }
+
+  .vet-consultation-modal h2 {
+    @apply text-3xl font-extrabold text-slate-900;
+  }
+
+  .vet-consultation-modal p {
+    @apply mt-2 text-sm text-slate-500;
+  }
+
+  .vet-complete-modal {
+    @apply max-w-xl;
+  }
+
+  .vet-complete-change-list {
+    @apply my-7 rounded-2xl border border-teal-100 bg-teal-50 p-5;
+  }
+
+  .vet-complete-change-list h3 {
+    @apply text-base font-extrabold text-slate-900;
+  }
+
+  .vet-complete-change-list ul {
+    @apply mt-4 space-y-3;
+  }
+
+  .vet-complete-change-list li {
+    @apply rounded-xl bg-white p-4 text-sm shadow-sm;
+  }
+
+  .vet-complete-change-list strong {
+    @apply block font-extrabold text-teal-800;
+  }
+
+  .vet-complete-change-list span {
+    @apply mt-2 block whitespace-pre-wrap leading-6 text-slate-600;
+  }
+
+  .vet-followup-form {
+    @apply mt-7 grid gap-5 sm:grid-cols-2;
+  }
+
+  .vet-followup-form label {
+    @apply text-sm font-bold text-slate-500;
+  }
+
+  .vet-followup-form input,
+  .vet-followup-form select,
+  .vet-followup-form textarea {
+    @apply mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .vet-followup-form textarea {
+    @apply min-h-32 resize-none;
+  }
+
+  .vet-followup-wide,
+  .vet-followup-actions {
+    @apply sm:col-span-2;
+  }
+
+  .vet-followup-actions {
+    @apply grid gap-3 sm:grid-cols-2;
+  }
+
+  .pet-edit-form {
+    @apply space-y-7;
+  }
+
+  .pet-edit-grid {
+    @apply grid grid-cols-1 gap-5 lg:grid-cols-2;
+  }
+
+  .pet-photo-upload {
+    @apply flex flex-col items-center justify-center py-4 text-center;
+  }
+
+  .pet-photo-upload > p {
+    @apply mt-4 text-4xl font-medium text-slate-950;
+  }
+
+  .pet-photo-preview {
+    @apply relative flex h-36 w-36 items-center justify-center rounded-full border-4 border-slate-300 bg-slate-100 text-6xl text-slate-400;
+  }
+
+  .pet-photo-preview img {
+    @apply h-full w-full rounded-full object-cover;
+  }
+
+  .pet-photo-camera {
+    @apply absolute bottom-0 right-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-blue-600 text-2xl text-white shadow-sm hover:bg-blue-700;
+  }
+
+  .app-footer {
+    @apply border-t border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-400;
   }
 }

@@ -153,7 +153,7 @@ export default function RegisterClient() {
         title: 'Account created!',
         text: `${form.pet_name} has been registered successfully.`,
       });
-      navigate(ROUTES.CLIENT.DASHBOARD, { replace: true });
+      navigate(ROUTES.CLIENT.PETS, { replace: true });
     } catch (err) {
       setError(getApiErrorMessage(
         err,

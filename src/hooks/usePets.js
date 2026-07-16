@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createPet, getPet, getPets, updatePet, deletePet } from '../services/petService';
+import {
+  createPet,
+  deletePet,
+  getPet,
+  getPets,
+  updatePet,
+  uploadPetPhoto,
+} from '../services/petService';
 
 const PETS_KEY = ['pets'];
 
@@ -34,8 +41,32 @@ export function useUpdatePet() {
 
   return useMutation({
     mutationFn: updatePet,
-    onSuccess: () => {
+    onSuccess: (updatedPet, variables) => {
+      queryClient.setQueryData(['pets', variables.petId], updatedPet);
+      queryClient.setQueryData(PETS_KEY, (currentPets) => (
+        Array.isArray(currentPets)
+          ? currentPets.map((pet) => (pet.id === variables.petId ? updatedPet : pet))
+          : currentPets
+      ));
       queryClient.invalidateQueries({ queryKey: ['pets'] });
+    },
+  });
+}
+
+export function useUploadPetPhoto() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: uploadPetPhoto,
+    onSuccess: (updatedPet, variables) => {
+      queryClient.setQueryData(['pets', variables.petId], updatedPet);
+      queryClient.setQueryData(PETS_KEY, (currentPets) => (
+        Array.isArray(currentPets)
+          ? currentPets.map((pet) => (pet.id === variables.petId ? updatedPet : pet))
+          : currentPets
+      ));
+      queryClient.invalidateQueries({ queryKey: PETS_KEY });
+      queryClient.invalidateQueries({ queryKey: ['pets', variables.petId] });
     },
   });
 }

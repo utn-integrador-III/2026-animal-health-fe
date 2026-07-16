@@ -1,9 +1,13 @@
+import useTranslation from '../../../hooks/useTranslation';
+
 export default function PetMedicalHistory() {
+  const { t } = useTranslation();
+
   return (
     <main className="page-container">
-      <h1 className="page-title">Medical history</h1>
+      <h1 className="page-title">{t('pets.section.diagnostics.title')}</h1>
       <p className="page-subtitle">
-        Medical consultations, treatments, lab results, and allergies will be available in Release 2.
+        {t('healthSection.releaseNote')}
       </p>
     </main>
   );
