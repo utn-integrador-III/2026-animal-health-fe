@@ -58,6 +58,27 @@ vi.mock('../src/hooks/useVaccines', () => ({
   })),
 }));
 
+vi.mock('../src/hooks/useMedical', () => ({
+  useClinicalRecordsList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+  useAddClinicalRecord: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useMedicationsList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+  useAddMedication: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     mutateAsync.mockReset();
