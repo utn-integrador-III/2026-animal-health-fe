@@ -8,6 +8,9 @@ export const API_ROUTES = {
   },
   PETS: {
     BASE: '/api/pets',
+    CLINICAL_RECORDS: (petId) => `/api/pets/${petId}/clinical-records`,
+    MEDICATIONS: (petId) => `/api/pets/${petId}/medications`,
+    MEDICATIONS_TOGGLE: (petId, medicationId) => `/api/pets/${petId}/medications/${medicationId}/toggle-check`,
   },
   APPOINTMENTS: {
     BASE: '/api/appointments',

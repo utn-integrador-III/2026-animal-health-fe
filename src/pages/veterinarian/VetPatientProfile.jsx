@@ -25,6 +25,13 @@ import useTranslation from '../../hooks/useTranslation';
 import { getApiErrorMessage } from '../../services/apiError';
 import { useVaccinesList } from '../../hooks/useVaccines';
 import useAuthStore from '../../stores/useAuthStore';
+import {
+  useClinicalRecordsList,
+  useAddClinicalRecord,
+  useMedicationsList,
+  useAddMedication,
+} from '../../hooks/useMedical';
+import Swal from 'sweetalert2';
 
 const DURATIONS = [
   { blocks: '1', labelKey: 'appointments.duration.30.label' },
@@ -267,6 +274,28 @@ export default function VetPatientProfile() {
   const appointment = appointments.find((item) => item.id === appointmentId);
   const { data: vaccinesList = [] } = useVaccinesList(appointment?.pet_id);
   const vaccinesCount = vaccinesList.length;
+
+  const addClinicalRecord = useAddClinicalRecord();
+  const { data: clinicalRecords = [] } = useClinicalRecordsList(appointment?.pet_id);
+  const addMedication = useAddMedication();
+  const { data: medicationsList = [] } = useMedicationsList(appointment?.pet_id);
+
+  const [clinicalForm, setClinicalForm] = useState({
+    diagnosis: '',
+    treatment: '',
+    weight_kg: '',
+    notes: '',
+    date: new Date().toISOString().split('T')[0],
+  });
+
+  const [medicationForm, setMedicationForm] = useState({
+    name: '',
+    dosage: '',
+    frequency: '',
+    start_date: new Date().toISOString().split('T')[0],
+    end_date: '',
+    notes: '',
+  });
   const petAppointments = useMemo(() => (
     appointment
       ? appointments.filter((item) => item.pet_id === appointment.pet_id)
@@ -304,14 +333,14 @@ export default function VetPatientProfile() {
     {
       key: 'diagnostics',
       title: t('vetPatient.cards.diagnostics.title'),
-      value: 0,
+      value: clinicalRecords.length,
       detail: t('vetPatient.cards.diagnostics.detail'),
       icon: HiClipboardList,
     },
     {
       key: 'medications',
       title: t('vetPatient.cards.medications.title'),
-      value: 0,
+      value: medicationsList.length,
       detail: t('vetPatient.cards.medications.detail'),
       icon: HiSparkles,
     },
@@ -373,26 +402,70 @@ export default function VetPatientProfile() {
     }
   };
 
-  const handleVaccineSubmit = (event) => {
+  const handleClinicalSubmit = async (event) => {
     event.preventDefault();
-    if (!appointment?.pet_id || !vaccineForm.name || !vaccineForm.scheduledDate) {
-      setErrorMessage(t('vetPatient.vaccineFormError'));
+    if (!appointment?.pet_id || !clinicalForm.diagnosis || !clinicalForm.treatment) {
+      setErrorMessage(t('diagnostics.diagnosisRequired'));
       return;
     }
+    setMessage('');
+    setErrorMessage('');
+    try {
+      await addClinicalRecord.mutateAsync({
+        petId: appointment.pet_id,
+        recordData: {
+          ...clinicalForm,
+          weight_kg: clinicalForm.weight_kg ? Number(clinicalForm.weight_kg) : null,
+        },
+      });
+      Swal.fire({
+        icon: 'success',
+        title: t('diagnostics.saveSuccess'),
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setClinicalForm({
+        diagnosis: '',
+        treatment: '',
+        weight_kg: '',
+        notes: '',
+        date: new Date().toISOString().split('T')[0],
+      });
+    } catch (error) {
+      setErrorMessage(getApiErrorMessage(error, t('vetPatient.completeError')));
+    }
+  };
 
-    addVaccine(appointment.pet_id, {
-      id: `${appointment.pet_id}-${Date.now()}`,
-      ...vaccineForm,
-    });
-
-    setMessage(t('vetPatient.vaccineSaved'));
-    setVaccineForm({
-      name: '',
-      type: '',
-      status: 'upcoming',
-      scheduledDate: '',
-      notes: '',
-    });
+  const handleMedicationSubmit = async (event) => {
+    event.preventDefault();
+    if (!appointment?.pet_id || !medicationForm.name || !medicationForm.dosage || !medicationForm.frequency || !medicationForm.end_date) {
+      setErrorMessage(t('medications.nameRequired'));
+      return;
+    }
+    setMessage('');
+    setErrorMessage('');
+    try {
+      await addMedication.mutateAsync({
+        petId: appointment.pet_id,
+        medicationData: medicationForm,
+      });
+      Swal.fire({
+        icon: 'success',
+        title: t('medications.saveSuccess'),
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setMedicationForm({
+        name: '',
+        dosage: '',
+        frequency: '',
+        start_date: new Date().toISOString().split('T')[0],
+        end_date: '',
+        notes: '',
+      });
+    } catch (error) {
+      setErrorMessage(getApiErrorMessage(error, t('vetPatient.completeError')));
+    }
   };
 
   return (
@@ -522,57 +595,184 @@ export default function VetPatientProfile() {
 
       {activeSection === 'diagnostics' && (
         <section className="vet-current-appointment">
-          <h2>{t('vetPatient.vaccineSectionTitle')}</h2>
-          <p className="page-subtitle">{t('vetPatient.vaccineSectionDescription')}</p>
-          <form className="vet-followup-form" onSubmit={handleVaccineSubmit}>
+          <h2>{t('diagnostics.title')}</h2>
+          <p className="page-subtitle">{t('vetPatient.cards.diagnostics.detail')}</p>
+
+          <form className="vet-followup-form" onSubmit={handleClinicalSubmit}>
             <label>
-              {t('vetPatient.vaccineName')}
+              {t('diagnostics.table.diagnosis')} *
               <input
                 required
-                value={vaccineForm.name}
-                onChange={(event) => setVaccineForm((current) => ({ ...current, name: event.target.value }))}
-                placeholder={t('vetPatient.vaccineNamePlaceholder')}
+                value={clinicalForm.diagnosis}
+                onChange={(event) => setClinicalForm((current) => ({ ...current, diagnosis: event.target.value }))}
+                placeholder="ej. Gastroenteritis"
               />
             </label>
             <label>
-              {t('vetPatient.vaccineType')}
+              {t('diagnostics.table.treatment')} *
               <input
-                value={vaccineForm.type}
-                onChange={(event) => setVaccineForm((current) => ({ ...current, type: event.target.value }))}
-                placeholder={t('vetPatient.vaccineTypePlaceholder')}
+                required
+                value={clinicalForm.treatment}
+                onChange={(event) => setClinicalForm((current) => ({ ...current, treatment: event.target.value }))}
+                placeholder="ej. Antibióticos por 7 días"
               />
             </label>
             <label>
-              {t('vetPatient.vaccineStatus')}
-              <select
-                value={vaccineForm.status}
-                onChange={(event) => setVaccineForm((current) => ({ ...current, status: event.target.value }))}
-              >
-                <option value="upcoming">{t('vetPatient.vaccineStatusUpcoming')}</option>
-                <option value="completed">{t('vetPatient.vaccineStatusCompleted')}</option>
-              </select>
+              {t('diagnostics.table.weight')} (kg)
+              <input
+                type="number"
+                step="0.01"
+                value={clinicalForm.weight_kg}
+                onChange={(event) => setClinicalForm((current) => ({ ...current, weight_kg: event.target.value }))}
+                placeholder={appointment.pet_weight_kg ? `${appointment.pet_weight_kg}` : "8.5"}
+              />
             </label>
             <label>
-              {t('vetPatient.vaccineDate')}
+              {t('diagnostics.table.date')} *
               <input
                 required
                 type="date"
-                value={vaccineForm.scheduledDate}
-                onChange={(event) => setVaccineForm((current) => ({ ...current, scheduledDate: event.target.value }))}
+                value={clinicalForm.date}
+                onChange={(event) => setClinicalForm((current) => ({ ...current, date: event.target.value }))}
               />
             </label>
             <label className="vet-followup-wide">
-              {t('vetPatient.vaccineNotes')}
+              {t('diagnostics.table.notes')}
               <textarea
-                value={vaccineForm.notes}
-                onChange={(event) => setVaccineForm((current) => ({ ...current, notes: event.target.value }))}
-                placeholder={t('vetPatient.vaccineNotesPlaceholder')}
+                value={clinicalForm.notes}
+                onChange={(event) => setClinicalForm((current) => ({ ...current, notes: event.target.value }))}
+                placeholder="Notas adicionales u observaciones..."
               />
             </label>
             <div className="vet-followup-actions">
-              <Button type="submit">{t('vetPatient.vaccineSave')}</Button>
+              <Button type="submit" isLoading={addClinicalRecord.isPending}>
+                {t('diagnostics.addRecord')}
+              </Button>
             </div>
           </form>
+
+          {/* History List */}
+          <div className="mt-8 border-t border-gray-150 pt-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Historial Médico' : 'Medical History'}</h3>
+            {clinicalRecords.length > 0 ? (
+              <div className="space-y-4">
+                {clinicalRecords.map((rec) => (
+                  <div key={rec.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-semibold text-gray-900">{formatDate(rec.date, language)}</span>
+                      <span className="text-xs text-gray-500">{rec.veterinarian_name}</span>
+                    </div>
+                    <h4 className="font-bold text-teal-800">{rec.diagnosis}</h4>
+                    <p className="text-sm text-gray-700 mt-1"><strong>Tratamiento:</strong> {rec.treatment}</p>
+                    {rec.weight_kg && <p className="text-xs text-gray-500 mt-1"><strong>Peso:</strong> {rec.weight_kg} kg</p>}
+                    {rec.notes && <p className="text-xs italic text-gray-500 mt-1"><strong>Notas:</strong> {rec.notes}</p>}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">{t('diagnostics.emptyDescription')}</p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {activeSection === 'medications' && (
+        <section className="vet-current-appointment">
+          <h2>{t('medications.title')}</h2>
+          <p className="page-subtitle">{t('medications.activeTreatments')}</p>
+
+          <form className="vet-followup-form" onSubmit={handleMedicationSubmit}>
+            <label>
+              {t('medications.name')} *
+              <input
+                required
+                value={medicationForm.name}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, name: event.target.value }))}
+                placeholder="ej. Amoxicilina"
+              />
+            </label>
+            <label>
+              {t('medications.dosage')} *
+              <input
+                required
+                value={medicationForm.dosage}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, dosage: event.target.value }))}
+                placeholder="ej. 1/2 tableta"
+              />
+            </label>
+            <label>
+              {t('medications.frequency')} *
+              <input
+                required
+                value={medicationForm.frequency}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, frequency: event.target.value }))}
+                placeholder="ej. Cada 12 horas"
+              />
+            </label>
+            <label>
+              {language === 'es' ? 'Fecha Inicio' : 'Start Date'} *
+              <input
+                required
+                type="date"
+                value={medicationForm.start_date}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, start_date: event.target.value }))}
+              />
+            </label>
+            <label>
+              {language === 'es' ? 'Fecha Fin' : 'End Date'} *
+              <input
+                required
+                type="date"
+                value={medicationForm.end_date}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, end_date: event.target.value }))}
+              />
+            </label>
+            <label className="vet-followup-wide">
+              {t('medications.notes')}
+              <textarea
+                value={medicationForm.notes}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, notes: event.target.value }))}
+                placeholder="ej. Dar con alimentos"
+              />
+            </label>
+            <div className="vet-followup-actions">
+              <Button type="submit" isLoading={addMedication.isPending}>
+                {t('medications.addMedication')}
+              </Button>
+            </div>
+          </form>
+
+          {/* Prescriptions List */}
+          <div className="mt-8 border-t border-gray-150 pt-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Tratamientos Recetados' : 'Prescribed Treatments'}</h3>
+            {medicationsList.length > 0 ? (
+              <div className="space-y-4">
+                {medicationsList.map((med) => (
+                  <div key={med.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-bold text-gray-900">{med.name}</h4>
+                        <p className="text-sm text-teal-800 font-medium">{med.dosage} • {med.frequency}</p>
+                      </div>
+                      <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+                        med.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {med.status === 'active' ? (language === 'es' ? 'Activo' : 'Active') : (language === 'es' ? 'Completado' : 'Completed')}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      <span>{formatDate(med.start_date, language)} - {formatDate(med.end_date, language)}</span>
+                      <span className="mx-2">•</span>
+                      <span>{language === 'es' ? 'Recetado por' : 'Prescribed by'} {med.veterinarian_name}</span>
+                    </div>
+                    {med.notes && <p className="text-xs italic text-gray-500 mt-2 bg-gray-50 p-2 rounded">{language === 'es' ? 'Indicaciones' : 'Instructions'}: {med.notes}</p>}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">{t('medications.noActive')}</p>
+            )}
+          </div>
         </section>
       )}
 
