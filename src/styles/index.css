@@ -477,6 +477,139 @@
     @apply rounded-3xl bg-white p-8 shadow-sm;
   }
 
+  .vaccines-page {
+    @apply space-y-8;
+  }
+
+  .vaccines-hero {
+    @apply space-y-4 rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm;
+  }
+
+  .vaccines-pet-summary {
+    @apply flex items-center gap-4 rounded-3xl bg-white p-4 shadow-sm;
+  }
+
+  .vaccines-pet-summary img,
+  .vaccines-pet-summary span {
+    @apply h-16 w-16 flex items-center justify-center rounded-3xl bg-teal-50 text-3xl;
+  }
+
+  .vaccines-pet-summary h2 {
+    @apply text-xl font-bold text-slate-950;
+  }
+
+  .vaccines-pet-summary p {
+    @apply text-sm text-slate-500;
+  }
+
+  .vaccines-summary-card {
+    @apply flex min-w-[18rem] items-center gap-4 rounded-2xl bg-teal-600 p-5 text-white shadow-sm;
+  }
+
+  .vaccines-pet-name {
+    @apply mt-2 text-sm font-semibold text-teal-700;
+  }
+
+  .vaccines-summary-icon {
+    @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-3xl;
+  }
+
+  .vaccines-summary-card p {
+    @apply text-sm text-teal-50;
+  }
+
+  .vaccines-summary-card strong {
+    @apply mt-1 block text-xl font-semibold;
+  }
+
+  .vaccines-summary-card span {
+    @apply mt-1 block text-sm text-teal-100;
+  }
+
+  .vaccines-content-grid {
+    @apply grid gap-6 lg:grid-cols-2;
+  }
+
+  .vaccines-panel {
+    @apply rounded-3xl border border-slate-200 bg-white p-6 shadow-sm;
+  }
+
+  .vaccines-panel-header {
+    @apply mb-5 flex items-start justify-between gap-4;
+  }
+
+  .vaccines-panel-label {
+    @apply text-sm font-semibold uppercase tracking-[0.2em] text-teal-600;
+  }
+
+  .vaccines-panel-header h2 {
+    @apply mt-1 text-xl font-semibold text-slate-900;
+  }
+
+  .vaccines-pill {
+    @apply inline-flex min-w-10 items-center justify-center rounded-full bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-700;
+  }
+
+  .vaccines-card-list {
+    @apply space-y-4;
+  }
+
+  .vaccine-card {
+    @apply flex gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4;
+  }
+
+  .vaccine-card-upcoming {
+    @apply border-teal-200 bg-teal-50/70;
+  }
+
+  .vaccine-card-icon {
+    @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-teal-700 shadow-sm;
+  }
+
+  .vaccine-card-content {
+    @apply min-w-0 flex-1;
+  }
+
+  .vaccine-card-header {
+    @apply flex flex-wrap items-start justify-between gap-2;
+  }
+
+  .vaccine-card-header h3 {
+    @apply text-lg font-semibold text-slate-900;
+  }
+
+  .vaccine-status {
+    @apply rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700;
+  }
+
+  .vaccine-status-upcoming {
+    @apply bg-teal-600 text-white;
+  }
+
+  .vaccine-card-type {
+    @apply mt-1 text-sm font-medium text-slate-500;
+  }
+
+  .vaccine-card-meta {
+    @apply mt-3 flex items-center gap-2 text-sm text-slate-600;
+  }
+
+  .vaccine-card-meta svg {
+    @apply h-4 w-4 text-teal-600;
+  }
+
+  .vaccine-card-notes {
+    @apply mt-2 text-sm leading-6 text-slate-600;
+  }
+
+  .vaccines-empty-state {
+    @apply flex items-center gap-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600;
+  }
+
+  .vaccines-empty-state svg {
+    @apply h-5 w-5 text-teal-600;
+  }
+
   .appointment-page {
     @apply max-w-4xl pb-16;
   }

@@ -8,6 +8,7 @@ import PetList from '../pages/client/pets/PetList';
 import PetDetails from '../pages/client/pets/PetDetails';
 import EditPet from '../pages/client/pets/EditPet';
 import PetMedicalHistory from '../pages/client/pets/PetMedicalHistory';
+import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import { ROUTES } from '../constants/routes';
 
 export default function ClientRoutes() {
@@ -22,7 +23,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.VACCINES}
-        element={<HealthSection title="Vaccines" description="Vaccination records and upcoming vaccine reminders for the selected pet." />}
+        element={<VaccinesPage />}
       />
       <Route
         path={ROUTES.CLIENT.MEDICATIONS}
