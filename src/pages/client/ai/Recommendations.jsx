@@ -1,6 +1,4 @@
-import React from 'react';
-
-/**
+﻿/**
  * Recomendaciones preventivas de la IA
  * Incluye disclaimer importante
  */
@@ -13,3 +11,4 @@ export default function Recommendations() {
     </div>
   );
 }
+

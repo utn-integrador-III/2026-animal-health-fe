@@ -1,0 +1,35 @@
+export const ROUTES = {
+  PUBLIC: {
+    ABOUT: '/about',
+    SERVICES: '/services',
+    CONTACT: '/contact',
+  },
+  AUTH: {
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    UNAUTHORIZED: '/unauthorized',
+  },
+  CLIENT: {
+    DASHBOARD: '/client/dashboard',
+    PETS: '/client/pets',
+    PROFILE: '/client/profile',
+    APPOINTMENTS: '/client/appointments',
+    VACCINES: '/client/vaccines',
+    MEDICATIONS: '/client/medications',
+    DIAGNOSTICS: '/client/diagnostics',
+    ALLERGIES: '/client/allergies',
+    LAB_RESULTS: '/client/lab-results',
+    RECOMMENDATIONS: '/client/recommendations',
+    PET_DETAIL: '/client/pets/:petId',
+    PET_EDIT: '/client/pets/:petId/edit',
+    PET_HISTORY: '/client/pets/:petId/history',
+  },
+  VET: {
+    DASHBOARD: '/vet/dashboard',
+    PROFILE: '/vet/profile',
+    CONSULTATION: '/vet/consultation',
+    PATIENT: '/vet/patients/:appointmentId',
+    VACCINES: '/vet/patients/:appointmentId/vaccines',
+    REPORTS: '/vet/reports',
+  },
+};

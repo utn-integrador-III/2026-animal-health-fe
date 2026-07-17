@@ -1,12 +1,13 @@
 import axios from 'axios';
+import useAuthStore from '../stores/useAuthStore';
 
 /**
- * Configuración base de Axios
- * Interceptor del Bearer Token
- * Centraliza todas las llamadas a FastAPI
+ *  Axios Base Configuration
+ *  Bearer Token Interceptor
+ * Centralizes all FastAPI calls
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -15,10 +16,10 @@ const api = axios.create({
   },
 });
 
-// Interceptor: Agregar token JWT a las peticiones
+// Interceptor: Add JWT token to requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = useAuthStore.getState().token || localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,14 +28,21 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor: Manejar respuestas con errores de autenticación
+// Interceptor: Handle responses with authentication errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expirado o inválido
-      localStorage.removeItem('token');
-      window.location.href = '/auth/login';
+      const requestUrl = error.config?.url ?? '';
+      const isAuthRequest =
+        requestUrl.includes('/api/auth/login') ||
+        requestUrl.includes('/api/auth/register');
+
+      if (!isAuthRequest) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('auth_session');
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(error);
   }
