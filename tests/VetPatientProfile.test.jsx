@@ -50,6 +50,14 @@ vi.mock('../src/hooks/useAppointments', () => ({
   })),
 }));
 
+vi.mock('../src/hooks/useVaccines', () => ({
+  useVaccinesList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     mutateAsync.mockReset();

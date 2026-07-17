@@ -6,6 +6,7 @@ import {
   HiClipboardList,
   HiExclamation,
   HiPlus,
+  HiShieldCheck,
   HiSparkles,
   HiX,
 } from 'react-icons/hi';
@@ -22,6 +23,7 @@ import {
 } from '../../hooks/useAppointments';
 import useTranslation from '../../hooks/useTranslation';
 import { getApiErrorMessage } from '../../services/apiError';
+import { useVaccinesList } from '../../hooks/useVaccines';
 import useAuthStore from '../../stores/useAuthStore';
 
 const DURATIONS = [
@@ -254,8 +256,17 @@ export default function VetPatientProfile() {
   const [errorMessage, setErrorMessage] = useState('');
   const [clinicalObservation, setClinicalObservation] = useState('');
   const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
+  const [vaccineForm, setVaccineForm] = useState({
+    name: '',
+    type: '',
+    status: 'upcoming',
+    scheduledDate: '',
+    notes: '',
+  });
 
   const appointment = appointments.find((item) => item.id === appointmentId);
+  const { data: vaccinesList = [] } = useVaccinesList(appointment?.pet_id);
+  const vaccinesCount = vaccinesList.length;
   const petAppointments = useMemo(() => (
     appointment
       ? appointments.filter((item) => item.pet_id === appointment.pet_id)
@@ -325,6 +336,13 @@ export default function VetPatientProfile() {
       detail: t('vetPatient.cards.ai.detail'),
       icon: HiSparkles,
     },
+    {
+      key: 'vaccines',
+      title: t('vetPatient.cards.vaccines.title'),
+      value: vaccinesCount,
+      detail: t('vetPatient.cards.vaccines.detail'),
+      icon: HiShieldCheck,
+    },
   ];
 
   const handleFollowUpSubmit = async (formData) => {
@@ -353,6 +371,28 @@ export default function VetPatientProfile() {
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('vetPatient.completeError')));
     }
+  };
+
+  const handleVaccineSubmit = (event) => {
+    event.preventDefault();
+    if (!appointment?.pet_id || !vaccineForm.name || !vaccineForm.scheduledDate) {
+      setErrorMessage(t('vetPatient.vaccineFormError'));
+      return;
+    }
+
+    addVaccine(appointment.pet_id, {
+      id: `${appointment.pet_id}-${Date.now()}`,
+      ...vaccineForm,
+    });
+
+    setMessage(t('vetPatient.vaccineSaved'));
+    setVaccineForm({
+      name: '',
+      type: '',
+      status: 'upcoming',
+      scheduledDate: '',
+      notes: '',
+    });
   };
 
   return (
@@ -415,6 +455,20 @@ export default function VetPatientProfile() {
       <section className="vet-clinical-card-grid">
         {cards.map((card) => {
           const Icon = card.icon;
+          if (card.key === 'vaccines') {
+            return (
+              <Link
+                key={card.key}
+                className="vet-clinical-card text-left flex flex-col items-start"
+                to={ROUTES.VET.VACCINES.replace(':appointmentId', appointmentId)}
+              >
+                <span><Icon aria-hidden="true" /></span>
+                <strong>{card.value}</strong>
+                <h2>{card.title}</h2>
+                <p>{card.detail}</p>
+              </Link>
+            );
+          }
           return (
             <button
               key={card.key}
@@ -463,6 +517,62 @@ export default function VetPatientProfile() {
               disabled={appointment.status !== 'scheduled'}
             />
           </label>
+        </section>
+      )}
+
+      {activeSection === 'diagnostics' && (
+        <section className="vet-current-appointment">
+          <h2>{t('vetPatient.vaccineSectionTitle')}</h2>
+          <p className="page-subtitle">{t('vetPatient.vaccineSectionDescription')}</p>
+          <form className="vet-followup-form" onSubmit={handleVaccineSubmit}>
+            <label>
+              {t('vetPatient.vaccineName')}
+              <input
+                required
+                value={vaccineForm.name}
+                onChange={(event) => setVaccineForm((current) => ({ ...current, name: event.target.value }))}
+                placeholder={t('vetPatient.vaccineNamePlaceholder')}
+              />
+            </label>
+            <label>
+              {t('vetPatient.vaccineType')}
+              <input
+                value={vaccineForm.type}
+                onChange={(event) => setVaccineForm((current) => ({ ...current, type: event.target.value }))}
+                placeholder={t('vetPatient.vaccineTypePlaceholder')}
+              />
+            </label>
+            <label>
+              {t('vetPatient.vaccineStatus')}
+              <select
+                value={vaccineForm.status}
+                onChange={(event) => setVaccineForm((current) => ({ ...current, status: event.target.value }))}
+              >
+                <option value="upcoming">{t('vetPatient.vaccineStatusUpcoming')}</option>
+                <option value="completed">{t('vetPatient.vaccineStatusCompleted')}</option>
+              </select>
+            </label>
+            <label>
+              {t('vetPatient.vaccineDate')}
+              <input
+                required
+                type="date"
+                value={vaccineForm.scheduledDate}
+                onChange={(event) => setVaccineForm((current) => ({ ...current, scheduledDate: event.target.value }))}
+              />
+            </label>
+            <label className="vet-followup-wide">
+              {t('vetPatient.vaccineNotes')}
+              <textarea
+                value={vaccineForm.notes}
+                onChange={(event) => setVaccineForm((current) => ({ ...current, notes: event.target.value }))}
+                placeholder={t('vetPatient.vaccineNotesPlaceholder')}
+              />
+            </label>
+            <div className="vet-followup-actions">
+              <Button type="submit">{t('vetPatient.vaccineSave')}</Button>
+            </div>
+          </form>
         </section>
       )}
 
