@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { HiBell, HiLogout, HiMenu, HiUser } from 'react-icons/hi';
+import { HiLogout, HiMenu, HiUser } from 'react-icons/hi';
 
 import animalHealthLogo from '../../assets/logos/LogoAnimalHealth.png';
 import { ROUTES } from '../../constants/routes';
@@ -8,6 +8,7 @@ import { LANGUAGE_LABELS, LANGUAGES } from '../../i18n/translations';
 import useLanguageStore from '../../stores/useLanguageStore';
 import useTranslation from '../../hooks/useTranslation';
 import useAuthStore from '../../stores/useAuthStore';
+import NotificationBell from '../notifications/NotificationBell'; // ← NUEVO (IMPORT)
 
 export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -139,58 +140,58 @@ export default function Navbar() {
         )}
 
         {isAuthenticated && role === 'client' && (
-          <div className="navbar-account" ref={profileMenuRef}>
-            <button
-              type="button"
-              className="navbar-profile-button"
-              onClick={() => setIsProfileOpen((value) => !value)}
-              aria-expanded={isProfileOpen}
-              aria-haspopup="menu"
-            >
-              <HiMenu aria-hidden="true" />
-              <span>{t('nav.profile')}</span>
-              {user?.profile_image_url ? (
-                <img
-                  className="navbar-avatar navbar-avatar-image"
-                  src={user.profile_image_url}
-                  alt={t('profile.photoAlt')}
-                />
-              ) : (
-                <span className="navbar-avatar">{userInitial}</span>
-              )}
-            </button>
+          <div className="flex items-center gap-4">
+            
+            <NotificationBell />
 
-            {isProfileOpen && (
-              <div className="profile-menu" role="menu">
-                <div className="profile-menu-header">
-                  <p className="profile-menu-name">{displayName}</p>
-                  <p className="profile-menu-email">{displayEmail}</p>
+            <div className="navbar-account" ref={profileMenuRef}>
+              <button
+                type="button"
+                className="navbar-profile-button"
+                onClick={() => setIsProfileOpen((value) => !value)}
+                aria-expanded={isProfileOpen}
+                aria-haspopup="menu"
+              >
+                <HiMenu aria-hidden="true" />
+                <span>{t('nav.profile')}</span>
+                {user?.profile_image_url ? (
+                  <img
+                    className="navbar-avatar navbar-avatar-image"
+                    src={user.profile_image_url}
+                    alt={t('profile.photoAlt')}
+                  />
+                ) : (
+                  <span className="navbar-avatar">{userInitial}</span>
+                )}
+              </button>
+
+              {isProfileOpen && (
+                <div className="profile-menu" role="menu">
+                  <div className="profile-menu-header">
+                    <p className="profile-menu-name">{displayName}</p>
+                    <p className="profile-menu-email">{displayEmail}</p>
+                  </div>
+                  <Link
+                    className="profile-menu-item"
+                    to={ROUTES.CLIENT.PROFILE}
+                    role="menuitem"
+                    onClick={() => setIsProfileOpen(false)}
+                  >
+                    <HiUser aria-hidden="true" />
+                    {t('nav.editProfile')}
+                  </Link>
+                  <button
+                    type="button"
+                    className="profile-menu-item profile-menu-item-danger"
+                    onClick={handleLogout}
+                    role="menuitem"
+                  >
+                    <HiLogout aria-hidden="true" />
+                    {t('nav.logOut')}
+                  </button>
                 </div>
-                <Link
-                  className="profile-menu-item"
-                  to={ROUTES.CLIENT.PROFILE}
-                  role="menuitem"
-                  onClick={() => setIsProfileOpen(false)}
-                >
-                  <HiUser aria-hidden="true" />
-                  {t('nav.editProfile')}
-                </Link>
-                <button type="button" className="profile-menu-item" role="menuitem">
-                  <HiBell aria-hidden="true" />
-                  {t('nav.notifications')}
-                  <span className="profile-notification-count">0</span>
-                </button>
-                <button
-                  type="button"
-                  className="profile-menu-item profile-menu-item-danger"
-                  onClick={handleLogout}
-                  role="menuitem"
-                >
-                  <HiLogout aria-hidden="true" />
-                  {t('nav.logOut')}
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </nav>
