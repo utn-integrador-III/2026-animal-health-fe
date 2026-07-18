@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../pages/auth/Login';
 import RegisterClient from '../pages/auth/RegisterClient';
 import Unauthorized from '../pages/auth/Unauthorized';
+import NotificationsPage from '../pages/NotificationsPage'; // ← NUEVO
 import { ROUTES } from '../constants/routes';
 import { USER_ROLES } from '../constants/userRoles';
 import ProtectedRoute from './ProtectedRoute';
@@ -25,6 +26,11 @@ export default function AppRouter() {
         <Route element={<RoleGuard allowedRoles={[USER_ROLES.VETERINARIAN]} />}>
           {VetRoutes()}
         </Route>
+
+        {/* ============================================================ */}
+        {/* NUEVO: Ruta de notificaciones (accesible para ambos roles) */}
+        {/* ============================================================ */}
+        <Route path={ROUTES.SHARED.NOTIFICATIONS} element={<NotificationsPage />} />
       </Route>
 
       <Route path="/" element={<Navigate to={ROUTES.AUTH.LOGIN} replace />} />

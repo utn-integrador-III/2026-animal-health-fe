@@ -9,6 +9,12 @@ export const ROUTES = {
     REGISTER: '/auth/register',
     UNAUTHORIZED: '/unauthorized',
   },
+  // ============================================================
+  // NUEVO: Rutas compartidas entre clientes y veterinarios
+  // ============================================================
+  SHARED: {
+    NOTIFICATIONS: '/notificaciones',
+  },
   CLIENT: {
     DASHBOARD: '/client/dashboard',
     PETS: '/client/pets',
