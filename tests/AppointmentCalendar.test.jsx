@@ -112,7 +112,7 @@ describe('AppointmentCalendar', () => {
     expect(screen.getByText(/choose the right appointment length/i)).toBeInTheDocument();
     expect(screen.getByText(/30 minutes: quick visit/i)).toBeInTheDocument();
     expect(screen.getByText(/1 hour: dedicated consultation/i)).toBeInTheDocument();
-    await user.type(screen.getByLabelText(/^date$/i), '2026-07-21');
+    await user.type(screen.getByLabelText(/^date$/i), '2026-07-28');
     await user.selectOptions(screen.getByLabelText(/veterinarian/i), 'vet-1');
     await user.selectOptions(screen.getByLabelText(/^time$/i), '09:00');
     await user.type(screen.getByLabelText(/reason for visit/i), 'Annual wellness checkup');
@@ -120,7 +120,7 @@ describe('AppointmentCalendar', () => {
 
     expect(createAppointment).toHaveBeenCalledWith({
       pet_id: 'pet-1',
-      appointment_date: '2026-07-21',
+      appointment_date: '2026-07-28',
       appointment_time: '09:00',
       duration_blocks: 1,
       reason: 'Annual wellness checkup',

@@ -56,7 +56,7 @@ describe('DashboardVet', () => {
     expect(screen.getByText('Lola')).toBeInTheDocument();
     expect(screen.getByAltText('Lola')).toHaveAttribute('src', 'https://example.com/lola.png');
     expect(screen.getByText('Abby Ramirez')).toBeInTheDocument();
-    expect(screen.getByText('Bird')).toBeInTheDocument();
+    expect(screen.getByText('Domestic bird')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /start appointment/i })).toHaveAttribute(
       'href',
       '/vet/patients/appointment-1',

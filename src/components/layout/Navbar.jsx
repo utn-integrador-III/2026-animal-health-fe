@@ -52,7 +52,7 @@ export default function Navbar() {
     <header className="app-navbar">
       <nav className="app-navbar-inner">
         <Link
-          to={isAuthenticated ? homeRoute : ROUTES.AUTH.LOGIN}
+          to={isAuthenticated ? homeRoute : ROUTES.PUBLIC.ABOUT}
           className="navbar-brand"
           aria-label="Animal Health home"
         >
@@ -65,12 +65,18 @@ export default function Navbar() {
 
         {isAuthenticated && role === 'client' && (
           <div className="navbar-navigation" aria-label="Client navigation">
-            <Link className="navbar-link" to={`${ROUTES.CLIENT.PETS}#about`}>
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.ABOUT}
+            >
               {t('nav.about')}
-            </Link>
-            <Link className="navbar-link" to={`${ROUTES.CLIENT.PETS}#services`}>
+            </NavLink>
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.SERVICES}
+            >
               {t('nav.services')}
-            </Link>
+            </NavLink>
             <NavLink
               className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
               to={ROUTES.CLIENT.PETS}
@@ -119,11 +125,31 @@ export default function Navbar() {
         </label>
 
         {!isAuthenticated && (
+          <div className="navbar-navigation public-navbar-navigation" aria-label="Public navigation">
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.ABOUT}
+            >
+              {t('nav.about')}
+            </NavLink>
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.SERVICES}
+            >
+              {t('nav.services')}
+            </NavLink>
+            <Link className="navbar-link" to={`${ROUTES.PUBLIC.ABOUT}#contact`}>
+              {t('nav.contact')}
+            </Link>
+          </div>
+        )}
+
+        {!isAuthenticated && (
           <div className="navbar-auth-actions">
-            <Link className="font-medium text-teal-700" to={ROUTES.AUTH.REGISTER}>
+            <Link className="navbar-signup-link" to={ROUTES.AUTH.REGISTER}>
               {t('nav.signUp')}
             </Link>
-            <Link className="font-medium text-teal-700" to={ROUTES.AUTH.LOGIN}>
+            <Link className="navbar-login-link" to={ROUTES.AUTH.LOGIN}>
               {t('nav.signIn')}
             </Link>
           </div>

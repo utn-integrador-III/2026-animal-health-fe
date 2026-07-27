@@ -6,7 +6,23 @@ import Loader from '../../components/common/Loader';
 import { DEFAULT_PET_ICON, SPECIES_ICON } from '../../constants/petConstants';
 import { ROUTES } from '../../constants/routes';
 import { useAppointments } from '../../hooks/useAppointments';
+import useTranslation from '../../hooks/useTranslation';
 import useAuthStore from '../../stores/useAuthStore';
+
+const LOCALE_BY_LANGUAGE = {
+  en: 'en-US',
+  es: 'es-CR',
+};
+
+const WEEKDAY_KEYS = [
+  'vetDashboard.weekday.sun',
+  'vetDashboard.weekday.mon',
+  'vetDashboard.weekday.tue',
+  'vetDashboard.weekday.wed',
+  'vetDashboard.weekday.thu',
+  'vetDashboard.weekday.fri',
+  'vetDashboard.weekday.sat',
+];
 
 function todayIsoDate() {
   return new Date().toISOString().split('T')[0];
@@ -24,24 +40,24 @@ function monthKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
-function displayDoctorName(fullName) {
-  if (!fullName) return 'Doctor';
+function displayDoctorName(fullName, fallback) {
+  if (!fullName) return fallback;
   return fullName.startsWith('Dr.') ? fullName : `Dr. ${fullName}`;
 }
 
-function formatTime(value) {
+function formatTime(value, locale) {
   if (!value) return '';
   const [hours, minutes] = value.split(':');
   const date = new Date();
   date.setHours(Number(hours), Number(minutes), 0, 0);
-  return new Intl.DateTimeFormat('en', {
+  return new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
   }).format(date);
 }
 
-function formatLongDate(value) {
-  return new Intl.DateTimeFormat('en', {
+function formatLongDate(value, locale) {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -68,11 +84,13 @@ function getMonthDays(monthDate) {
 
 export default function DashboardVet() {
   const user = useAuthStore((state) => state.user);
+  const { language, t } = useTranslation();
+  const locale = LOCALE_BY_LANGUAGE[language] ?? LOCALE_BY_LANGUAGE.en;
   const [selectedDate, setSelectedDate] = useState(todayIsoDate());
   const [visibleMonth, setVisibleMonth] = useState(() => dateFromIso(todayIsoDate()));
   const { data: appointments = [], isLoading, isError } = useAppointments({ enabled: true });
 
-  if (isLoading) return <Loader label="Loading today's patients..." />;
+  if (isLoading) return <Loader label={t('vetDashboard.loading')} />;
 
   const scheduledAppointments = appointments.filter((appointment) => (
     appointment.status === 'scheduled'
@@ -88,7 +106,7 @@ export default function DashboardVet() {
     return summary;
   }, {});
   const monthDays = getMonthDays(visibleMonth);
-  const visibleMonthLabel = new Intl.DateTimeFormat('en', {
+  const visibleMonthLabel = new Intl.DateTimeFormat(locale, {
     month: 'long',
     year: 'numeric',
   }).format(visibleMonth);
@@ -114,31 +132,33 @@ export default function DashboardVet() {
   return (
     <main className="vet-dashboard page-container">
       <header className="vet-dashboard-header">
-        <h1>Hi {displayDoctorName(user?.full_name)},</h1>
-        <p>Ready to help your patients!</p>
+        <h1>{t('vetDashboard.greeting', {
+          doctorName: displayDoctorName(user?.full_name, t('vetDashboard.doctorFallback')),
+        })}</h1>
+        <p>{t('vetDashboard.subtitle')}</p>
       </header>
 
-      <section className="vet-summary-grid" aria-label="Veterinarian daily summary">
+      <section className="vet-summary-grid" aria-label={t('vetDashboard.summaryAria')}>
         <article className="vet-summary-card">
           <span><HiCalendar aria-hidden="true" /></span>
           <strong>{selectedDateAppointments.length}</strong>
-          <p>Appointments selected day</p>
+          <p>{t('vetDashboard.selectedDayCount')}</p>
         </article>
         <article className="vet-summary-card">
           <span><HiClock aria-hidden="true" /></span>
           <strong>{monthlyAppointments.length}</strong>
-          <p>Appointments this month</p>
+          <p>{t('vetDashboard.monthCount')}</p>
         </article>
       </section>
 
-      <section className="vet-calendar-card" aria-label="Monthly appointment calendar">
+      <section className="vet-calendar-card" aria-label={t('vetDashboard.calendarAria')}>
         <div className="vet-calendar-header">
           <div>
-            <h2>Monthly workload</h2>
-            <p>Select a day to review the assigned patients.</p>
+            <h2>{t('vetDashboard.monthlyWorkload')}</h2>
+            <p>{t('vetDashboard.monthlyWorkloadHelp')}</p>
           </div>
           <label>
-            Date
+            {t('appointments.date')}
             <input
               type="date"
               value={selectedDate}
@@ -147,17 +167,17 @@ export default function DashboardVet() {
           </label>
         </div>
         <div className="vet-calendar-monthbar">
-          <button type="button" onClick={goToPreviousMonth} aria-label="Previous month">
+          <button type="button" onClick={goToPreviousMonth} aria-label={t('vetDashboard.previousMonth')}>
             <HiChevronLeft aria-hidden="true" />
           </button>
           <strong>{visibleMonthLabel}</strong>
-          <button type="button" onClick={goToNextMonth} aria-label="Next month">
+          <button type="button" onClick={goToNextMonth} aria-label={t('vetDashboard.nextMonth')}>
             <HiChevronRight aria-hidden="true" />
           </button>
         </div>
         <div className="vet-calendar-weekdays" aria-hidden="true">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <span key={day}>{day}</span>
+          {WEEKDAY_KEYS.map((dayKey) => (
+            <span key={dayKey}>{t(dayKey)}</span>
           ))}
         </div>
         <div className="vet-calendar-grid">
@@ -189,17 +209,19 @@ export default function DashboardVet() {
       </section>
 
       <section className="vet-patient-table-card">
-        <h2>Appointments for {formatLongDate(selectedDate)}</h2>
+        <h2>{t('vetDashboard.appointmentsFor', {
+          date: formatLongDate(selectedDate, locale),
+        })}</h2>
 
         {isError && (
           <p className="status-error">
-            Patient assignments could not be loaded.
+            {t('vetDashboard.loadError')}
           </p>
         )}
 
         {!isError && selectedDateAppointments.length === 0 && (
           <p className="vet-empty-patients">
-            No patients are assigned for this day.
+            {t('vetDashboard.emptyDay')}
           </p>
         )}
 
@@ -208,14 +230,14 @@ export default function DashboardVet() {
             <table className="vet-patient-table">
               <thead>
                 <tr>
-                  <th>Pet name</th>
-                  <th>Owner</th>
-                  <th>Species</th>
-                  <th>Breed</th>
-                  <th>Time</th>
-                  <th>Last visit</th>
-                  <th>Status</th>
-                  <th aria-label="Actions" />
+                  <th>{t('vetDashboard.table.petName')}</th>
+                  <th>{t('vetDashboard.table.owner')}</th>
+                  <th>{t('vetDashboard.table.species')}</th>
+                  <th>{t('vetDashboard.table.breed')}</th>
+                  <th>{t('vetDashboard.table.time')}</th>
+                  <th>{t('vetDashboard.table.lastVisit')}</th>
+                  <th>{t('vetDashboard.table.status')}</th>
+                  <th aria-label={t('vetDashboard.table.actions')} />
                 </tr>
               </thead>
               <tbody>
@@ -231,14 +253,16 @@ export default function DashboardVet() {
                         {appointment.pet_name}
                       </span>
                     </td>
-                    <td>{appointment.owner_name ?? 'Client'}</td>
-                    <td>{appointment.pet_species}</td>
-                    <td>{appointment.pet_breed ?? 'Not specified'}</td>
-                    <td>{formatTime(appointment.appointment_time)}</td>
+                    <td>{appointment.owner_name ?? t('vetPatient.clientFallback')}</td>
+                    <td>{t(`petSpecies.${appointment.pet_species}`)}</td>
+                    <td>{appointment.pet_breed ?? t('vetDashboard.notSpecified')}</td>
+                    <td>{formatTime(appointment.appointment_time, locale)}</td>
                     <td>{appointment.last_visit ?? '--'}</td>
                     <td>
                       <span className="vet-status-confirmed">
-                        {appointment.status === 'scheduled' ? 'Confirmed' : appointment.status}
+                        {appointment.status === 'scheduled'
+                          ? t('vetDashboard.status.confirmed')
+                          : t(`appointments.status.${appointment.status}`)}
                       </span>
                     </td>
                     <td>
@@ -246,7 +270,7 @@ export default function DashboardVet() {
                         className="vet-start-link"
                         to={ROUTES.VET.PATIENT.replace(':appointmentId', appointment.id)}
                       >
-                        Start Appointment
+                        {t('vetDashboard.startAppointment')}
                       </Link>
                     </td>
                   </tr>
