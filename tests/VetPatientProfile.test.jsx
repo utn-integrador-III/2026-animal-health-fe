@@ -137,7 +137,7 @@ describe('VetPatientProfile', () => {
     );
 
     await user.click(screen.getByRole('button', { name: /nueva consulta/i }));
-    await user.type(screen.getByLabelText(/fecha/i), '2026-07-25');
+    await user.type(screen.getByLabelText(/fecha/i), '2026-07-28');
     await user.selectOptions(screen.getByLabelText(/duraci/i), '2');
     await user.selectOptions(screen.getByLabelText(/hora/i), '10:00');
     await user.type(screen.getByLabelText(/motivo de la visita/i), 'Control de evolucion');
@@ -145,7 +145,7 @@ describe('VetPatientProfile', () => {
 
     expect(mutateAsync).toHaveBeenCalledWith({
       pet_id: 'pet-1',
-      appointment_date: '2026-07-25',
+      appointment_date: '2026-07-28',
       appointment_time: '10:00',
       duration_blocks: 2,
       reason: 'Control de evolucion',

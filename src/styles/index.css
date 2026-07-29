@@ -80,11 +80,11 @@
   }
 
   .navbar-profile-button {
-    @apply inline-flex h-14 items-center gap-3 rounded-full bg-indigo-500 px-5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-indigo-600;
+    @apply inline-flex h-14 items-center gap-3 rounded-full bg-teal-600 px-5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-teal-700;
   }
 
   .navbar-avatar {
-    @apply flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-800 ring-4 ring-indigo-500;
+    @apply flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-800 ring-4 ring-teal-600;
   }
 
   .navbar-avatar-image {
@@ -245,6 +245,81 @@
     .service-card-tall img {
       @apply h-48 w-full;
     }
+  }
+
+  .contact-page {
+    @apply flex-1 bg-slate-50 px-4 py-12 sm:px-8;
+  }
+
+  .contact-shell {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .contact-heading {
+    @apply mb-10 max-w-3xl;
+  }
+
+  .contact-heading p {
+    @apply text-sm font-semibold uppercase tracking-wide text-teal-700;
+  }
+
+  .contact-heading h1 {
+    @apply mt-2 text-4xl font-semibold text-slate-950 sm:text-5xl;
+  }
+
+  .contact-heading span {
+    @apply mt-3 block text-lg leading-8 text-slate-600;
+  }
+
+  .contact-grid {
+    @apply grid gap-10 lg:grid-cols-[1fr_24rem];
+  }
+
+  .contact-form {
+    @apply grid gap-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2 sm:p-8;
+  }
+
+  .contact-form label {
+    @apply grid gap-2 text-sm font-semibold text-slate-600;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .contact-form textarea {
+    @apply min-h-64 resize-y;
+  }
+
+  .contact-message-field,
+  .contact-form .status-success,
+  .contact-form .status-error {
+    @apply sm:col-span-2;
+  }
+
+  .contact-submit {
+    @apply w-full sm:w-48;
+  }
+
+  .contact-details {
+    @apply rounded-3xl border border-slate-200 bg-white p-6 shadow-sm;
+  }
+
+  .contact-details h2 {
+    @apply mb-8 text-3xl font-semibold text-slate-800;
+  }
+
+  .contact-detail-item {
+    @apply mb-5 flex items-center gap-4 rounded-2xl border border-transparent p-3 text-slate-700 transition-colors hover:border-teal-100 hover:bg-teal-50;
+  }
+
+  .contact-detail-item span {
+    @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-teal-600 text-xl text-white shadow-sm;
+  }
+
+  .contact-detail-item strong {
+    @apply break-all text-lg font-bold text-indigo-600;
   }
 
   .page-eyebrow {
@@ -1245,6 +1320,63 @@
     @apply grid gap-3 sm:grid-cols-2;
   }
 
+  .create-consultation {
+    @apply space-y-7;
+  }
+
+  .create-consultation h1 {
+    @apply text-4xl font-extrabold text-slate-950;
+  }
+
+  .walk-in-panel {
+    @apply rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8;
+  }
+
+  .walk-in-panel h2 {
+    @apply text-2xl font-extrabold text-slate-950;
+  }
+
+  .walk-in-search {
+    @apply mt-5 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end;
+  }
+
+  .walk-in-form {
+    @apply mt-7 grid gap-5 sm:grid-cols-2;
+  }
+
+  .walk-in-form label,
+  .walk-in-search label {
+    @apply text-sm font-bold text-slate-600;
+  }
+
+  .walk-in-form input,
+  .walk-in-form select,
+  .walk-in-form textarea,
+  .walk-in-search input {
+    @apply mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base text-slate-900 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100;
+  }
+
+  .walk-in-form textarea {
+    @apply min-h-32 resize-y;
+  }
+
+  .walk-in-wide,
+  .walk-in-actions {
+    @apply sm:col-span-2;
+  }
+
+  .walk-in-actions {
+    @apply flex justify-end;
+  }
+
+  .walk-in-summary {
+    @apply mt-5 grid gap-2 rounded-2xl bg-teal-50 p-4 text-slate-700;
+  }
+
+  .walk-in-summary strong {
+    @apply text-xl text-slate-950;
+  }
+
   .pet-edit-form {
     @apply space-y-7;
   }
@@ -1273,7 +1405,77 @@
     @apply absolute bottom-0 right-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-blue-600 text-2xl text-white shadow-sm hover:bg-blue-700;
   }
 
+  .pet-profile-page {
+    @apply max-w-7xl;
+  }
+
+  .pet-readonly-panel {
+    @apply mt-2 grid gap-6;
+  }
+
+  .pet-readonly-grid {
+    @apply grid gap-6 md:grid-cols-2;
+  }
+
+  .pet-readonly-panel label {
+    @apply block text-sm font-semibold text-slate-700;
+  }
+
+  .pet-readonly-panel label > span,
+  .pet-readonly-wide > span {
+    @apply text-red-500;
+  }
+
+  .pet-readonly-panel .form-control {
+    @apply mt-1 h-12 rounded-lg bg-white text-base text-slate-900;
+  }
+
+  .pet-readonly-panel .form-control[readonly],
+  .pet-readonly-panel .form-control:disabled {
+    @apply cursor-default border-slate-300 bg-white opacity-100;
+  }
+
+  .pet-readonly-checkbox {
+    @apply flex items-center gap-3;
+  }
+
+  .pet-readonly-checkbox input {
+    @apply h-4 w-4 rounded border-slate-300 text-teal-600;
+  }
+
+  .pet-readonly-checkbox span {
+    @apply text-sm font-semibold text-slate-700;
+  }
+
+  .pet-readonly-wide {
+    @apply block;
+  }
+
+  .pet-readonly-photo {
+    @apply mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-4 border-slate-300 bg-stone-200 text-6xl shadow-sm;
+  }
+
+  .pet-readonly-photo img {
+    @apply h-full w-full object-cover;
+  }
+
+  .pet-readonly-edit-link {
+    @apply ml-6 w-fit bg-transparent text-2xl font-semibold text-teal-700 hover:text-teal-800;
+  }
+
   .app-footer {
     @apply border-t border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-400;
   }
+}
+
+.navbar-profile-button {
+  background-color: #0d9488;
+}
+
+.navbar-profile-button:hover {
+  background-color: #0f766e;
+}
+
+.navbar-avatar {
+  --tw-ring-color: #0d9488;
 }

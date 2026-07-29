@@ -84,7 +84,7 @@ function normalizeTime(value) {
 }
 
 function getPetPhotoUrl(pet, appointment) {
-  return appointment?.pet_photo_url ?? pet?.photo_url ?? pet?.pet_photo_url ?? '';
+  return pet?.photo_url ?? pet?.pet_photo_url ?? appointment?.pet_photo_url ?? '';
 }
 
 function isSunday(value) {

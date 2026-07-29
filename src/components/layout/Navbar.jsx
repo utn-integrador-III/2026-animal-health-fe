@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { HiLogout, HiMenu, HiUser } from 'react-icons/hi';
 
 import animalHealthLogo from '../../assets/logos/LogoAnimalHealth.png';
@@ -13,6 +13,7 @@ import NotificationBell from '../notifications/NotificationBell'; // ← NUEVO (
 export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileMenuRef = useRef(null);
+  const location = useLocation();
   const navigate = useNavigate();
   const authStatus = useAuthStore((state) => state.authStatus);
   const user = useAuthStore((state) => state.user);
@@ -21,6 +22,9 @@ export default function Navbar() {
   const setLanguage = useLanguageStore((state) => state.setLanguage);
   const { language, t } = useTranslation();
   const isAuthenticated = authStatus === 'authenticated';
+  const isClientArea = location.pathname.startsWith('/client');
+  const isVetArea = location.pathname.startsWith('/vet');
+  const isAppArea = isClientArea || isVetArea;
   const homeRoute = role === 'veterinarian'
     ? ROUTES.VET.DASHBOARD
     : ROUTES.CLIENT.PETS;
@@ -52,7 +56,7 @@ export default function Navbar() {
     <header className="app-navbar">
       <nav className="app-navbar-inner">
         <Link
-          to={isAuthenticated ? homeRoute : ROUTES.PUBLIC.ABOUT}
+          to={isAuthenticated && isAppArea ? homeRoute : ROUTES.PUBLIC.ABOUT}
           className="navbar-brand"
           aria-label="Animal Health home"
         >
@@ -63,7 +67,7 @@ export default function Navbar() {
           />
         </Link>
 
-        {isAuthenticated && role === 'client' && (
+        {isAuthenticated && role === 'client' && isClientArea && (
           <div className="navbar-navigation" aria-label="Client navigation">
             <NavLink
               className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
@@ -83,13 +87,16 @@ export default function Navbar() {
             >
               {t('nav.pets')}
             </NavLink>
-            <Link className="navbar-link" to={`${ROUTES.CLIENT.PETS}#contact`}>
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.CONTACT}
+            >
               {t('nav.contact')}
-            </Link>
+            </NavLink>
           </div>
         )}
 
-        {isAuthenticated && role === 'veterinarian' && (
+        {isAuthenticated && role === 'veterinarian' && isVetArea && (
           <div className="vet-navbar-navigation" aria-label="Veterinarian navigation">
             <NavLink
               className={({ isActive }) => (isActive ? 'vet-navbar-link vet-navbar-link-active' : 'vet-navbar-link')}
@@ -124,7 +131,7 @@ export default function Navbar() {
           </select>
         </label>
 
-        {!isAuthenticated && (
+        {!isAppArea && (
           <div className="navbar-navigation public-navbar-navigation" aria-label="Public navigation">
             <NavLink
               className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
@@ -138,13 +145,16 @@ export default function Navbar() {
             >
               {t('nav.services')}
             </NavLink>
-            <Link className="navbar-link" to={`${ROUTES.PUBLIC.ABOUT}#contact`}>
+            <NavLink
+              className={({ isActive }) => (isActive ? 'navbar-link navbar-link-active' : 'navbar-link')}
+              to={ROUTES.PUBLIC.CONTACT}
+            >
               {t('nav.contact')}
-            </Link>
+            </NavLink>
           </div>
         )}
 
-        {!isAuthenticated && (
+        {!isAppArea && (
           <div className="navbar-auth-actions">
             <Link className="navbar-signup-link" to={ROUTES.AUTH.REGISTER}>
               {t('nav.signUp')}
@@ -155,7 +165,7 @@ export default function Navbar() {
           </div>
         )}
 
-        {isAuthenticated && role !== 'client' && (
+        {isAuthenticated && role !== 'client' && isVetArea && (
           <button
             type="button"
             onClick={handleLogout}
@@ -165,7 +175,7 @@ export default function Navbar() {
           </button>
         )}
 
-        {isAuthenticated && role === 'client' && (
+        {isAuthenticated && role === 'client' && isClientArea && (
           <div className="flex items-center gap-4">
             
             <NotificationBell />

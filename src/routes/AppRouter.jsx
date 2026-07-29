@@ -5,6 +5,7 @@ import RegisterClient from '../pages/auth/RegisterClient';
 import Unauthorized from '../pages/auth/Unauthorized';
 import NotificationsPage from '../pages/NotificationsPage';
 import About from '../pages/public/About';
+import Contact from '../pages/public/Contact';
 import Services from '../pages/public/Services';
 import { ROUTES } from '../constants/routes';
 import { USER_ROLES } from '../constants/userRoles';
@@ -18,6 +19,7 @@ export default function AppRouter() {
     <Routes>
       <Route path={ROUTES.PUBLIC.ABOUT} element={<About />} />
       <Route path={ROUTES.PUBLIC.SERVICES} element={<Services />} />
+      <Route path={ROUTES.PUBLIC.CONTACT} element={<Contact />} />
       <Route path={ROUTES.AUTH.LOGIN} element={<Login />} />
       <Route path={ROUTES.AUTH.REGISTER} element={<RegisterClient />} />
       <Route path={ROUTES.AUTH.UNAUTHORIZED} element={<Unauthorized />} />

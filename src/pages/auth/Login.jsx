@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import animalHealthLogo from '../../assets/logos/LogoAnimalHealth.png';
-import animalHealthLogoTransparent from '../../assets/logos/LogoAnimalHealth-removebg-cropped.png';
 import loginBackground from '../../assets/images/tylijura-veterinarian-8859098.jpg';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
@@ -57,17 +56,10 @@ export default function Login() {
           style={{ backgroundImage: `url(${loginBackground})` }}
         />
         <div className="absolute inset-0 bg-teal-950/45" />
-        <div className="relative z-10 flex h-full max-w-2xl flex-col justify-between p-12 text-white">
-          <div className="inline-flex rounded-3xl bg-white/25 p-3 shadow-lg ring-1 ring-white/35 backdrop-blur-sm">
-            <img
-              src={animalHealthLogoTransparent}
-              alt="Animal Health"
-              className="h-40 w-auto object-contain"
-            />
-          </div>
-          <div>
-            <h1 className="max-w-md text-4xl font-bold">{t('login.welcomeBack')}</h1>
-            <p className="mt-4 max-w-xl text-base font-semibold leading-7 text-teal-50">
+        <div className="relative z-10 flex h-full max-w-2xl items-center p-12 text-white">
+          <div className="max-w-xl">
+            <h1 className="text-5xl font-bold leading-tight">{t('login.welcomeBack')}</h1>
+            <p className="mt-6 text-lg font-semibold leading-8 text-teal-50">
               {t('login.sideDescription')}
             </p>
           </div>
