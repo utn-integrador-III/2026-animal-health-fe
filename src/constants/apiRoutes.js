@@ -18,4 +18,12 @@ export const API_ROUTES = {
     VETERINARIANS: '/api/appointments/veterinarians',
     AVAILABLE_SLOTS: '/api/appointments/available-slots',
   },
+  CONTACT: {
+    BASE: '/api/contact',
+  },
+  CONSULTATIONS: {
+    CLIENTS: '/api/consultations/clients',
+    WALK_IN: '/api/consultations/walk-in',
+    DIAGNOSES: (consultationId) => `/api/consultations/${consultationId}/diagnoses`,
+  },
 };

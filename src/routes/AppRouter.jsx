@@ -3,7 +3,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../pages/auth/Login';
 import RegisterClient from '../pages/auth/RegisterClient';
 import Unauthorized from '../pages/auth/Unauthorized';
-import NotificationsPage from '../pages/NotificationsPage'; // ← NUEVO
+import NotificationsPage from '../pages/NotificationsPage';
+import About from '../pages/public/About';
+import Contact from '../pages/public/Contact';
+import Services from '../pages/public/Services';
 import { ROUTES } from '../constants/routes';
 import { USER_ROLES } from '../constants/userRoles';
 import ProtectedRoute from './ProtectedRoute';
@@ -14,6 +17,9 @@ import VetRoutes from './VetRoutes';
 export default function AppRouter() {
   return (
     <Routes>
+      <Route path={ROUTES.PUBLIC.ABOUT} element={<About />} />
+      <Route path={ROUTES.PUBLIC.SERVICES} element={<Services />} />
+      <Route path={ROUTES.PUBLIC.CONTACT} element={<Contact />} />
       <Route path={ROUTES.AUTH.LOGIN} element={<Login />} />
       <Route path={ROUTES.AUTH.REGISTER} element={<RegisterClient />} />
       <Route path={ROUTES.AUTH.UNAUTHORIZED} element={<Unauthorized />} />
@@ -27,13 +33,10 @@ export default function AppRouter() {
           {VetRoutes()}
         </Route>
 
-        {/* ============================================================ */}
-        {/* NUEVO: Ruta de notificaciones (accesible para ambos roles) */}
-        {/* ============================================================ */}
         <Route path={ROUTES.SHARED.NOTIFICATIONS} element={<NotificationsPage />} />
       </Route>
 
-      <Route path="/" element={<Navigate to={ROUTES.AUTH.LOGIN} replace />} />
+      <Route path="/" element={<Navigate to={ROUTES.PUBLIC.ABOUT} replace />} />
       <Route path="*" element={<Navigate to={ROUTES.AUTH.LOGIN} replace />} />
     </Routes>
   );

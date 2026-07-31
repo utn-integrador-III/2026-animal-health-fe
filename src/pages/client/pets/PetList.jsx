@@ -20,7 +20,7 @@ import { ROUTES } from '../../../constants/routes';
 import { usePetsList } from '../../../hooks/usePets';
 import useTranslation from '../../../hooks/useTranslation';
 import useAuthStore from '../../../stores/useAuthStore';
-import petsHeroImage from '../../../assets/images/mtajmr-animals-7862112.jpg';
+import petsHeroImage from '../../../assets/images/all-pets.png';
 
 function withPetId(route, petId) {
   return petId ? `${route}?petId=${encodeURIComponent(petId)}` : route;

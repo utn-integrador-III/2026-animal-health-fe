@@ -10,6 +10,14 @@ import useLanguageStore from '../src/stores/useLanguageStore';
 const mutateAsync = vi.fn();
 const completeAppointment = vi.fn();
 
+function getTestAppointmentDate() {
+  const date = new Date();
+  if (date.getDay() === 0) {
+    date.setDate(date.getDate() + 1);
+  }
+  return date.toISOString().split('T')[0];
+}
+
 vi.mock('../src/hooks/useAppointments', () => ({
   useAppointments: vi.fn(() => ({
     data: [
@@ -127,6 +135,7 @@ describe('VetPatientProfile', () => {
   test('creates a follow-up appointment for the current pet', async () => {
     mutateAsync.mockResolvedValueOnce({});
     const user = userEvent.setup();
+    const appointmentDate = getTestAppointmentDate();
 
     render(
       <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
@@ -137,7 +146,7 @@ describe('VetPatientProfile', () => {
     );
 
     await user.click(screen.getByRole('button', { name: /nueva consulta/i }));
-    await user.type(screen.getByLabelText(/fecha/i), '2026-07-25');
+    await user.type(screen.getByLabelText(/fecha/i), appointmentDate);
     await user.selectOptions(screen.getByLabelText(/duraci/i), '2');
     await user.selectOptions(screen.getByLabelText(/hora/i), '10:00');
     await user.type(screen.getByLabelText(/motivo de la visita/i), 'Control de evolucion');
@@ -145,7 +154,7 @@ describe('VetPatientProfile', () => {
 
     expect(mutateAsync).toHaveBeenCalledWith({
       pet_id: 'pet-1',
-      appointment_date: '2026-07-25',
+      appointment_date: appointmentDate,
       appointment_time: '10:00',
       duration_blocks: 2,
       reason: 'Control de evolucion',

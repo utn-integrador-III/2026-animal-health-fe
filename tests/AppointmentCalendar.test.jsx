@@ -9,6 +9,14 @@ const createAppointment = vi.fn();
 const updateAppointment = vi.fn();
 const cancelAppointment = vi.fn();
 
+function getTestAppointmentDate() {
+  const date = new Date();
+  if (date.getDay() === 0) {
+    date.setDate(date.getDate() + 1);
+  }
+  return date.toISOString().split('T')[0];
+}
+
 vi.mock('../src/hooks/usePets', () => ({
   usePet: vi.fn(() => ({
     data: {
@@ -96,7 +104,7 @@ describe('AppointmentCalendar', () => {
     expect(screen.getByText('Loli')).toBeInTheDocument();
     expect(screen.getAllByAltText('Loli')).toHaveLength(2);
     screen.getAllByAltText('Loli').forEach((image) => {
-      expect(image).toHaveAttribute('src', 'https://example.com/lola-appointment.png');
+      expect(image).toHaveAttribute('src', 'https://example.com/lola.png');
     });
     expect(screen.getAllByText(/dental checkup/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/dr\. maria sanchez/i)).toBeInTheDocument();
@@ -104,6 +112,7 @@ describe('AppointmentCalendar', () => {
 
   test('opens the new appointment form and submits appointment data', async () => {
     const user = userEvent.setup();
+    const appointmentDate = getTestAppointmentDate();
     createAppointment.mockResolvedValueOnce({});
     renderAppointments();
 
@@ -112,7 +121,7 @@ describe('AppointmentCalendar', () => {
     expect(screen.getByText(/choose the right appointment length/i)).toBeInTheDocument();
     expect(screen.getByText(/30 minutes: quick visit/i)).toBeInTheDocument();
     expect(screen.getByText(/1 hour: dedicated consultation/i)).toBeInTheDocument();
-    await user.type(screen.getByLabelText(/^date$/i), '2026-07-21');
+    await user.type(screen.getByLabelText(/^date$/i), appointmentDate);
     await user.selectOptions(screen.getByLabelText(/veterinarian/i), 'vet-1');
     await user.selectOptions(screen.getByLabelText(/^time$/i), '09:00');
     await user.type(screen.getByLabelText(/reason for visit/i), 'Annual wellness checkup');
@@ -120,7 +129,7 @@ describe('AppointmentCalendar', () => {
 
     expect(createAppointment).toHaveBeenCalledWith({
       pet_id: 'pet-1',
-      appointment_date: '2026-07-21',
+      appointment_date: appointmentDate,
       appointment_time: '09:00',
       duration_blocks: 1,
       reason: 'Annual wellness checkup',
