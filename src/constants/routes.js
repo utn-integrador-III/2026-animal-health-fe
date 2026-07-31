@@ -22,6 +22,7 @@ export const ROUTES = {
     APPOINTMENTS: '/client/appointments',
     VACCINES: '/client/vaccines',
     MEDICATIONS: '/client/medications',
+    MEDICATION_REMINDERS: '/client/medications/reminders',
     DIAGNOSTICS: '/client/diagnostics',
     ALLERGIES: '/client/allergies',
     LAB_RESULTS: '/client/lab-results',

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { HiCalendar, HiSparkles, HiCheckCircle } from 'react-icons/hi';
+import { HiCalendar, HiSparkles, HiCheckCircle, HiBell } from 'react-icons/hi';
 import { HiOutlineXCircle } from 'react-icons/hi2';
 import Swal from 'sweetalert2';
 
@@ -9,6 +9,7 @@ import { usePet } from '../../../hooks/usePets';
 import { DEFAULT_PET_ICON, SPECIES_ICON } from '../../../constants/petConstants';
 import useTranslation from '../../../hooks/useTranslation';
 import { useMedicationsList, useToggleMedicationCheck } from '../../../hooks/useMedical';
+import { useNotifications } from '../../../hooks/useNotifications';
 
 function formatDate(value, locale) {
   if (!value) return '--';
@@ -26,13 +27,23 @@ export default function MedicationsPage() {
   const { data: pet, isLoading: loadingPet, isError: errorPet } = usePet(petId);
   const { data: medications = [], isLoading: loadingMeds, isError: errorMeds } = useMedicationsList(petId);
   const toggleCheck = useToggleMedicationCheck();
+  const { notifications } = useNotifications();
 
   const petName = pet?.name ?? t('vaccines.petFallback');
   const backToDashboard = petId
     ? `${ROUTES.CLIENT.DASHBOARD}?petId=${encodeURIComponent(petId)}`
     : ROUTES.CLIENT.DASHBOARD;
 
+  const remindersUrl = petId
+    ? `${ROUTES.CLIENT.MEDICATION_REMINDERS}?petId=${encodeURIComponent(petId)}`
+    : ROUTES.CLIENT.MEDICATION_REMINDERS;
+
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+  const medicationReminderCount = useMemo(
+    () => notifications.filter((n) => !n.read && (n.medication_name || n.type === 'medication_reminder')).length,
+    [notifications]
+  );
 
   // Filter medications
   const activeMedications = useMemo(() => {
@@ -50,7 +61,7 @@ export default function MedicationsPage() {
     });
   }, [activeMedications, todayStr]);
 
-  const handleToggle = async (medicationId, isTaken) => {
+  const handleToggle = async (medicationId) => {
     try {
       await toggleCheck.mutateAsync({
         petId,
@@ -83,10 +94,36 @@ export default function MedicationsPage() {
         {t('healthSection.back')}
       </Link>
 
+      {/* ── Medication Reminder Banner ────────────────────────────── */}
+      {medicationReminderCount > 0 && (
+        <Link to={remindersUrl} className="med-reminder-banner" aria-label="Ver recordatorios de medicación">
+          <span className="med-reminder-banner-icon" aria-hidden="true">
+            <HiBell />
+          </span>
+          <span className="med-reminder-banner-text">
+            <strong>{medicationReminderCount} recordatorio{medicationReminderCount > 1 ? 's' : ''} de medicación pendiente{medicationReminderCount > 1 ? 's' : ''}</strong>
+            {' '}— Toca aquí para ver los detalles
+          </span>
+          <span className="med-reminder-banner-arrow" aria-hidden="true">→</span>
+        </Link>
+      )}
+
       <section className="health-section-page medications-page">
         <div className="vaccines-hero">
           <div>
             <h1 className="page-title">{t('medications.title')}</h1>
+            <Link
+              to={remindersUrl}
+              className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl transition shadow-sm"
+            >
+              <HiBell className="text-lg" />
+              <span>Ver Recordatorios y Alertas</span>
+              {medicationReminderCount > 0 && (
+                <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold ml-1">
+                  {medicationReminderCount}
+                </span>
+              )}
+            </Link>
           </div>
           <div className="appointment-pet-summary vaccines-pet-summary">
             {pet?.photo_url ? (

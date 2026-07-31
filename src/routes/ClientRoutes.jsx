@@ -10,6 +10,7 @@ import EditPet from '../pages/client/pets/EditPet';
 import PetMedicalHistory from '../pages/client/pets/PetMedicalHistory';
 import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
+import MedicationReminder from '../pages/client/medications/MedicationReminder';
 import { ROUTES } from '../constants/routes';
 
 export default function ClientRoutes() {
@@ -29,6 +30,10 @@ export default function ClientRoutes() {
       <Route
         path={ROUTES.CLIENT.MEDICATIONS}
         element={<MedicationsPage />}
+      />
+      <Route
+        path={ROUTES.CLIENT.MEDICATION_REMINDERS}
+        element={<MedicationReminder />}
       />
       <Route
         path={ROUTES.CLIENT.DIAGNOSTICS}

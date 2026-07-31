@@ -1479,3 +1479,193 @@
 .navbar-avatar {
   --tw-ring-color: #0d9488;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEDICATION REMINDER FEATURE STYLES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Reminder Card ─────────────────────────────────────────────── */
+@layer components {
+  .med-reminder-card {
+    @apply relative bg-white rounded-2xl shadow-md border border-teal-100 p-5
+           flex flex-col gap-4 transition-shadow hover:shadow-lg;
+  }
+
+  .med-reminder-card--success {
+    @apply bg-teal-50 border-teal-200 flex items-center justify-center min-h-[180px];
+  }
+
+  .med-reminder-success-inner {
+    @apply text-center flex flex-col items-center gap-2;
+  }
+
+  .med-reminder-success-icon {
+    @apply text-5xl text-teal-500;
+    animation: check-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  .med-reminder-success-title {
+    @apply text-lg font-bold text-teal-700;
+  }
+
+  .med-reminder-success-sub {
+    @apply text-sm text-teal-600;
+  }
+
+  /* ── Card header ──────────────────────────────────────────────── */
+  .med-reminder-header {
+    @apply flex items-start gap-3 pb-3 border-b border-teal-50;
+  }
+
+  .med-reminder-pill-icon {
+    @apply text-3xl;
+    animation: pulse-pill 2.5s ease-in-out infinite;
+  }
+
+  .med-reminder-pet-label {
+    @apply text-xs font-semibold text-teal-700 uppercase tracking-wide mb-0.5;
+  }
+
+  .med-reminder-alert-text {
+    @apply text-sm font-medium text-slate-700 leading-snug;
+  }
+
+  /* ── Detail rows ──────────────────────────────────────────────── */
+  .med-reminder-details {
+    @apply flex flex-col gap-3;
+  }
+
+  .med-reminder-detail-row {
+    @apply flex items-center gap-3;
+  }
+
+  .med-reminder-detail-icon {
+    @apply text-xl text-teal-400 flex-shrink-0;
+  }
+
+  .med-reminder-detail-label {
+    @apply text-xs text-slate-400 font-medium uppercase tracking-wide leading-none;
+  }
+
+  .med-reminder-detail-value {
+    @apply text-sm font-semibold text-slate-800 mt-0.5;
+  }
+
+  /* ── Scheduler badge ──────────────────────────────────────────── */
+  .med-reminder-scheduler-badge {
+    @apply inline-flex items-center gap-1 text-xs text-blue-600 bg-blue-50
+           border border-blue-100 rounded-full px-3 py-1 font-medium;
+  }
+
+  /* ── Action buttons ───────────────────────────────────────────── */
+  .med-reminder-actions {
+    @apply flex flex-col sm:flex-row gap-2 mt-1;
+  }
+
+  .med-reminder-btn-take {
+    @apply flex-1 flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600
+           text-white font-semibold rounded-xl px-4 py-2.5 text-sm
+           transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .med-reminder-btn-snooze {
+    @apply flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200
+           text-slate-700 font-semibold rounded-xl px-4 py-2.5 text-sm
+           transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .med-reminder-spinner {
+    @apply inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full;
+    animation: spin 0.7s linear infinite;
+  }
+
+  /* ── Dismiss button ───────────────────────────────────────────── */
+  .med-reminder-dismiss {
+    @apply absolute top-3 right-3 text-slate-300 hover:text-slate-500
+           rounded-full p-1 transition-colors;
+  }
+
+  /* ── Empty state ──────────────────────────────────────────────── */
+  .med-reminder-empty {
+    @apply flex flex-col items-center justify-center py-12 text-center
+           bg-teal-50/40 rounded-2xl border border-dashed border-teal-100;
+  }
+
+  /* ── Alert Banner (on MedicationsPage) ───────────────────────── */
+  .med-reminder-banner {
+    @apply flex items-center gap-3 bg-gradient-to-r from-teal-500 to-teal-600
+           text-white rounded-xl px-4 py-3 mb-4 shadow-sm
+           transition-all hover:from-teal-600 hover:to-teal-700 cursor-pointer;
+    text-decoration: none;
+  }
+
+  .med-reminder-banner-icon {
+    @apply text-xl flex-shrink-0;
+  }
+
+  .med-reminder-banner-text {
+    @apply flex-1 text-sm;
+  }
+
+  .med-reminder-banner-arrow {
+    @apply text-lg font-bold opacity-80;
+  }
+
+  /* ── Schedule Table ───────────────────────────────────────────── */
+  .med-schedule-table {
+    @apply w-full text-sm text-left border-collapse;
+  }
+
+  .med-schedule-table thead {
+    @apply bg-slate-50;
+  }
+
+  .med-schedule-table thead th {
+    @apply px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide
+           border-b border-slate-100 whitespace-nowrap;
+  }
+
+  .med-schedule-table tbody tr {
+    @apply border-b border-slate-50 transition-colors hover:bg-teal-50/30;
+  }
+
+  .med-schedule-table tbody td {
+    @apply px-4 py-3 text-slate-700;
+  }
+
+  .med-schedule-status {
+    @apply inline-flex items-center text-xs font-semibold px-2.5 py-0.5 rounded-full;
+  }
+
+  .med-schedule-status--active {
+    @apply bg-teal-100 text-teal-800;
+  }
+
+  .med-schedule-status--completed {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  /* ── Search input ─────────────────────────────────────────────── */
+  .med-schedule-search {
+    @apply w-full max-w-sm border border-slate-200 rounded-xl px-4 py-2 text-sm
+           text-slate-700 placeholder:text-slate-400 outline-none
+           focus:ring-2 focus:ring-teal-300 focus:border-teal-400 transition;
+  }
+}
+
+/* ── Keyframe animations ──────────────────────────────────────────── */
+@keyframes pulse-pill {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+@keyframes check-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

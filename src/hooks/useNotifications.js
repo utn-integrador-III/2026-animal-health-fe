@@ -7,6 +7,8 @@ import {
   markAsRead,
   markAllAsRead,
   deleteNotification,
+  takeMedication,
+  remindLater,
 } from '../services/notificationService';
 
 export const useNotifications = () => {
@@ -79,9 +81,36 @@ export const useNotifications = () => {
     }
   }, [notifications]);
 
+  const handleTakeMedication = useCallback(async (notificationId) => {
+    try {
+      await takeMedication(notificationId);
+      // Remove from list and decrement unread count
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error('Error al marcar medicamento como tomado:', err);
+      throw err;
+    }
+  }, []);
+
+  const handleRemindLater = useCallback(async (notificationId, delayMinutes = 15) => {
+    try {
+      const result = await remindLater(notificationId, delayMinutes);
+      // Remove the original notification from the local list
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      return result;
+    } catch (err) {
+      console.error('Error al posponer notificación:', err);
+      throw err;
+    }
+  }, []);
+
   useEffect(() => {
-    loadNotifications();
-    loadUnreadCount();
+    void (async () => {
+      await loadNotifications();
+      await loadUnreadCount();
+    })();
   }, [loadNotifications, loadUnreadCount]);
 
   return {
@@ -95,5 +124,7 @@ export const useNotifications = () => {
     markAsRead: handleMarkAsRead,
     markAllAsRead: handleMarkAllAsRead,
     deleteNotification: handleDelete,
+    takeMedication: handleTakeMedication,
+    remindLater: handleRemindLater,
   };
 };
