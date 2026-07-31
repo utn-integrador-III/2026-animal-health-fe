@@ -87,6 +87,26 @@ vi.mock('../src/hooks/useMedical', () => ({
   })),
 }));
 
+vi.mock('../src/hooks/useAllergies', () => ({
+  useAllergiesList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+  useAddAllergy: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useUpdateAllergy: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useDeleteAllergy: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     mutateAsync.mockReset();
