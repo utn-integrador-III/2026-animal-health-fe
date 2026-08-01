@@ -41,7 +41,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.ALLERGIES}
-        element={<HealthSection title="Allergies" description="Known allergies, alerts, and sensitivity notes for the selected pet." />}
+        element={<AllergiesPage />}
       />
       <Route
         path={ROUTES.CLIENT.LAB_RESULTS}

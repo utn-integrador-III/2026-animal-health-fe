@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   HiBeaker,
@@ -31,6 +31,12 @@ import {
   useMedicationsList,
   useAddMedication,
 } from '../../hooks/useMedical';
+import {
+  useAllergiesList,
+  useAddAllergy,
+  useUpdateAllergy,
+  useDeleteAllergy,
+} from '../../hooks/useAllergies';
 import Swal from 'sweetalert2';
 
 const DURATIONS = [
@@ -280,6 +286,21 @@ export default function VetPatientProfile() {
   const addMedication = useAddMedication();
   const { data: medicationsList = [] } = useMedicationsList(appointment?.pet_id);
 
+  const addAllergy = useAddAllergy();
+  const updateAllergyMutation = useUpdateAllergy();
+  const deleteAllergyMutation = useDeleteAllergy();
+  const { data: allergiesList = [] } = useAllergiesList(appointment?.pet_id);
+
+  const [allergyForm, setAllergyForm] = useState({
+    allergen: '',
+    category: '',
+    severity: '',
+    reaction: '',
+    notes: '',
+  });
+  const [editingAllergy, setEditingAllergy] = useState(null); // null | allergy object
+  const allergyFormRef = useRef(null);
+
   const [clinicalForm, setClinicalForm] = useState({
     diagnosis: '',
     treatment: '',
@@ -348,7 +369,7 @@ export default function VetPatientProfile() {
     {
       key: 'allergies',
       title: t('vetPatient.cards.allergies.title'),
-      value: 0,
+      value: allergiesList.length,
       detail: t('vetPatient.cards.allergies.detail'),
       icon: HiExclamation,
     },
@@ -765,9 +786,8 @@ export default function VetPatientProfile() {
                         <h4 className="font-bold text-gray-900">{med.name}</h4>
                         <p className="text-sm text-teal-800 font-medium">{med.dosage} • {med.frequency}</p>
                       </div>
-                      <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
-                        med.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${med.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
                         {med.status === 'active' ? (language === 'es' ? 'Activo' : 'Active') : (language === 'es' ? 'Completado' : 'Completed')}
                       </span>
                     </div>
@@ -782,6 +802,216 @@ export default function VetPatientProfile() {
               </div>
             ) : (
               <p className="text-sm text-gray-500 italic">{t('medications.noActive')}</p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {activeSection === 'allergies' && (
+        <section className="vet-current-appointment" ref={allergyFormRef}>
+          <h2>{t('allergies.title')}</h2>
+          <p className="text-sm text-slate-500 mt-1 mb-6">{t('allergies.subtitle')}</p>
+
+          {/* Add / Edit Form */}
+          <form
+            className="vet-followup-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              if (!appointment?.pet_id || !allergyForm.allergen || !allergyForm.category || !allergyForm.severity) {
+                setErrorMessage(t('allergies.allergenRequired'));
+                return;
+              }
+              setMessage('');
+              setErrorMessage('');
+              try {
+                if (editingAllergy) {
+                  await updateAllergyMutation.mutateAsync({
+                    petId: appointment.pet_id,
+                    allergyId: editingAllergy.id,
+                    allergyData: allergyForm,
+                  });
+                  Swal.fire({ icon: 'success', title: t('allergies.updateSuccess'), showConfirmButton: false, timer: 1500 });
+                  setEditingAllergy(null);
+                } else {
+                  await addAllergy.mutateAsync({
+                    petId: appointment.pet_id,
+                    allergyData: allergyForm,
+                  });
+                  Swal.fire({ icon: 'success', title: t('allergies.saveSuccess'), showConfirmButton: false, timer: 1500 });
+                }
+                setAllergyForm({ allergen: '', category: '', severity: '', reaction: '', notes: '' });
+              } catch (error) {
+                setErrorMessage(getApiErrorMessage(error, editingAllergy ? t('allergies.updateError') : t('allergies.saveError')));
+              }
+            }}
+          >
+            <label>
+              {t('allergies.allergen')} *
+              <input
+                required
+                value={allergyForm.allergen}
+                onChange={(e) => setAllergyForm((f) => ({ ...f, allergen: e.target.value }))}
+                placeholder={t('allergies.allergenPlaceholder')}
+              />
+            </label>
+            <label>
+              {t('allergies.category')} *
+              <select
+                required
+                value={allergyForm.category}
+                onChange={(e) => setAllergyForm((f) => ({ ...f, category: e.target.value }))}
+              >
+                <option value="">--</option>
+                {['food', 'environmental', 'medication', 'other'].map((cat) => (
+                  <option key={cat} value={cat}>{t(`allergies.category.${cat}`)}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t('allergies.severity')} *
+              <select
+                required
+                value={allergyForm.severity}
+                onChange={(e) => setAllergyForm((f) => ({ ...f, severity: e.target.value }))}
+              >
+                <option value="">--</option>
+                {['mild', 'moderate', 'severe'].map((sev) => (
+                  <option key={sev} value={sev}>{t(`allergies.severity.${sev}`)}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t('allergies.reaction')}
+              <input
+                value={allergyForm.reaction}
+                onChange={(e) => setAllergyForm((f) => ({ ...f, reaction: e.target.value }))}
+                placeholder={t('allergies.reactionPlaceholder')}
+              />
+            </label>
+            <label className="vet-followup-wide">
+              {t('allergies.notes')}
+              <textarea
+                value={allergyForm.notes}
+                onChange={(e) => setAllergyForm((f) => ({ ...f, notes: e.target.value }))}
+                placeholder={t('allergies.notesPlaceholder')}
+              />
+            </label>
+            <div className="vet-followup-actions">
+              {editingAllergy && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => {
+                    setEditingAllergy(null);
+                    setAllergyForm({ allergen: '', category: '', severity: '', reaction: '', notes: '' });
+                  }}
+                >
+                  {t('allergies.cancelEdit')}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                isLoading={addAllergy.isPending || updateAllergyMutation.isPending}
+              >
+                {editingAllergy ? t('allergies.updateButton') : t('allergies.addButton')}
+              </Button>
+            </div>
+          </form>
+
+          {/* Allergies List */}
+          <div className="mt-8 border-t border-slate-200 pt-6">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">
+              {language === 'es' ? 'Alergias Registradas' : 'Registered Allergies'}
+            </h3>
+            {allergiesList.length > 0 ? (
+              <div className="space-y-4">
+                {allergiesList.map((allergy) => (
+                  <div
+                    key={allergy.id}
+                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                    style={{ borderLeft: '4px solid #f59e0b' }}
+                  >
+                    <div className="flex justify-between items-start flex-wrap gap-3">
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-base">{allergy.allergen}</h4>
+                        <p className="text-sm text-teal-700 font-medium mt-0.5">
+                          {t(`allergies.category.${allergy.category?.toLowerCase()}`) || allergy.category}
+                          {' • '}
+                          {t(`allergies.severity.${allergy.severity?.toLowerCase()}`) || allergy.severity}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            setEditingAllergy(allergy);
+                            setAllergyForm({
+                              allergen: allergy.allergen ?? '',
+                              category: allergy.category ?? '',
+                              severity: allergy.severity ?? '',
+                              reaction: allergy.reaction ?? '',
+                              notes: allergy.notes ?? '',
+                            });
+                            allergyFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }}
+                        >
+                          {t('allergies.editButton')}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="danger"
+                          size="sm"
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: t('allergies.deleteConfirmTitle'),
+                              text: t('allergies.deleteConfirmText'),
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#dc2626',
+                              confirmButtonText: t('allergies.deleteConfirmButton'),
+                              cancelButtonText: t('allergies.cancelEdit'),
+                            });
+                            if (!result.isConfirmed) return;
+                            try {
+                              await deleteAllergyMutation.mutateAsync({
+                                petId: appointment.pet_id,
+                                allergyId: allergy.id,
+                              });
+                              Swal.fire({ icon: 'success', title: t('allergies.deleteSuccess'), showConfirmButton: false, timer: 1500 });
+                            } catch (error) {
+                              setErrorMessage(getApiErrorMessage(error, t('allergies.deleteError')));
+                            }
+                          }}
+                        >
+                          {t('allergies.deleteButton')}
+                        </Button>
+                      </div>
+                    </div>
+                    {allergy.reaction && (
+                      <p className="text-sm text-slate-700 mt-2">
+                        <strong>{t('allergies.reaction')}:</strong> {allergy.reaction}
+                      </p>
+                    )}
+                    {allergy.notes && (
+                      <p className="text-xs italic text-slate-500 mt-1">
+                        <strong>{t('allergies.notes')}:</strong> {allergy.notes}
+                      </p>
+                    )}
+                    {allergy.veterinarian_name && (
+                      <p className="text-xs text-slate-400 mt-1">
+                        {t('allergies.veterinarian')}: {allergy.veterinarian_name}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500 italic">{t('allergies.empty')}</p>
             )}
           </div>
         </section>
