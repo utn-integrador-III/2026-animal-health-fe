@@ -10,6 +10,7 @@ import EditPet from '../pages/client/pets/EditPet';
 import PetMedicalHistory from '../pages/client/pets/PetMedicalHistory';
 import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
+import AllergiesPage from '../pages/client/allergies/AllergiesPage';
 import { ROUTES } from '../constants/routes';
 
 export default function ClientRoutes() {
@@ -36,7 +37,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.ALLERGIES}
-        element={<HealthSection title="Allergies" description="Known allergies, alerts, and sensitivity notes for the selected pet." />}
+        element={<AllergiesPage />}
       />
       <Route
         path={ROUTES.CLIENT.LAB_RESULTS}
