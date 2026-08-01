@@ -1,9 +1,9 @@
-// src/services/notificationService.js
+import useAuthStore from '../stores/useAuthStore';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const getAuthToken = () => {
-  return localStorage.getItem('access_token');
+  return useAuthStore.getState().token || localStorage.getItem('token') || localStorage.getItem('access_token');
 };
 
 const getHeaders = async () => {
@@ -101,6 +101,55 @@ export const deleteNotification = async (notificationId) => {
     return await response.json();
   } catch (error) {
     console.error('Error al eliminar notificación:', error);
+    throw error;
+  }
+};
+
+/**
+ * Marks a medication notification as taken.
+ * Also adds today's date to the medication's checked_dates in the backend.
+ */
+export const takeMedication = async (notificationId) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${API_BASE_URL}/api/notifications/${notificationId}/take`, {
+      method: 'PUT',
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error al marcar medicamento como tomado:', error);
+    throw error;
+  }
+};
+
+/**
+ * Snoozes a medication notification for a given number of minutes (default 15).
+ * The backend creates a new notification with the future remind_at time.
+ */
+export const remindLater = async (notificationId, delayMinutes = 15) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(
+      `${API_BASE_URL}/api/notifications/${notificationId}/remind-later?delay_minutes=${delayMinutes}`,
+      {
+        method: 'PUT',
+        headers,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error al posponer notificación:', error);
     throw error;
   }
 };

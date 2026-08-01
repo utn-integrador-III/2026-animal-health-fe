@@ -22,6 +22,15 @@ export const API_ROUTES = {
     VETERINARIANS: '/api/appointments/veterinarians',
     AVAILABLE_SLOTS: '/api/appointments/available-slots',
   },
+  NOTIFICATIONS: {
+    BASE: '/api/notifications/',
+    UNREAD_COUNT: '/api/notifications/unread-count',
+    READ_ALL: '/api/notifications/read-all',
+    READ: (id) => `/api/notifications/${id}/read`,
+    DELETE: (id) => `/api/notifications/${id}`,
+    TAKE: (id) => `/api/notifications/${id}/take`,
+    REMIND_LATER: (id) => `/api/notifications/${id}/remind-later`,
+  },
   CONTACT: {
     BASE: '/api/contact',
   },

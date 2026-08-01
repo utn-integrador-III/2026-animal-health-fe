@@ -313,6 +313,7 @@ export default function VetPatientProfile() {
     name: '',
     dosage: '',
     frequency: '',
+    administration_time: '',
     start_date: new Date().toISOString().split('T')[0],
     end_date: '',
     notes: '',
@@ -480,6 +481,7 @@ export default function VetPatientProfile() {
         name: '',
         dosage: '',
         frequency: '',
+        administration_time: '',
         start_date: new Date().toISOString().split('T')[0],
         end_date: '',
         notes: '',
@@ -728,6 +730,15 @@ export default function VetPatientProfile() {
                 value={medicationForm.frequency}
                 onChange={(event) => setMedicationForm((current) => ({ ...current, frequency: event.target.value }))}
                 placeholder="ej. Cada 12 horas"
+              />
+            </label>
+            <label>
+              {t('medications.administrationTime') || (language === 'es' ? 'Hora de Administración' : 'Administration Time')} *
+              <input
+                required
+                type="time"
+                value={medicationForm.administration_time}
+                onChange={(event) => setMedicationForm((current) => ({ ...current, administration_time: event.target.value }))}
               />
             </label>
             <label>
