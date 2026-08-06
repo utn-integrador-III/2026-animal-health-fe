@@ -44,7 +44,17 @@ export default function CreateConsultation() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const updateClient = (field) => (event) => {
-    setClientForm((current) => ({ ...current, [field]: event.target.value }));
+    const value = event.target.value;
+    setClientForm((current) => ({
+      ...current,
+      [field]: value,
+      ...(field === 'client_email' ? { client_id: '' } : {}),
+    }));
+    if (field === 'client_email') {
+      setKnownPets([]);
+      setPetForm(EMPTY_PET);
+      setMessage('');
+    }
   };
 
   const updatePet = (field) => (event) => {

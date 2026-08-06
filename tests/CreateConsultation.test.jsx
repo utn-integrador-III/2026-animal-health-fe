@@ -125,4 +125,37 @@ describe('CreateConsultation', () => {
     }));
     expect(await screen.findByRole('heading', { name: /veterinary patient profile/i })).toBeInTheDocument();
   });
+
+  test('clears a previously selected client when the email changes', async () => {
+    const user = userEvent.setup();
+    findClient.mockResolvedValueOnce({
+      client: {
+        id: 'miguel-1',
+        full_name: 'Miguel Vargas',
+        email: 'miguel@example.com',
+        phone: '8888-8888',
+      },
+      pets: [{
+        id: 'nino-1',
+        name: 'Nino',
+        birth_date: '2023-01-10',
+        species: 'Dog',
+        sex: 'Male',
+        breed_primary: 'Poodle',
+        weight_kg: 8,
+      }],
+    });
+
+    renderConsultation();
+    const email = screen.getByLabelText(/correo del cliente/i);
+    await user.type(email, 'miguel@example.com');
+    await user.click(screen.getByRole('button', { name: /buscar cliente/i }));
+    expect(await screen.findByLabelText(/mascota registrada/i)).toBeInTheDocument();
+
+    await user.clear(email);
+    await user.type(email, 'carmen@example.com');
+
+    expect(screen.queryByLabelText(/mascota registrada/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/nombre de la mascota/i)).toHaveValue('');
+  });
 });
