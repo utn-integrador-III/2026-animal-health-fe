@@ -10,6 +10,7 @@ import useTranslation from '../../../hooks/useTranslation';
 import useAuthStore from '../../../stores/useAuthStore';
 import { useDiagnosesList, useAddDiagnosis } from '../../../hooks/useDiagnoses';
 import VetDiagnosisForm from '../../../components/veterinarian/VetDiagnosisForm';
+import DiagnosisSummaryCard from '../../../components/cards/DiagnosisSummaryCard';
 
 const EMPTY_FORM = {
   diagnosis: '',
@@ -194,132 +195,8 @@ export default function DiagnosisPage() {
 
               <div className="vaccines-card-list">
                 {diagnoses.length > 0 ? (
-                  diagnoses.map((item) => (
-                    <article
-                      key={item.id}
-                      className="vaccine-card"
-                      style={{
-                        borderLeft: '4px solid #0d9488',
-                        padding: '1.25rem',
-                        marginBottom: '1rem',
-                        backgroundColor: '#ffffff',
-                        borderRadius: '0.5rem',
-                        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-                      }}
-                    >
-                      <div className="vaccine-card-content" style={{ width: '100%' }}>
-                        {/* Header: Title + Status + Meta bar */}
-                        <div className="vaccine-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                          <div>
-                            <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: '#0f766e', margin: 0 }}>
-                              {item.diagnosis}
-                            </h3>
-                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginTop: '0.25rem', fontSize: '0.8rem', color: '#6b7280', flexWrap: 'wrap' }}>
-                              <span> <strong>{t('diagnoses.consultationDate')}:</strong> {formatDate(item.consultation_date || item.created_at, language)}</span>
-                              {item.veterinarian_name && (
-                                <span> <strong>{t('diagnoses.veterinarian')}:</strong> {item.veterinarian_name}</span>
-                              )}
-                            </div>
-                          </div>
-                          {item.status && (
-                            <span className="allergy-badge allergy-badge-moderate" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontWeight: '600' }}>
-                              {t(`diagnoses.status.${item.status}`) || item.status}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Divided Sections */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginTop: '0.75rem' }}>
-                          {/* 1. Motivo y Síntomas */}
-                          {(item.reason || item.symptoms) && (
-                            <div style={{ backgroundColor: '#f9fafb', padding: '0.75rem 1rem', borderRadius: '0.375rem', border: '1px solid #f3f4f6' }}>
-                              <h4 style={{ fontSize: '0.85rem', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.35rem' }}>
-                                {t('diagnoses.mainReason')}
-                              </h4>
-                              {item.reason && (
-                                <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: '0 0 0.25rem 0' }}>
-                                  <strong>{t('diagnoses.reason')}:</strong> {item.reason}
-                                </p>
-                              )}
-                              {item.symptoms && (
-                                <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: 0 }}>
-                                  <strong>{t('diagnoses.symptoms')}:</strong> {item.symptoms}
-                                </p>
-                              )}
-                            </div>
-                          )}
-
-                          {/* 2. Evaluación Médica */}
-                          {(item.presumptive_diagnosis || item.differential_diagnoses || item.physical_exam) && (
-                            <div style={{ backgroundColor: '#f9fafb', padding: '0.75rem 1rem', borderRadius: '0.375rem', border: '1px solid #f3f4f6' }}>
-                              <h4 style={{ fontSize: '0.85rem', fontWeight: '700', color: '#374151', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.35rem' }}>
-                                {t('diagnoses.systemEvaluation')}
-                              </h4>
-                              {item.presumptive_diagnosis && (
-                                <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: '0 0 0.25rem 0' }}>
-                                  <strong>{t('diagnoses.presumptiveLabel')}:</strong> {item.presumptive_diagnosis}
-                                </p>
-                              )}
-                              {item.differential_diagnoses && (
-                                <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: '0 0 0.25rem 0' }}>
-                                  <strong>{t('diagnoses.differentialLabel')}:</strong> {item.differential_diagnoses}
-                                </p>
-                              )}
-                              {item.physical_exam && (
-                                <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: 0 }}>
-                                  <strong>{t('diagnoses.physicalExam')}:</strong> {item.physical_exam}
-                                </p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* 3. Tratamiento e Indicaciones */}
-                        {(item.treatment || item.clinical_plan || item.owner_instructions || item.follow_up) && (
-                          <div style={{ backgroundColor: '#f0fdf4', padding: '0.85rem 1rem', borderRadius: '0.375rem', border: '1px solid #dcfce7', marginTop: '0.75rem' }}>
-                            <h4 style={{ fontSize: '0.85rem', fontWeight: '700', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.35rem' }}>
-                              {t('diagnoses.treatmentSummary')}
-                            </h4>
-                            {item.treatment && (
-                              <p style={{ fontSize: '0.9rem', color: '#15803d', fontWeight: '600', margin: '0 0 0.35rem 0' }}>
-                                <strong>{t('diagnoses.treatmentLabel')}:</strong> {item.treatment}
-                              </p>
-                            )}
-                            {item.clinical_plan && (
-                              <p style={{ fontSize: '0.85rem', color: '#166534', margin: '0 0 0.25rem 0' }}>
-                                <strong>{t('diagnoses.clinicalPlan')}:</strong> {item.clinical_plan}
-                              </p>
-                            )}
-                            {item.owner_instructions && (
-                              <p style={{ fontSize: '0.85rem', color: '#166534', margin: '0 0 0.25rem 0' }}>
-                                <strong>{t('diagnoses.ownerInstructions')}:</strong> {item.owner_instructions}
-                              </p>
-                            )}
-                            {item.follow_up && (
-                              <p style={{ fontSize: '0.85rem', color: '#166534', margin: 0 }}>
-                                <strong>{t('diagnoses.followUp')}:</strong> {item.follow_up}
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        {/* 4. Notas adicionales */}
-                        {(item.notes || item.clinical_notes) && (
-                          <div style={{ marginTop: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid #f3f4f6' }}>
-                            {item.clinical_notes && (
-                              <p style={{ fontSize: '0.82rem', color: '#4b5563', margin: '0 0 0.2rem 0' }}>
-                                {item.clinical_notes}
-                              </p>
-                            )}
-                            {item.notes && (
-                              <p style={{ fontSize: '0.82rem', color: '#6b7280', fontStyle: 'italic', margin: 0 }}>
-                                <strong>{t('diagnoses.clinicalObservations')}:</strong> {item.notes}
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </article>
+                  diagnoses.map((item, idx) => (
+                    <DiagnosisSummaryCard key={item.id || idx} item={item} />
                   ))
                 ) : (
                   <div className="vaccines-empty-state">

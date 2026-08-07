@@ -41,7 +41,11 @@ export default function ClientRoutes() {
         path={ROUTES.CLIENT.DIAGNOSTICS}
         element={<DiagnosisPage />}
       />
-     {/* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */}
+      <Route
+        path={ROUTES.CLIENT.ALLERGIES}
+        element={<AllergiesPage />}
+      />
+
       <Route
         path={ROUTES.CLIENT.LAB_RESULTS}
         element={<HealthSection title="Lab results" description="Laboratory results and follow-up information for the selected pet." />}

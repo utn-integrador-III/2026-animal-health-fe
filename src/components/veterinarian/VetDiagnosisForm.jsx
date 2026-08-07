@@ -30,23 +30,23 @@ export const INITIAL_FORM = {
   // 2. Motivo de consulta
   reason: '',
   symptom_start_date: '',
-  duration: '5 días',
+  duration: '',
   evolution: 'Empeorando',
   severity: 'Moderada',
 
-  // 3. Síntomas y signos
+  // 3. Síntomas y signos — all unchecked by default
   owner_symptoms: {
     appetite_loss: false,
     vomiting: false,
     diarrhea: false,
-    scratching_itching: true,
+    scratching_itching: false,
     lethargy: false,
     behavior_changes: false,
     others: '',
   },
   vet_signs: {
-    skin_redness: true,
-    ear_discharge: true,
+    skin_redness: false,
+    ear_discharge: false,
     dehydration: false,
     abdominal_pain: false,
     lameness: false,
@@ -54,15 +54,15 @@ export const INITIAL_FORM = {
     others: '',
   },
 
-  // 4. Examen físico - Vitales
+  // 4. Examen físico - Vitales — empty; placeholders show examples
   weight_kg: '',
-  temperature_c: '38.5',
-  heart_rate_bpm: '120',
-  respiratory_rate_rpm: '28',
+  temperature_c: '',
+  heart_rate_bpm: '',
+  respiratory_rate_rpm: '',
   body_condition: '5 - Ideal',
   hydration: 'Normal',
   mucosa_color: 'Rosadas',
-  capillary_refill_sec: '< 2 seg',
+  capillary_refill_sec: '',
 
   // Examen físico - Sistemas
   systems_eval: SYSTEM_KEYS.reduce((acc, sys) => {
@@ -70,20 +70,20 @@ export const INITIAL_FORM = {
     return acc;
   }, {}),
 
-  // 5. Evaluación clínica
-  presumptive_diagnosis: 'Dermatitis alérgica',
-  differential_diagnoses: 'Alergia alimentaria, Dermatitis por pulgas, Infección fúngica',
+  // 5. Evaluación clínica — empty; placeholders show examples
+  presumptive_diagnosis: '',
+  differential_diagnoses: '',
   diagnosis: '',
   status: 'Presuntivo',
   findings: '',
 
-  // 6. Plan clínico
+  // 6. Plan clínico — all unchecked by default
   recommended_actions: {
-    prescribe_medication: true,
-    lab_tests: true,
+    prescribe_medication: false,
+    lab_tests: false,
     register_allergy: false,
     vaccine: false,
-    follow_up: true,
+    follow_up: false,
     refer_specialist: false,
   },
   treatment: '',
@@ -94,7 +94,7 @@ export const INITIAL_FORM = {
   warning_signs: '',
 
   // 8. Seguimiento
-  requires_follow_up: true,
+  requires_follow_up: false,
   follow_up_date: '',
   follow_up_reason: '',
 
@@ -196,6 +196,13 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
       follow_up: form.requires_follow_up
         ? `Fecha: ${form.follow_up_date}. Motivo: ${form.follow_up_reason}`
         : 'No requiere',
+      weight_kg: form.weight_kg ? String(form.weight_kg) : '',
+      temperature_c: form.temperature_c ? String(form.temperature_c) : '',
+      heart_rate_bpm: form.heart_rate_bpm ? String(form.heart_rate_bpm) : '',
+      respiratory_rate_rpm: form.respiratory_rate_rpm ? String(form.respiratory_rate_rpm) : '',
+      systems_eval: form.systems_eval,
+      follow_up_date: form.requires_follow_up ? form.follow_up_date : '',
+      follow_up_reason: form.requires_follow_up ? form.follow_up_reason : '',
     };
 
     if (onSubmit) {
@@ -313,6 +320,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 rows="3"
                 value={form.reason}
                 onChange={(e) => handleChange('reason', e.target.value)}
+                placeholder={t('diagnoses.placeholder.reason')}
                 style={{ width: '100%', marginTop: '0.25rem', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.375rem' }}
               />
             </label>
@@ -332,6 +340,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                   type="text"
                   value={form.duration}
                   onChange={(e) => handleChange('duration', e.target.value)}
+                  placeholder={t('diagnoses.placeholder.duration')}
                   style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
                 />
               </label>
@@ -445,6 +454,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 type="text"
                 value={form.temperature_c}
                 onChange={(e) => handleChange('temperature_c', e.target.value)}
+                placeholder={t('diagnoses.placeholder.temperature_c')}
                 style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
               />
             </label>
@@ -454,6 +464,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 type="text"
                 value={form.heart_rate_bpm}
                 onChange={(e) => handleChange('heart_rate_bpm', e.target.value)}
+                placeholder={t('diagnoses.placeholder.heart_rate_bpm')}
                 style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
               />
             </label>
@@ -463,6 +474,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 type="text"
                 value={form.respiratory_rate_rpm}
                 onChange={(e) => handleChange('respiratory_rate_rpm', e.target.value)}
+                placeholder={t('diagnoses.placeholder.respiratory_rate_rpm')}
                 style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
               />
             </label>
@@ -560,6 +572,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                   type="text"
                   value={form.presumptive_diagnosis}
                   onChange={(e) => handleChange('presumptive_diagnosis', e.target.value)}
+                  placeholder={t('diagnoses.placeholder.presumptive_diagnosis')}
                   style={{ width: '100%', marginTop: '0.25rem', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.375rem' }}
                 />
               </label>
@@ -570,6 +583,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                   type="text"
                   value={form.differential_diagnoses}
                   onChange={(e) => handleChange('differential_diagnoses', e.target.value)}
+                  placeholder={t('diagnoses.placeholder.differential_diagnoses')}
                   style={{ width: '100%', marginTop: '0.25rem', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.375rem' }}
                 />
               </label>
@@ -624,6 +638,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 rows="3"
                 value={form.treatment}
                 onChange={(e) => handleChange('treatment', e.target.value)}
+                placeholder={t('diagnoses.placeholder.treatment')}
                 style={{ width: '100%', marginTop: '0.25rem', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.375rem' }}
               />
             </label>
@@ -712,6 +727,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 rows="2"
                 value={form.owner_instructions}
                 onChange={(e) => handleChange('owner_instructions', e.target.value)}
+                placeholder={t('diagnoses.placeholder.owner_instructions')}
                 style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
               />
             </label>
@@ -721,6 +737,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 rows="2"
                 value={form.warning_signs}
                 onChange={(e) => handleChange('warning_signs', e.target.value)}
+                placeholder={t('diagnoses.placeholder.warning_signs')}
                 style={{ width: '100%', marginTop: '0.2rem', padding: '0.4rem', border: '1px solid #d1d5db', borderRadius: '0.25rem' }}
               />
             </label>
@@ -785,6 +802,7 @@ export default function VetDiagnosisForm({ pet, veterinarian, onSubmit, isPendin
                 rows="5"
                 value={form.notes}
                 onChange={(e) => handleChange('notes', e.target.value)}
+                placeholder={t('diagnoses.placeholder.notes')}
                 style={{ width: '100%', marginTop: '0.25rem', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.375rem' }}
               />
             </label>
