@@ -39,4 +39,7 @@ export const API_ROUTES = {
     WALK_IN: '/api/consultations/walk-in',
     DIAGNOSES: (consultationId) => `/api/consultations/${consultationId}/diagnoses`,
   },
+  ADMIN: {
+    VETERINARIANS: '/api/admin/veterinarians',
+  },
 };

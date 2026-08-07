@@ -24,10 +24,13 @@ export default function Navbar() {
   const isAuthenticated = authStatus === 'authenticated';
   const isClientArea = location.pathname.startsWith('/client');
   const isVetArea = location.pathname.startsWith('/vet');
-  const isAppArea = isClientArea || isVetArea;
+  const isAdminArea = location.pathname.startsWith('/admin');
+  const isAppArea = isClientArea || isVetArea || isAdminArea;
   const homeRoute = role === 'veterinarian'
     ? ROUTES.VET.DASHBOARD
-    : ROUTES.CLIENT.PETS;
+    : role === 'admin'
+      ? ROUTES.ADMIN.DASHBOARD
+      : ROUTES.CLIENT.PETS;
 
   const displayName = user?.full_name ?? user?.name ?? user?.email ?? 'Client';
   const displayEmail = user?.email ?? 'Animal Health';
@@ -165,7 +168,7 @@ export default function Navbar() {
           </div>
         )}
 
-        {isAuthenticated && role !== 'client' && isVetArea && (
+        {isAuthenticated && role !== 'client' && (isVetArea || isAdminArea) && (
           <button
             type="button"
             onClick={handleLogout}

@@ -39,4 +39,9 @@ export const ROUTES = {
     VACCINES: '/vet/patients/:appointmentId/vaccines',
     REPORTS: '/vet/reports',
   },
+  ADMIN: {
+    DASHBOARD: '/admin/dashboard',
+    VETERINARIANS: '/admin/veterinarians',
+    VET_CREATE: '/admin/veterinarians/new',
+  },
 };
