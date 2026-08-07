@@ -11,6 +11,7 @@ export const API_ROUTES = {
     CLINICAL_RECORDS: (petId) => `/api/pets/${petId}/clinical-records`,
     MEDICATIONS: (petId) => `/api/pets/${petId}/medications`,
     MEDICATIONS_TOGGLE: (petId, medicationId) => `/api/pets/${petId}/medications/${medicationId}/toggle-check`,
+    LAB_RESULTS: (petId) => `/api/pets/${petId}/lab-results`,
     ALLERGIES: {
       BY_PET: (petId) => `/api/pets/${petId}/allergies`,
       SPECIFIC: (petId, id) => `/api/pets/${petId}/allergies/${id}`,
@@ -19,6 +20,7 @@ export const API_ROUTES = {
       BY_PET: (petId) => `/api/pets/${petId}/diagnoses`,
       SPECIFIC: (petId, id) => `/api/pets/${petId}/diagnoses/${id}`,
     },
+    VACCINES: (petId) => `/api/pets/${petId}/vaccines`,
   },
   APPOINTMENTS: {
     BASE: '/api/appointments',

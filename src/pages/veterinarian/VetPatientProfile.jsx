@@ -379,6 +379,13 @@ export default function VetPatientProfile() {
       icon: HiCalendar,
     },
     {
+      key: 'medical-history',
+      title: language === 'es' ? 'Historial Clínico' : 'Medical History',
+      value: language === 'es' ? 'Ver' : 'View',
+      detail: language === 'es' ? 'Ver línea de tiempo unificada' : 'View unified timeline',
+      icon: HiClipboardList,
+    },
+    {
       key: 'diagnostics',
       title: t('vetPatient.cards.diagnostics.title'),
       value: allRecords.length,
@@ -560,6 +567,13 @@ export default function VetPatientProfile() {
         </dl>
 
         <div className="vet-patient-actions">
+          <Link
+            to={ROUTES.VET.MEDICAL_HISTORY.replace(':appointmentId', appointmentId)}
+            className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 border border-teal-600 bg-white text-teal-700 hover:bg-teal-50 px-4 py-2 text-sm"
+          >
+            <HiClipboardList aria-hidden="true" />
+            {language === 'es' ? 'Historial Médico' : 'Medical History'}
+          </Link>
           <Button onClick={() => setIsFollowUpOpen(true)}>
             <HiPlus aria-hidden="true" />
             {t('vetPatient.newConsultation')}
@@ -578,12 +592,15 @@ export default function VetPatientProfile() {
       <section className="vet-clinical-card-grid">
         {cards.map((card) => {
           const Icon = card.icon;
-          if (card.key === 'vaccines') {
+          if (card.key === 'vaccines' || card.key === 'medical-history') {
+            const targetRoute = card.key === 'vaccines'
+              ? ROUTES.VET.VACCINES.replace(':appointmentId', appointmentId)
+              : ROUTES.VET.MEDICAL_HISTORY.replace(':appointmentId', appointmentId);
             return (
               <Link
                 key={card.key}
-                className="vet-clinical-card text-left flex flex-col items-start"
-                to={ROUTES.VET.VACCINES.replace(':appointmentId', appointmentId)}
+                className="vet-clinical-card text-left flex flex-col items-start animate-fade-in"
+                to={targetRoute}
               >
                 <span><Icon aria-hidden="true" /></span>
                 <strong>{card.value}</strong>
