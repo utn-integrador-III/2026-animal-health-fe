@@ -12,6 +12,7 @@ import PetMedicalHistory from '../pages/client/pets/PetMedicalHistory';
 import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
 import MedicationReminder from '../pages/client/medications/MedicationReminder';
+import DiagnosisPage from '../pages/client/diagnoses/DiagnosisPage';
 import { ROUTES } from '../constants/routes';
 /* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */
 export default function ClientRoutes() {
@@ -38,7 +39,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.DIAGNOSTICS}
-        element={<PetMedicalHistory />}
+        element={<DiagnosisPage />}
       />
      {/* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */}
       <Route
