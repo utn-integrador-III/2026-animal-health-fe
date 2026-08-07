@@ -1,14 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '../../../components/common/Button';
 import { PET_SPECIES, PET_SEX } from '../../../constants/petConstants';
 import useTranslation from '../../../hooks/useTranslation';
 import {
-  useCreateDiagnosis,
   useCreateWalkInConsultation,
   useFindClientByEmail,
 } from '../../../hooks/useConsultations';
 import { getApiErrorMessage } from '../../../services/apiError';
+import { ROUTES } from '../../../constants/routes';
 
 const EMPTY_CLIENT = {
   client_id: '',
@@ -24,34 +25,50 @@ const EMPTY_PET = {
   pet_species: '',
   pet_sex: '',
   pet_breed: '',
+  pet_breed_secondary: '',
+  pet_mixed_breed: false,
   pet_weight_kg: '',
 };
 
 export default function CreateConsultation() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const findClient = useFindClientByEmail();
   const createConsultation = useCreateWalkInConsultation();
-  const createDiagnosis = useCreateDiagnosis();
 
   const [clientForm, setClientForm] = useState(EMPTY_CLIENT);
   const [petForm, setPetForm] = useState(EMPTY_PET);
   const [knownPets, setKnownPets] = useState([]);
   const [reason, setReason] = useState('');
-  const [createdConsultation, setCreatedConsultation] = useState(null);
-  const [diagnosisForm, setDiagnosisForm] = useState({
-    diagnosis: '',
-    clinical_notes: '',
-  });
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const updateClient = (field) => (event) => {
-    setClientForm((current) => ({ ...current, [field]: event.target.value }));
+    const value = event.target.value;
+    setClientForm((current) => ({
+      ...current,
+      [field]: value,
+      ...(field === 'client_email' ? { client_id: '' } : {}),
+    }));
+    if (field === 'client_email') {
+      setKnownPets([]);
+      setPetForm(EMPTY_PET);
+      setMessage('');
+    }
   };
 
   const updatePet = (field) => (event) => {
     const value = event.target.value;
     setPetForm((current) => {
+      if (field === 'pet_mixed_breed') {
+        const checked = event.target.checked;
+        return {
+          ...current,
+          pet_mixed_breed: checked,
+          pet_breed_secondary: checked ? current.pet_breed_secondary : '',
+        };
+      }
+
       if (field !== 'pet_id') return { ...current, [field]: value };
 
       const selected = knownPets.find((pet) => pet.id === value);
@@ -64,13 +81,11 @@ export default function CreateConsultation() {
         pet_species: selected.species,
         pet_sex: selected.sex,
         pet_breed: selected.breed_primary,
+        pet_breed_secondary: selected.breed_secondary ?? '',
+        pet_mixed_breed: Boolean(selected.mixed_breed || selected.breed_secondary),
         pet_weight_kg: String(selected.weight_kg),
       };
     });
-  };
-
-  const updateDiagnosis = (field) => (event) => {
-    setDiagnosisForm((current) => ({ ...current, [field]: event.target.value }));
   };
 
   const handleSearchClient = async () => {
@@ -108,37 +123,28 @@ export default function CreateConsultation() {
       const payload = {
         ...clientForm,
         ...petForm,
+        pet_breed_primary: petForm.pet_breed,
+        pet_breed_secondary: petForm.pet_mixed_breed
+          ? petForm.pet_breed_secondary.trim()
+          : null,
+        pet_mixed_breed: petForm.pet_mixed_breed,
         pet_weight_kg: petForm.pet_weight_kg ? Number(petForm.pet_weight_kg) : null,
         reason,
+        create_client_account: !clientForm.client_id,
+        send_temporary_password: !clientForm.client_id,
       };
       const result = await createConsultation.mutateAsync(payload);
-      setCreatedConsultation(result);
-      setMessage(t('walkIn.consultationCreated'));
+      const appointmentId = result.appointment_id ?? result.appointment?.id ?? result.id;
+
+      if (!appointmentId) {
+        throw new Error(t('walkIn.missingAppointmentId'));
+      }
+
+      navigate(ROUTES.VET.PATIENT.replace(':appointmentId', appointmentId), {
+        replace: true,
+      });
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('walkIn.consultationError')));
-    }
-  };
-
-  const handleSaveDiagnosis = async (event) => {
-    event.preventDefault();
-    if (!createdConsultation) return;
-
-    setMessage('');
-    setErrorMessage('');
-    try {
-      await createDiagnosis.mutateAsync({
-        consultationId: createdConsultation.id,
-        diagnosisData: {
-          consultation_id: createdConsultation.id,
-          pet_id: createdConsultation.pet_id,
-          diagnosis: diagnosisForm.diagnosis,
-          clinical_notes: diagnosisForm.clinical_notes,
-        },
-      });
-      setDiagnosisForm({ diagnosis: '', clinical_notes: '' });
-      setMessage(t('walkIn.diagnosisSaved'));
-    } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, t('walkIn.diagnosisError')));
     }
   };
 
@@ -241,6 +247,25 @@ export default function CreateConsultation() {
             {t('petForm.primaryBreed')} *
             <input required value={petForm.pet_breed} onChange={updatePet('pet_breed')} />
           </label>
+          <label className="walk-in-checkbox">
+            <input
+              type="checkbox"
+              checked={petForm.pet_mixed_breed}
+              onChange={updatePet('pet_mixed_breed')}
+            />
+            <span>{t('petForm.mixedBreed')}</span>
+          </label>
+          {petForm.pet_mixed_breed && (
+            <label>
+              {t('petForm.secondaryBreed')} *
+              <input
+                required
+                value={petForm.pet_breed_secondary}
+                onChange={updatePet('pet_breed_secondary')}
+                placeholder={t('petForm.secondaryBreedPlaceholder')}
+              />
+            </label>
+          )}
           <label>
             {t('petForm.weight')} *
             <input required type="number" step="0.001" min="0.001" value={petForm.pet_weight_kg} onChange={updatePet('pet_weight_kg')} />
@@ -264,41 +289,6 @@ export default function CreateConsultation() {
         </form>
       </section>
 
-      {createdConsultation && (
-        <section className="walk-in-panel">
-          <h2>{t('walkIn.diagnosisSection')}</h2>
-          <div className="walk-in-summary">
-            <strong>{createdConsultation.pet_name}</strong>
-            <span>{createdConsultation.owner_name}</span>
-            <span>{createdConsultation.reason}</span>
-          </div>
-
-          <form className="walk-in-form" onSubmit={handleSaveDiagnosis}>
-            <label>
-              {t('diagnostics.table.diagnosis')} *
-              <input
-                required
-                value={diagnosisForm.diagnosis}
-                onChange={updateDiagnosis('diagnosis')}
-              />
-            </label>
-            <label className="walk-in-wide">
-              {t('walkIn.clinicalNotes')} *
-              <textarea
-                required
-                minLength={2}
-                value={diagnosisForm.clinical_notes}
-                onChange={updateDiagnosis('clinical_notes')}
-              />
-            </label>
-            <div className="walk-in-actions">
-              <Button type="submit" isLoading={createDiagnosis.isPending}>
-                {t('walkIn.saveDiagnosis')}
-              </Button>
-            </div>
-          </form>
-        </section>
-      )}
     </main>
   );
 }

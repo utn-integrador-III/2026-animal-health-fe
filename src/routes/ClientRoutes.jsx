@@ -4,6 +4,7 @@ import Dashboard from '../pages/client/Dashboard';
 import HealthSection from '../pages/client/HealthSection';
 import Profile from '../pages/client/Profile';
 import AppointmentCalendar from '../pages/client/appointments/AppointmentCalendar';
+import AllergiesPage from '../pages/client/allergies/AllergiesPage';
 import PetList from '../pages/client/pets/PetList';
 import PetDetails from '../pages/client/pets/PetDetails';
 import EditPet from '../pages/client/pets/EditPet';

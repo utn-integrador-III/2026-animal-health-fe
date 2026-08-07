@@ -8,13 +8,18 @@ import {
   updatePet,
   uploadPetPhoto,
 } from '../services/petService';
+import useAuthStore from '../stores/useAuthStore';
 
 const PETS_KEY = ['pets'];
 
 export function usePetsList() {
+  const ownerId = useAuthStore((state) => state.user?.id);
+
   return useQuery({
-    queryKey: PETS_KEY,
+    queryKey: [...PETS_KEY, ownerId],
     queryFn: getPets,
+    enabled: Boolean(ownerId),
+    refetchOnMount: 'always',
   });
 }
 
