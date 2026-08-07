@@ -37,6 +37,8 @@ import {
   useUpdateAllergy,
   useDeleteAllergy,
 } from '../../hooks/useAllergies';
+import { useAddDiagnosis, useDiagnosesList } from '../../hooks/useDiagnoses';
+import VetDiagnosisForm, { INITIAL_FORM } from '../../components/veterinarian/VetDiagnosisForm';
 import Swal from 'sweetalert2';
 
 const DURATIONS = [
@@ -59,11 +61,17 @@ function normalizeTime(value) {
 
 function formatDate(value, language) {
   if (!value) return '--';
-  return new Intl.DateTimeFormat(language, {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(`${value}T00:00:00`));
+  try {
+    const dateObj = value.includes('T') ? new Date(value) : new Date(`${value}T00:00:00`);
+    if (isNaN(dateObj.getTime())) return value;
+    return new Intl.DateTimeFormat(language, {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(dateObj);
+  } catch {
+    return value;
+  }
 }
 
 function calculateAge(birthDate, t) {
@@ -263,12 +271,14 @@ export default function VetPatientProfile() {
   const { data: appointments = [], isLoading, isError } = useAppointments({ enabled: true });
   const createFollowUp = useCreateFollowUpAppointment();
   const completeAppointment = useCompleteAppointment();
+  const addDiagnosis = useAddDiagnosis();
   const [activeSection, setActiveSection] = useState('summary');
   const [isFollowUpOpen, setIsFollowUpOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [clinicalObservation, setClinicalObservation] = useState('');
   const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
+  const [diagnosisForm, setDiagnosisForm] = useState(null);
   const [vaccineForm, setVaccineForm] = useState({
     name: '',
     type: '',
@@ -283,6 +293,22 @@ export default function VetPatientProfile() {
 
   const addClinicalRecord = useAddClinicalRecord();
   const { data: clinicalRecords = [] } = useClinicalRecordsList(appointment?.pet_id);
+  const { data: diagnosesList = [] } = useDiagnosesList(appointment?.pet_id);
+
+  const allRecords = useMemo(() => {
+    const combined = [...diagnosesList, ...clinicalRecords];
+    const uniqueMap = new Map();
+    combined.forEach((item) => {
+      if (item && item.id) {
+        uniqueMap.set(item.id, item);
+      }
+    });
+    return Array.from(uniqueMap.values()).sort((a, b) => {
+      const dateA = new Date(a.consultation_date || a.date || 0);
+      const dateB = new Date(b.consultation_date || b.date || 0);
+      return dateB - dateA;
+    });
+  }, [diagnosesList, clinicalRecords]);
   const addMedication = useAddMedication();
   const { data: medicationsList = [] } = useMedicationsList(appointment?.pet_id);
 
@@ -355,7 +381,7 @@ export default function VetPatientProfile() {
     {
       key: 'diagnostics',
       title: t('vetPatient.cards.diagnostics.title'),
-      value: clinicalRecords.length,
+      value: allRecords.length,
       detail: t('vetPatient.cards.diagnostics.detail'),
       icon: HiClipboardList,
     },
@@ -418,6 +444,7 @@ export default function VetPatientProfile() {
         clinicalObservation,
       });
       setIsCompleteConfirmOpen(false);
+      setDiagnosisForm(null); // Reset draft diagnosis form on complete consultation
       setMessage(t('vetPatient.completeSuccess'));
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('vetPatient.completeError')));
@@ -618,77 +645,62 @@ export default function VetPatientProfile() {
 
       {activeSection === 'diagnostics' && (
         <section className="vet-current-appointment">
-          <h2>{t('diagnostics.title')}</h2>
-          <p className="page-subtitle">{t('vetPatient.cards.diagnostics.detail')}</p>
-
-          <form className="vet-followup-form" onSubmit={handleClinicalSubmit}>
-            <label>
-              {t('diagnostics.table.diagnosis')} *
-              <input
-                required
-                value={clinicalForm.diagnosis}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, diagnosis: event.target.value }))}
-                placeholder="ej. Gastroenteritis"
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.treatment')} *
-              <input
-                required
-                value={clinicalForm.treatment}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, treatment: event.target.value }))}
-                placeholder="ej. Antibióticos por 7 días"
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.weight')} (kg)
-              <input
-                type="number"
-                step="0.01"
-                value={clinicalForm.weight_kg}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, weight_kg: event.target.value }))}
-                placeholder={appointment.pet_weight_kg ? `${appointment.pet_weight_kg}` : "8.5"}
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.date')} *
-              <input
-                required
-                type="date"
-                value={clinicalForm.date}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, date: event.target.value }))}
-              />
-            </label>
-            <label className="vet-followup-wide">
-              {t('diagnostics.table.notes')}
-              <textarea
-                value={clinicalForm.notes}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, notes: event.target.value }))}
-                placeholder="Notas adicionales u observaciones..."
-              />
-            </label>
-            <div className="vet-followup-actions">
-              <Button type="submit" isLoading={addClinicalRecord.isPending}>
-                {t('diagnostics.addRecord')}
-              </Button>
-            </div>
-          </form>
+          <VetDiagnosisForm
+            pet={{
+              id: appointment?.pet_id,
+              name: appointment?.pet_name,
+              species: appointment?.pet_species,
+              sex: appointment?.pet_sex,
+              weight: appointment?.pet_weight_kg,
+            }}
+            veterinarian={user}
+            isPending={addDiagnosis.isPending}
+            onNavigateToSection={setActiveSection}
+            diagnosisForm={diagnosisForm}
+            setDiagnosisForm={setDiagnosisForm}
+            onSubmit={async (payload) => {
+              try {
+                await addDiagnosis.mutateAsync({
+                  petId: appointment?.pet_id,
+                  diagnosisData: payload,
+                });
+                Swal.fire({
+                  icon: 'success',
+                  title: t('diagnoses.saveSuccess'),
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } catch {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: t('diagnoses.saveError'),
+                });
+              }
+            }}
+          />
 
           {/* History List */}
           <div className="mt-8 border-t border-gray-150 pt-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Historial Médico' : 'Medical History'}</h3>
-            {clinicalRecords.length > 0 ? (
+            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Historial Médico / Diagnósticos' : 'Medical History / Diagnoses'}</h3>
+            {allRecords.length > 0 ? (
               <div className="space-y-4">
-                {clinicalRecords.map((rec) => (
+                {allRecords.map((rec) => (
                   <div key={rec.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-semibold text-gray-900">{formatDate(rec.date, language)}</span>
-                      <span className="text-xs text-gray-500">{rec.veterinarian_name}</span>
+                      <span className="text-sm font-semibold text-gray-900">{formatDate(rec.consultation_date || rec.date, language)}</span>
+                      <span className="text-xs text-gray-500">{rec.veterinarian_name || rec.registered_by || 'Veterinario'}</span>
                     </div>
                     <h4 className="font-bold text-teal-800">{rec.diagnosis}</h4>
-                    <p className="text-sm text-gray-700 mt-1"><strong>Tratamiento:</strong> {rec.treatment}</p>
-                    {rec.weight_kg && <p className="text-xs text-gray-500 mt-1"><strong>Peso:</strong> {rec.weight_kg} kg</p>}
-                    {rec.notes && <p className="text-xs italic text-gray-500 mt-1"><strong>Notas:</strong> {rec.notes}</p>}
+                    {rec.reason && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Motivo:' : 'Reason:'}</strong> {rec.reason}</p>}
+                    {rec.symptoms && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Síntomas:' : 'Symptoms:'}</strong> {rec.symptoms}</p>}
+                    {rec.presumptive_diagnosis && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Diag. Presuntivo:' : 'Presumptive:'}</strong> {rec.presumptive_diagnosis}</p>}
+                    {rec.treatment && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Tratamiento:' : 'Treatment:'}</strong> {rec.treatment}</p>}
+                    {rec.clinical_plan && <p className="text-sm text-teal-700 mt-1"><strong>{language === 'es' ? 'Plan Clínico:' : 'Clinical Plan:'}</strong> {rec.clinical_plan}</p>}
+                    {rec.owner_instructions && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Indicaciones:' : 'Instructions:'}</strong> {rec.owner_instructions}</p>}
+                    {rec.follow_up && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Seguimiento:' : 'Follow-up:'}</strong> {rec.follow_up}</p>}
+                    {rec.weight_kg && <p className="text-xs text-gray-500 mt-1"><strong>{language === 'es' ? 'Peso:' : 'Weight:'}</strong> {rec.weight_kg} kg</p>}
+                    {(rec.notes || rec.clinical_notes) && <p className="text-xs italic text-gray-500 mt-1"><strong>{language === 'es' ? 'Notas:' : 'Notes:'}</strong> {rec.notes || rec.clinical_notes}</p>}
                   </div>
                 ))}
               </div>

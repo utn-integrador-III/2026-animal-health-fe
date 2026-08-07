@@ -15,6 +15,10 @@ export const API_ROUTES = {
       BY_PET: (petId) => `/api/pets/${petId}/allergies`,
       SPECIFIC: (petId, id) => `/api/pets/${petId}/allergies/${id}`,
     },
+    DIAGNOSES: {
+      BY_PET: (petId) => `/api/pets/${petId}/diagnoses`,
+      SPECIFIC: (petId, id) => `/api/pets/${petId}/diagnoses/${id}`,
+    },
   },
   APPOINTMENTS: {
     BASE: '/api/appointments',

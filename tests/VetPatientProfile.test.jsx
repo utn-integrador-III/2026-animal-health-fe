@@ -107,6 +107,11 @@ vi.mock('../src/hooks/useAllergies', () => ({
   })),
 }));
 
+vi.mock('../src/hooks/useDiagnoses', () => ({
+  useDiagnosesList: vi.fn(() => ({ data: [], isLoading: false, isError: false })),
+  useAddDiagnosis: vi.fn(() => ({ mutateAsync: vi.fn(), isPending: false })),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     mutateAsync.mockReset();
