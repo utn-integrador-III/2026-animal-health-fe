@@ -37,6 +37,7 @@ export const ROUTES = {
     CONSULTATION: '/vet/consultation',
     PATIENT: '/vet/patients/:appointmentId',
     VACCINES: '/vet/patients/:appointmentId/vaccines',
+    MEDICAL_HISTORY: '/vet/patients/:appointmentId/medical-history',
     REPORTS: '/vet/reports',
   },
   ADMIN: {
