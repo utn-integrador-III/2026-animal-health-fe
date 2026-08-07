@@ -13,6 +13,7 @@ import ProtectedRoute from './ProtectedRoute';
 import RoleGuard from './RoleGuard';
 import ClientRoutes from './ClientRoutes';
 import VetRoutes from './VetRoutes';
+import AdminRoutes from './AdminRoutes';
 
 export default function AppRouter() {
   return (
@@ -31,6 +32,10 @@ export default function AppRouter() {
 
         <Route element={<RoleGuard allowedRoles={[USER_ROLES.VETERINARIAN]} />}>
           {VetRoutes()}
+        </Route>
+
+        <Route element={<RoleGuard allowedRoles={[USER_ROLES.ADMIN]} />}>
+          {AdminRoutes()}
         </Route>
 
         <Route path={ROUTES.SHARED.NOTIFICATIONS} element={<NotificationsPage />} />

@@ -13,7 +13,7 @@ import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
 import MedicationReminder from '../pages/client/medications/MedicationReminder';
 import { ROUTES } from '../constants/routes';
-
+/* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */
 export default function ClientRoutes() {
   return (
     <Route element={<ClientLayout />}>
@@ -40,10 +40,7 @@ export default function ClientRoutes() {
         path={ROUTES.CLIENT.DIAGNOSTICS}
         element={<PetMedicalHistory />}
       />
-      <Route
-        path={ROUTES.CLIENT.ALLERGIES}
-        element={<AllergiesPage />}
-      />
+     {/* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */}
       <Route
         path={ROUTES.CLIENT.LAB_RESULTS}
         element={<HealthSection title="Lab results" description="Laboratory results and follow-up information for the selected pet." />}
