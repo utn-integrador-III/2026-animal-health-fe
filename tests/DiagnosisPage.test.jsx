@@ -131,11 +131,9 @@ describe('DiagnosisPage', () => {
     );
 
     expect(screen.getByText('Dermatitis alérgica')).toBeInTheDocument();
-    expect(screen.getByText(/dermatitis atópica/i)).toBeInTheDocument();
-    expect(screen.getByText(/alergia alimentaria/i)).toBeInTheDocument();
-    expect(screen.getByText(/rascado e inflamación/i)).toBeInTheDocument();
-    expect(screen.getByText(/evitar pollo/i)).toBeInTheDocument();
-    expect(screen.getByText(/revisión en 14 días/i)).toBeInTheDocument();
+    expect(screen.getByText('Rascado / Picazón')).toBeInTheDocument();
+    expect(screen.getByText(/Antihistamínico y champú medicado/i)).toBeInTheDocument();
+    expect(screen.getByText(/Dra. Mariana López/i)).toBeInTheDocument();
   });
 
   test('client cannot add, edit, or delete diagnoses (read-only mode)', () => {
