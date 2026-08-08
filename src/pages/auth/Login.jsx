@@ -5,15 +5,19 @@ import animalHealthLogo from '../../assets/logos/LogoAnimalHealth.png';
 import loginBackground from '../../assets/images/tylijura-veterinarian-8859098.jpg';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import Footer from '../../components/layout/Footer';
+import Navbar from '../../components/layout/Navbar';
 import { ROUTES } from '../../constants/routes';
 import { loginUser } from '../../services/authService';
 import { getApiErrorMessage } from '../../services/apiError';
 import useAuthStore from '../../stores/useAuthStore';
 import { getHomeRouteByRole } from '../../utils/roleRedirect';
+import useTranslation from '../../hooks/useTranslation';
 
 export default function Login() {
   const navigate = useNavigate();
   const setSession = useAuthStore((state) => state.setSession);
+  const { t } = useTranslation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,52 +40,43 @@ export default function Login() {
       });
       navigate(getHomeRouteByRole(authData.user?.role), { replace: true });
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Invalid email or password.'));
+      setError(getApiErrorMessage(err, t('login.invalidCredentials')));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen bg-slate-100">
+    <div className="app-shell">
+      <Navbar />
+      <main className="flex min-h-[calc(100vh-6rem)] bg-slate-100">
       <section className="relative hidden flex-1 overflow-hidden lg:block">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${loginBackground})` }}
         />
         <div className="absolute inset-0 bg-teal-950/45" />
-        <div className="relative z-10 flex h-full max-w-xl flex-col justify-between p-12 text-white">
-          <div className="flex items-center gap-3">
-            <img
-              src={animalHealthLogo}
-              alt="Animal Health"
-              className="h-14 w-14 rounded-full bg-white/90 object-contain"
-            />
-            <div>
-              <p className="text-2xl font-bold">Animal Health</p>
-              <p className="text-sm text-teal-100">Client portal</p>
-            </div>
-          </div>
-          <div>
-            <h1 className="max-w-md text-4xl font-bold">Welcome back</h1>
-            <p className="mt-4 max-w-md text-sm leading-6 text-teal-50">
-              Manage pet profiles, appointments, and health information from one place.
+        <div className="relative z-10 flex h-full max-w-2xl items-center p-12 text-white">
+          <div className="max-w-xl">
+            <h1 className="text-5xl font-bold leading-tight">{t('login.welcomeBack')}</h1>
+            <p className="mt-6 text-lg font-semibold leading-8 text-teal-50">
+              {t('login.sideDescription')}
             </p>
           </div>
         </div>
       </section>
 
       <section className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+        <div className="w-full max-w-xl rounded-2xl bg-white p-10 shadow-xl">
           <div className="mb-8 text-center">
             <img
               src={animalHealthLogo}
               alt="Animal Health"
-              className="mx-auto h-16 w-16 rounded-full object-contain"
+              className="mx-auto h-20 w-20 rounded-full object-contain"
             />
-            <h1 className="mt-4 text-3xl font-bold text-slate-900">Sign in</h1>
-            <p className="mt-1 text-sm text-slate-500">
-              Access your Animal Health account.
+            <h1 className="mt-4 text-4xl font-bold text-slate-900">{t('login.title')}</h1>
+            <p className="mt-2 text-base text-slate-500">
+              {t('login.subtitle')}
             </p>
           </div>
 
@@ -91,10 +86,10 @@ export default function Login() {
             </p>
           )}
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <Input
               id="login-email"
-              label="Email"
+              label={t('login.email')}
               type="email"
               autoComplete="email"
               value={form.email}
@@ -103,7 +98,7 @@ export default function Login() {
             />
             <Input
               id="login-password"
-              label="Password"
+              label={t('login.password')}
               type="password"
               autoComplete="current-password"
               value={form.password}
@@ -112,18 +107,20 @@ export default function Login() {
             />
 
             <Button type="submit" className="w-full" isLoading={isLoading}>
-              Sign in
+              {t('login.submit')}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-500">
-            No account yet?{' '}
+            {t('login.noAccount')}{' '}
             <Link className="font-semibold text-teal-700" to={ROUTES.AUTH.REGISTER}>
-              Create one
+              {t('login.createOne')}
             </Link>
           </p>
         </div>
       </section>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }

@@ -1,0 +1,161 @@
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+import CreateConsultation from '../src/pages/veterinarian/consultations/CreateConsultation';
+import useLanguageStore from '../src/stores/useLanguageStore';
+
+const findClient = vi.fn();
+const createConsultation = vi.fn();
+const createDiagnosis = vi.fn();
+
+function renderConsultation() {
+  return render(
+    <MemoryRouter initialEntries={['/vet/consultation']}>
+      <Routes>
+        <Route path="/vet/consultation" element={<CreateConsultation />} />
+        <Route path="/vet/patients/:appointmentId" element={<h1>Veterinary patient profile</h1>} />
+      </Routes>
+    </MemoryRouter>,
+  );
+}
+
+vi.mock('../src/hooks/useConsultations', () => ({
+  useFindClientByEmail: vi.fn(() => ({
+    mutateAsync: findClient,
+    isPending: false,
+  })),
+  useCreateWalkInConsultation: vi.fn(() => ({
+    mutateAsync: createConsultation,
+    isPending: false,
+  })),
+  useCreateDiagnosis: vi.fn(() => ({
+    mutateAsync: createDiagnosis,
+    isPending: false,
+  })),
+}));
+
+describe('CreateConsultation', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+    useLanguageStore.setState({ language: 'es' });
+  });
+
+  test('searches an existing client and creates a walk-in consultation for an existing pet', async () => {
+    const user = userEvent.setup();
+    findClient.mockResolvedValueOnce({
+      client: {
+        id: 'client-1',
+        full_name: 'Abby Ramirez',
+        email: 'abby@example.com',
+        phone: '8875-4545',
+      },
+      pets: [
+        {
+          id: 'pet-1',
+          name: 'Lola',
+          birth_date: '2024-07-13',
+          species: 'Bird',
+          sex: 'Female',
+          breed_primary: 'Ninfa',
+          weight_kg: 0.085,
+        },
+      ],
+    });
+    createConsultation.mockResolvedValueOnce({
+      id: 'consultation-1',
+      pet_id: 'pet-1',
+      pet_name: 'Lola',
+      owner_name: 'Abby Ramirez',
+      reason: 'Consulta presencial por caida de plumas',
+    });
+
+    renderConsultation();
+
+    await user.type(screen.getByLabelText(/correo del cliente/i), 'abby@example.com');
+    await user.click(screen.getByRole('button', { name: /buscar cliente/i }));
+    await user.selectOptions(await screen.findByLabelText(/mascota registrada/i), 'pet-1');
+    await user.type(screen.getByLabelText(/motivo de la visita/i), 'Consulta presencial por caida de plumas');
+    await user.click(screen.getByRole('button', { name: /crear consulta/i }));
+
+    expect(findClient).toHaveBeenCalledWith('abby@example.com');
+    expect(createConsultation).toHaveBeenCalledWith(expect.objectContaining({
+      client_id: 'client-1',
+      client_email: 'abby@example.com',
+      pet_id: 'pet-1',
+      pet_name: 'Lola',
+      pet_weight_kg: 0.085,
+      reason: 'Consulta presencial por caida de plumas',
+    }));
+    expect(await screen.findByRole('heading', { name: /veterinary patient profile/i })).toBeInTheDocument();
+  });
+
+  test('sends mixed-breed and new-client provisioning data, then opens the patient profile', async () => {
+    const user = userEvent.setup();
+    createConsultation.mockResolvedValueOnce({
+      appointment_id: 'appointment-2',
+      pet_id: 'pet-2',
+      pet_name: 'Milo',
+      owner_name: 'Samuel Romero',
+      reason: 'Revision externa',
+    });
+    renderConsultation();
+
+    await user.type(screen.getByLabelText(/correo del cliente/i), 'samuel@example.com');
+    await user.type(screen.getByLabelText(/nombre completo/i), 'Samuel Romero');
+    await user.type(screen.getByLabelText(/nombre de la mascota/i), 'Milo');
+    await user.type(screen.getByLabelText(/fecha de nacimiento/i), '2024-03-01');
+    await user.selectOptions(screen.getByLabelText(/especie/i), 'Dog');
+    await user.selectOptions(screen.getByLabelText(/sexo/i), 'Male');
+    await user.type(screen.getByLabelText(/raza principal/i), 'Mestizo');
+    await user.click(screen.getByLabelText(/mascota mestiza/i));
+    await user.type(screen.getByLabelText(/^raza secundaria/i), 'Labrador');
+    await user.type(screen.getByLabelText(/peso/i), '12.5');
+    await user.type(screen.getByLabelText(/motivo de la visita/i), 'Revision externa');
+    await user.click(screen.getByRole('button', { name: /crear consulta/i }));
+
+    expect(createConsultation).toHaveBeenCalledWith(expect.objectContaining({
+      client_id: '',
+      create_client_account: true,
+      send_temporary_password: true,
+      pet_breed_primary: 'Mestizo',
+      pet_breed_secondary: 'Labrador',
+      pet_mixed_breed: true,
+    }));
+    expect(await screen.findByRole('heading', { name: /veterinary patient profile/i })).toBeInTheDocument();
+  });
+
+  test('clears a previously selected client when the email changes', async () => {
+    const user = userEvent.setup();
+    findClient.mockResolvedValueOnce({
+      client: {
+        id: 'miguel-1',
+        full_name: 'Miguel Vargas',
+        email: 'miguel@example.com',
+        phone: '8888-8888',
+      },
+      pets: [{
+        id: 'nino-1',
+        name: 'Nino',
+        birth_date: '2023-01-10',
+        species: 'Dog',
+        sex: 'Male',
+        breed_primary: 'Poodle',
+        weight_kg: 8,
+      }],
+    });
+
+    renderConsultation();
+    const email = screen.getByLabelText(/correo del cliente/i);
+    await user.type(email, 'miguel@example.com');
+    await user.click(screen.getByRole('button', { name: /buscar cliente/i }));
+    expect(await screen.findByLabelText(/mascota registrada/i)).toBeInTheDocument();
+
+    await user.clear(email);
+    await user.type(email, 'carmen@example.com');
+
+    expect(screen.queryByLabelText(/mascota registrada/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/nombre de la mascota/i)).toHaveValue('');
+  });
+});
