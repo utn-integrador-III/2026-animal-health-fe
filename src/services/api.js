@@ -1,4 +1,5 @@
 import axios from 'axios';
+import useAuthStore from '../stores/useAuthStore';
 
 /**
  *  Axios Base Configuration
@@ -18,7 +19,7 @@ const api = axios.create({
 // Interceptor: Add JWT token to requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = useAuthStore.getState().token || localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
