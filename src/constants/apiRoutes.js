@@ -3,6 +3,7 @@ export const API_ROUTES = {
     LOGIN: '/api/auth/login',
     REGISTER: '/api/auth/register',
     PROFILE: '/api/auth/profile',
+<<<<<<< HEAD
     PROFILE_PHOTO: '/api/auth/profile/photo',
     PROFILE_PASSWORD: '/api/auth/profile/password',
   },
@@ -47,5 +48,10 @@ export const API_ROUTES = {
   },
   ADMIN: {
     VETERINARIANS: '/api/admin/veterinarians',
+=======
+  },
+  PETS: {
+    BASE: '/api/pets',
+>>>>>>> origin/R2
   },
 };
