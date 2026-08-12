@@ -9,7 +9,6 @@ export const ROUTES = {
     REGISTER: '/auth/register',
     UNAUTHORIZED: '/unauthorized',
   },
-<<<<<<< HEAD
   // ============================================================
   // NUEVO: Rutas compartidas entre clientes y veterinarios
   // ============================================================
@@ -28,12 +27,6 @@ export const ROUTES = {
     ALLERGIES: '/client/allergies',
     LAB_RESULTS: '/client/lab-results',
     RECOMMENDATIONS: '/client/recommendations',
-=======
-  CLIENT: {
-    DASHBOARD: '/client/pets',
-    PETS: '/client/pets',
-    PROFILE: '/client/profile',
->>>>>>> origin/R2
     PET_DETAIL: '/client/pets/:petId',
     PET_EDIT: '/client/pets/:petId/edit',
     PET_HISTORY: '/client/pets/:petId/history',

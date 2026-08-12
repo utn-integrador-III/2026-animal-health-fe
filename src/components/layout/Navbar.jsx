@@ -57,7 +57,6 @@ export default function Navbar() {
 
   return (
     <header className="app-navbar">
-<<<<<<< HEAD
       <nav className="app-navbar-inner">
         <Link
           to={isAuthenticated && isAppArea ? homeRoute : ROUTES.PUBLIC.ABOUT}
@@ -234,39 +233,6 @@ export default function Navbar() {
             </div>
           </div>
         )}
-=======
-      <nav className="app-navbar-inner justify-between">
-        <Link to={isAuthenticated ? homeRoute : ROUTES.AUTH.LOGIN} className="flex items-center gap-3">
-          <img
-            src={animalHealthLogo}
-            alt="Animal Health"
-            className="h-12 w-12 rounded-full bg-white object-contain"
-          />
-          <span className="text-lg font-bold text-slate-900">Animal Health</span>
-        </Link>
-
-        <div className="flex items-center gap-3">
-          {!isAuthenticated && (
-            <>
-              <Link className="font-medium text-teal-700" to={ROUTES.AUTH.REGISTER}>
-                Sign up
-              </Link>
-              <Link className="font-medium text-teal-700" to={ROUTES.AUTH.LOGIN}>
-                Sign in
-              </Link>
-            </>
-          )}
-          {isAuthenticated && (
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="font-medium text-teal-700"
-            >
-              Sign out
-            </button>
-          )}
-        </div>
->>>>>>> origin/R2
       </nav>
     </header>
   );
