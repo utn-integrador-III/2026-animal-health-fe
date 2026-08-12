@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { HiX } from 'react-icons/hi';
+import useTranslation from '../../hooks/useTranslation';
 
 /**
  * Base Modal component rendered via React Portal.
@@ -20,6 +21,8 @@ export default function Modal({
   children,
   maxWidth = 'max-w-2xl',
 }) {
+  const { t } = useTranslation();
+
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
@@ -75,7 +78,7 @@ export default function Modal({
             <button
               id="modal-close-btn"
               onClick={onClose}
-              aria-label="Close modal"
+              aria-label={t('common.closeModal')}
               className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
             >
               <HiX className="h-5 w-5" />
