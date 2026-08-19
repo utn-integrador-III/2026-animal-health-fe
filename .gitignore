@@ -30,3 +30,7 @@ tmp/
 
 # Firebase
 serviceAccountKey.json
+
+.firebase/
+.coverage
+.codex-automation-review/
