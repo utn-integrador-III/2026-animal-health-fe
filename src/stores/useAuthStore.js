@@ -32,7 +32,14 @@ const useAuthStore = create((set) => ({
     localStorage.setItem('auth_session', JSON.stringify(session));
     return { user, role: session.role };
   }),
-  setToken: (token) => set({ token }),
+  setToken: (token) => {
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+    set({ token });
+  },
   setRole: (role) => set({ role }),
 
   setSession: ({ user, token }) => {

@@ -187,6 +187,11 @@ npm install
 npm run dev
 ```
 
+```Cache clear
+npm run dev -- --force
+```
+
+
 Default URL: `http://localhost:5173`
 
 ## Verification
