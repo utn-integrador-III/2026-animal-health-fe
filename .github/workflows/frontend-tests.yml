@@ -68,6 +68,3 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANIMAL_HEALTH }}
           projectId: animalhealth-fe1e8
           channelId: live
-
-      - name: Build Docker image
-        run: docker build --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} -t animal-health-fe:${{ github.sha }} .

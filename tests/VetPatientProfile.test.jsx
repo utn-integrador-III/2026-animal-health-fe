@@ -18,6 +18,38 @@ function getTestAppointmentDate() {
   return date.toISOString().split('T')[0];
 }
 
+const breedRiskHookState = vi.hoisted(() => ({
+  result: {
+    data: {
+      pet_id: 'pet-1',
+      name: 'Lola',
+      species: 'Bird',
+      breed_primary: 'Ninfa',
+      breed_secondary: null,
+      birth_date: '2024-07-13',
+      age_years: 2,
+      age_months: 1,
+      age_days: 3,
+      alerts: [
+        {
+          title: 'Respiratory sensitivity',
+          description: 'Cockatiels may be sensitive to poor air quality.',
+          severity: 'moderate',
+          recommendation: 'Review ventilation and avoid smoke exposure.',
+        },
+      ],
+      preventive_recommendations: [
+        'Schedule regular wellness checks.',
+        'Monitor appetite and feather condition.',
+      ],
+      non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+      generated_by: 'gemini',
+    },
+    isLoading: false,
+    isError: false,
+  },
+}));
+
 vi.mock('../src/hooks/useAppointments', () => ({
   useAppointments: vi.fn(() => ({
     data: [
@@ -112,10 +144,79 @@ vi.mock('../src/hooks/useDiagnoses', () => ({
   useAddDiagnosis: vi.fn(() => ({ mutateAsync: vi.fn(), isPending: false })),
 }));
 
+vi.mock('../src/hooks/useBreedRiskAlerts', () => ({
+  useBreedRiskAlerts: vi.fn(() => breedRiskHookState.result),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     mutateAsync.mockReset();
     completeAppointment.mockReset();
+    breedRiskHookState.result = {
+      data: {
+        pet_id: 'pet-1',
+        name: 'Lola',
+        species: 'Bird',
+        breed_primary: 'Ninfa',
+        breed_secondary: null,
+        birth_date: '2024-07-13',
+        age_years: 2,
+        age_months: 1,
+        age_days: 3,
+        alerts: [
+          {
+            title: 'Respiratory sensitivity',
+            description: 'Cockatiels may be sensitive to poor air quality.',
+            severity: 'moderate',
+            recommendation: 'Review ventilation and avoid smoke exposure.',
+          },
+        ],
+        preventive_recommendations: [
+          'Schedule regular wellness checks.',
+          'Monitor appetite and feather condition.',
+        ],
+        non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+        generated_by: 'gemini',
+        recommendation_id: 'latest-recommendation',
+        history: [
+          {
+            recommendation_id: 'latest-recommendation',
+            generated_at: '2026-08-21T15:00:00+00:00',
+            alerts: [
+              {
+                title: 'Respiratory sensitivity',
+                description: 'Cockatiels may be sensitive to poor air quality.',
+                severity: 'moderate',
+                recommendation: 'Review ventilation and avoid smoke exposure.',
+              },
+            ],
+            preventive_recommendations: [
+              'Schedule regular wellness checks.',
+              'Monitor appetite and feather condition.',
+            ],
+            non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+            generated_by: 'gemini',
+          },
+          {
+            recommendation_id: 'previous-recommendation',
+            generated_at: '2026-08-20T15:00:00+00:00',
+            alerts: [
+              {
+                title: 'Previous respiratory note',
+                description: 'Older generated context.',
+                severity: 'low',
+                recommendation: 'Keep monitoring respiratory pattern.',
+              },
+            ],
+            preventive_recommendations: ['Previous preventive recommendation.'],
+            non_diagnostic_warning: 'Previous informational warning.',
+            generated_by: 'gemini',
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    };
     useLanguageStore.setState({ language: 'es' });
     useAuthStore.setState({
       user: {
@@ -220,5 +321,88 @@ describe('VetPatientProfile', () => {
       clinicalObservation: 'Se realiza revision general y limpieza de pico.',
     });
     expect(await screen.findByText(/cita finalizada correctamente/i)).toBeInTheDocument();
+  });
+
+  test('shows AI breed risk alerts with age, breed, recommendations, and warning', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+
+    expect(screen.getByRole('heading', { name: /alertas de riesgo por raza/i })).toBeInTheDocument();
+    expect(screen.getAllByText('Lola').length).toBeGreaterThan(1);
+    expect(screen.getAllByText('Ninfa').length).toBeGreaterThan(1);
+    expect(screen.getByText(/2 anos, 1 meses, 3 dias/i)).toBeInTheDocument();
+    expect(screen.getByText('Respiratory sensitivity')).toBeInTheDocument();
+    expect(screen.getByText(/Review ventilation and avoid smoke exposure/i)).toBeInTheDocument();
+    expect(screen.getByText('AI guidance is informational and not a diagnosis.')).toBeInTheDocument();
+  });
+
+  test('lets the veterinarian choose previous AI recommendation versions', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+    await user.selectOptions(screen.getByLabelText(/historial de recomendaciones/i), 'previous-recommendation');
+
+    expect(screen.getByText('Previous respiratory note')).toBeInTheDocument();
+    expect(screen.getByText(/Keep monitoring respiratory pattern/i)).toBeInTheDocument();
+    expect(screen.getByText('Previous informational warning.')).toBeInTheDocument();
+  });
+
+  test('shows the AI loading state', async () => {
+    breedRiskHookState.result = {
+      data: undefined,
+      isLoading: true,
+      isError: false,
+    };
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+
+    expect(screen.getByText(/generando alertas de riesgo por raza/i)).toBeInTheDocument();
+  });
+
+  test('shows the AI error state', async () => {
+    breedRiskHookState.result = {
+      data: undefined,
+      isLoading: false,
+      isError: true,
+    };
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+
+    expect(screen.getByText(/no se pudieron cargar las recomendaciones de ia/i)).toBeInTheDocument();
   });
 });

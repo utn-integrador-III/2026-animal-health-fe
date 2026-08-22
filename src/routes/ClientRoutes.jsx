@@ -13,6 +13,7 @@ import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
 import MedicationReminder from '../pages/client/medications/MedicationReminder';
 import DiagnosisPage from '../pages/client/diagnoses/DiagnosisPage';
+import PetCareRecommendations from '../pages/client/ai/PetCareRecommendations';
 import { ROUTES } from '../constants/routes';
 /* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */
 export default function ClientRoutes() {
@@ -52,7 +53,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.RECOMMENDATIONS}
-        element={<HealthSection title="Preventive recommendations" description="Care suggestions and preventive health guidance." />}
+        element={<PetCareRecommendations />}
       />
       <Route path={ROUTES.CLIENT.PET_DETAIL} element={<PetDetails />} />
       <Route path={ROUTES.CLIENT.PET_EDIT} element={<EditPet />} />
