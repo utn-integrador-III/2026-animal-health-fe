@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -237,5 +237,95 @@ describe('DiagnosisPage', () => {
 
     expect(screen.getAllByText('Diagnostics').length).toBeGreaterThan(0);
     expect(screen.getByText('No diagnoses available.')).toBeInTheDocument();
+  });
+
+  test('shows error message when loading pet or diagnoses fails', () => {
+    usePet.mockReturnValue({ data: null, isLoading: false, isError: true });
+    useDiagnosesList.mockReturnValue({ data: [], isLoading: false, isError: false });
+
+    render(
+      <MemoryRouter initialEntries={['/client/diagnostics?petId=pet-1']}>
+        <DiagnosisPage />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/no se pudieron cargar los diagnósticos/i)).toBeInTheDocument();
+  });
+
+  test('shows error alert when diagnosis submission fails', async () => {
+    const Swal = (await import('sweetalert2')).default;
+    const user = userEvent.setup();
+    useAuthStore.setState({ user: { id: 'vet-1', role: 'veterinarian', full_name: 'Dra. Mariana López' } });
+    usePet.mockReturnValue({
+      data: { id: 'pet-1', name: 'Candy', species: 'Cat', sex: 'Female' },
+      isLoading: false,
+      isError: false,
+    });
+    useDiagnosesList.mockReturnValue({ data: [], isLoading: false, isError: false });
+    mockMutateAsync.mockRejectedValueOnce(new Error('API Error'));
+
+    render(
+      <MemoryRouter initialEntries={['/client/diagnostics?petId=pet-1']}>
+        <DiagnosisPage />
+      </MemoryRouter>
+    );
+
+    const toggleButton = screen.getByRole('button', { name: /agregar diagnóstico/i });
+    await user.click(toggleButton);
+
+    const diagnosisInput = screen.getByLabelText(/diagnóstico definitivo \*/i);
+    await user.type(diagnosisInput, 'Gastritis aguda');
+
+    const submitBtn = screen.getByRole('button', { name: /completar consulta|guardar diagnóstico/i });
+    await user.click(submitBtn);
+
+    expect(Swal.fire).toHaveBeenCalledWith(
+      expect.objectContaining({
+        icon: 'error',
+        text: expect.any(String),
+      })
+    );
+  });
+
+  test('veterinarian can cancel form and navigate back to vet dashboard', async () => {
+    const user = userEvent.setup();
+    useAuthStore.setState({ user: { id: 'vet-1', role: 'veterinarian', full_name: 'Dra. Mariana López' } });
+    usePet.mockReturnValue({
+      data: { id: 'pet-1', name: 'Candy', species: 'Cat', sex: 'Female', photo_url: 'https://example.com/photo.jpg' },
+      isLoading: false,
+      isError: false,
+    });
+    useDiagnosesList.mockReturnValue({ data: [], isLoading: false, isError: false });
+
+    render(
+      <MemoryRouter initialEntries={['/client/diagnostics?petId=pet-1']}>
+        <DiagnosisPage />
+      </MemoryRouter>
+    );
+
+    const backLink = screen.getByRole('link', { name: /volver/i });
+    expect(backLink).toHaveAttribute('href', '/vet/dashboard');
+
+    const toggleButton = screen.getByRole('button', { name: /agregar diagnóstico/i });
+    await user.click(toggleButton);
+
+    const cancelBtns = screen.getAllByRole('button', { name: /cancelar/i });
+    await user.click(cancelBtns[cancelBtns.length - 1]);
+
+    expect(screen.queryByLabelText(/diagnóstico definitivo \*/i)).not.toBeInTheDocument();
+  });
+
+  test('renders back link to client dashboard when petId is missing', () => {
+    usePet.mockReturnValue({ data: null, isLoading: false, isError: false });
+    useDiagnosesList.mockReturnValue({ data: [], isLoading: false, isError: false });
+
+    render(
+      <MemoryRouter initialEntries={['/client/diagnostics']}>
+        <DiagnosisPage />
+      </MemoryRouter>
+    );
+
+    const backLink = screen.getByRole('link', { name: /volver/i });
+    expect(backLink).toHaveAttribute('href', '/client/dashboard');
   });
 });
