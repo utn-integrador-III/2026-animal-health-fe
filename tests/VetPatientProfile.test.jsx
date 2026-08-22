@@ -22,6 +22,44 @@ function getTestAppointmentDate() {
   return date.toISOString().split('T')[0];
 }
 
+function getFutureDate(daysToAdd = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + daysToAdd);
+  return date.toISOString().split('T')[0];
+}
+
+const breedRiskHookState = vi.hoisted(() => ({
+  result: {
+    data: {
+      pet_id: 'pet-1',
+      name: 'Lola',
+      species: 'Bird',
+      breed_primary: 'Ninfa',
+      breed_secondary: null,
+      birth_date: '2024-07-13',
+      age_years: 2,
+      age_months: 1,
+      age_days: 3,
+      alerts: [
+        {
+          title: 'Respiratory sensitivity',
+          description: 'Cockatiels may be sensitive to poor air quality.',
+          severity: 'moderate',
+          recommendation: 'Review ventilation and avoid smoke exposure.',
+        },
+      ],
+      preventive_recommendations: [
+        'Schedule regular wellness checks.',
+        'Monitor appetite and feather condition.',
+      ],
+      non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+      generated_by: 'gemini',
+    },
+    isLoading: false,
+    isError: false,
+  },
+}));
+
 vi.mock('../src/hooks/useAppointments', () => ({
   useAppointments: vi.fn(() => ({
     data: [
@@ -116,10 +154,80 @@ vi.mock('../src/hooks/useDiagnoses', () => ({
   useAddDiagnosis: vi.fn(() => ({ mutateAsync: vi.fn(), isPending: false })),
 }));
 
+vi.mock('../src/hooks/useBreedRiskAlerts', () => ({
+  useBreedRiskAlerts: vi.fn(() => breedRiskHookState.result),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
     mutateAsync.mockReset();
     completeAppointment.mockReset();
+    breedRiskHookState.result = {
+      data: {
+        pet_id: 'pet-1',
+        name: 'Lola',
+        species: 'Bird',
+        breed_primary: 'Ninfa',
+        breed_secondary: null,
+        birth_date: '2024-07-13',
+        age_years: 2,
+        age_months: 1,
+        age_days: 3,
+        alerts: [
+          {
+            title: 'Respiratory sensitivity',
+            description: 'Cockatiels may be sensitive to poor air quality.',
+            severity: 'moderate',
+            recommendation: 'Review ventilation and avoid smoke exposure.',
+          },
+        ],
+        preventive_recommendations: [
+          'Schedule regular wellness checks.',
+          'Monitor appetite and feather condition.',
+        ],
+        non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+        generated_by: 'gemini',
+        recommendation_id: 'latest-recommendation',
+        history: [
+          {
+            recommendation_id: 'latest-recommendation',
+            generated_at: '2026-08-21T15:00:00+00:00',
+            alerts: [
+              {
+                title: 'Respiratory sensitivity',
+                description: 'Cockatiels may be sensitive to poor air quality.',
+                severity: 'moderate',
+                recommendation: 'Review ventilation and avoid smoke exposure.',
+              },
+            ],
+            preventive_recommendations: [
+              'Schedule regular wellness checks.',
+              'Monitor appetite and feather condition.',
+            ],
+            non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
+            generated_by: 'gemini',
+          },
+          {
+            recommendation_id: 'previous-recommendation',
+            generated_at: '2026-08-20T15:00:00+00:00',
+            alerts: [
+              {
+                title: 'Previous respiratory note',
+                description: 'Older generated context.',
+                severity: 'low',
+                recommendation: 'Keep monitoring respiratory pattern.',
+              },
+            ],
+            preventive_recommendations: ['Previous preventive recommendation.'],
+            non_diagnostic_warning: 'Previous informational warning.',
+            generated_by: 'gemini',
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    };
     useLanguageStore.setState({ language: 'es' });
     useAuthStore.setState({
       user: {
@@ -226,159 +334,255 @@ describe('VetPatientProfile', () => {
     expect(await screen.findByText(/cita finalizada correctamente/i)).toBeInTheDocument();
   });
 
-  test('submits diagnosis form and handles success and error in VetPatientProfile', async () => {
-    const mockAddDiagnosisMutate = vi.fn();
+  test('submits diagnosis information from the veterinary patient profile', async () => {
     const { useAddDiagnosis } = await import('../src/hooks/useDiagnoses');
-    useAddDiagnosis.mockReturnValue({ mutateAsync: mockAddDiagnosisMutate, isPending: false });
-
+    const addDiagnosis = vi.fn().mockResolvedValueOnce({});
+    useAddDiagnosis.mockReturnValue({
+      mutateAsync: addDiagnosis,
+      isPending: false,
+    });
     const user = userEvent.setup();
+
     render(
       <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
         <Routes>
           <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    // Open diagnoses section by clicking its clinical card
-    await user.click(screen.getByRole('button', { name: /diagnosticos|diagnósticos/i }));
+    await user.click(screen.getByRole('button', { name: /diagn[oó]sticos/i }));
+    await user.type(screen.getByLabelText(/diagn[oó]stico definitivo/i), 'Traumatismo leve');
+    await user.type(screen.getByLabelText(/resumen del tratamiento/i), 'Reposo y monitoreo por 48 horas');
+    await user.click(screen.getByRole('button', { name: /completar consulta/i }));
 
-    const diagnosisInput = screen.getByLabelText(/diagnóstico definitivo \*/i);
-    await user.type(diagnosisInput, 'Traumatismo leve');
-
-    // Submit diagnosis form
-    mockAddDiagnosisMutate.mockResolvedValueOnce({});
-    const submitBtn = screen.getByRole('button', { name: /completar consulta/i });
-    await user.click(submitBtn);
-
-    expect(mockAddDiagnosisMutate).toHaveBeenCalledWith({
+    expect(addDiagnosis).toHaveBeenCalledWith({
       petId: 'pet-1',
-      diagnosisData: expect.objectContaining({ diagnosis: 'Traumatismo leve' }),
+      diagnosisData: expect.objectContaining({
+        pet_id: 'pet-1',
+        diagnosis: 'Traumatismo leve',
+        treatment: 'Reposo y monitoreo por 48 horas',
+      }),
     });
-
-    // Test rejection
-    mockAddDiagnosisMutate.mockRejectedValueOnce(new Error('Save failed'));
-    await user.click(submitBtn);
   });
 
-    beforeEach(() => {
-      window.HTMLElement.prototype.scrollIntoView = vi.fn();
+  test('prescribes medication from the veterinary patient profile', async () => {
+    const { useAddMedication, useMedicationsList } = await import('../src/hooks/useMedical');
+    const addMedication = vi.fn().mockResolvedValueOnce({});
+    useAddMedication.mockReturnValue({
+      mutateAsync: addMedication,
+      isPending: false,
+    });
+    useMedicationsList.mockReturnValue({
+      data: [
+        {
+          id: 'med-1',
+          name: 'Amoxicilina',
+          dosage: '250 mg',
+          frequency: 'Cada 12 horas',
+          administration_time: '08:00',
+          start_date: getFutureDate(),
+          end_date: getFutureDate(7),
+          notes: 'Dar con alimentos',
+        },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /medicamentos/i }));
+
+    expect(screen.getByText('Amoxicilina')).toBeInTheDocument();
+
+    await user.type(screen.getByPlaceholderText('ej. Amoxicilina'), 'Cefalexina');
+    await user.type(screen.getByPlaceholderText('ej. 1/2 tableta'), '500 mg');
+    await user.type(screen.getByPlaceholderText('ej. Cada 12 horas'), 'Cada 8 horas');
+    fireEvent.change(screen.getByLabelText(/hora de administraci/i), {
+      target: { value: '08:00' },
+    });
+    fireEvent.change(screen.getByLabelText(/fecha inicio/i), {
+      target: { value: getFutureDate() },
+    });
+    fireEvent.change(screen.getByLabelText(/fecha fin/i), {
+      target: { value: getFutureDate(7) },
+    });
+    await user.type(screen.getByPlaceholderText('ej. Dar con alimentos'), 'Administrar con comida');
+    await user.click(screen.getByRole('button', { name: /agregar medicamento|recetar medicamento/i }));
+
+    expect(addMedication).toHaveBeenCalledWith({
+      petId: 'pet-1',
+      medicationData: expect.objectContaining({
+        name: 'Cefalexina',
+        dosage: '500 mg',
+        frequency: 'Cada 8 horas',
+        administration_time: '08:00',
+        start_date: getFutureDate(),
+        end_date: getFutureDate(7),
+        notes: 'Administrar con comida',
+      }),
+    });
+  });
+
+  test('adds, edits, cancels, and deletes allergies from the veterinary patient profile', async () => {
+    const {
+      useAddAllergy,
+      useAllergiesList,
+      useDeleteAllergy,
+      useUpdateAllergy,
+    } = await import('../src/hooks/useAllergies');
+    const addAllergy = vi.fn().mockResolvedValueOnce({});
+    const updateAllergy = vi.fn().mockResolvedValueOnce({});
+    const deleteAllergy = vi.fn().mockResolvedValueOnce({});
+    useAddAllergy.mockReturnValue({ mutateAsync: addAllergy, isPending: false });
+    useUpdateAllergy.mockReturnValue({ mutateAsync: updateAllergy, isPending: false });
+    useDeleteAllergy.mockReturnValue({ mutateAsync: deleteAllergy, isPending: false });
+    useAllergiesList.mockReturnValue({
+      data: [
+        {
+          id: 'allergy-1',
+          allergen: 'Polen',
+          category: 'environmental',
+          severity: 'moderate',
+          reaction: 'Estornudos',
+          notes: 'Evitar jardines con flores',
+          veterinarian_name: 'Maria Sanchez',
+        },
+      ],
+      isLoading: false,
+      isError: false,
+    });
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /alergias/i }));
+
+    expect(screen.getByText('Polen')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /editar/i }));
+    await user.click(screen.getByRole('button', { name: /cancelar/i }));
+
+    await user.type(screen.getByLabelText(/al[eé]rgeno/i), 'Picadura de pulga');
+    await user.selectOptions(screen.getByLabelText(/categor[ií]a/i), 'environmental');
+    await user.selectOptions(screen.getByLabelText(/severidad/i), 'mild');
+    await user.type(screen.getByLabelText(/reacci[oó]n/i), 'Irritacion leve');
+    await user.type(screen.getByLabelText(/notas/i), 'Controlar piel semanalmente');
+    await user.click(screen.getByRole('button', { name: /registrar alergia|agregar alergia/i }));
+
+    expect(addAllergy).toHaveBeenCalledWith({
+      petId: 'pet-1',
+      allergyData: expect.objectContaining({
+        allergen: 'Picadura de pulga',
+        category: 'environmental',
+        severity: 'mild',
+        reaction: 'Irritacion leve',
+        notes: 'Controlar piel semanalmente',
+      }),
     });
 
-    test('handles medications section (prescribing medication)', async () => {
-      const mockAddMedicationMutate = vi.fn().mockResolvedValueOnce({});
-      const { useAddMedication, useMedicationsList } = await import('../src/hooks/useMedical');
-      useAddMedication.mockReturnValue({ mutateAsync: mockAddMedicationMutate, isPending: false });
-      useMedicationsList.mockReturnValue({
-        data: [
-          {
-            id: 'm1',
-            name: 'Amoxicilina',
-            dosage: '250mg',
-            frequency: 'Cada 12 horas',
-            status: 'active',
-            start_date: '2026-08-01',
-            end_date: '2026-08-10',
-            veterinarian_name: 'Dr. Ruiz',
-            notes: 'Con comida',
-          },
-        ],
-        isLoading: false,
-        isError: false,
-      });
+    await user.click(screen.getByRole('button', { name: /eliminar/i }));
 
-      const user = userEvent.setup();
-      render(
-        <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-          <Routes>
-            <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-          </Routes>
-        </MemoryRouter>
-      );
-
-      // Click medications tab
-      const medTab = screen.getByRole('button', { name: /medicamentos|tratamientos/i });
-      await user.click(medTab);
-
-      expect(screen.getByText('Amoxicilina')).toBeInTheDocument();
-
-      // Fill form
-      await user.type(screen.getByPlaceholderText('ej. Amoxicilina'), 'Cefalexina');
-      await user.type(screen.getByPlaceholderText('ej. 1/2 tableta'), '500mg');
-      await user.type(screen.getByPlaceholderText('ej. Cada 12 horas'), 'Cada 8 horas');
-      fireEvent.change(screen.getByLabelText(/hora de administración/i), { target: { value: '08:00' } });
-      fireEvent.change(screen.getByLabelText(/fecha inicio/i), { target: { value: '2026-08-22' } });
-      fireEvent.change(screen.getByLabelText(/fecha fin/i), { target: { value: '2026-08-29' } });
-
-      await user.click(screen.getByRole('button', { name: /recetar medicamento/i }));
-
-      expect(mockAddMedicationMutate).toHaveBeenCalledWith({
-        petId: 'pet-1',
-        medicationData: expect.objectContaining({ name: 'Cefalexina', dosage: '500mg' }),
-      });
+    expect(deleteAllergy).toHaveBeenCalledWith({
+      petId: 'pet-1',
+      allergyId: 'allergy-1',
     });
+  });
 
-    test('handles allergies section (add, edit, cancel edit, delete)', async () => {
-      const mockAddAllergyMutate = vi.fn().mockResolvedValueOnce({});
-      const mockUpdateAllergyMutate = vi.fn().mockResolvedValueOnce({});
-      const mockDeleteAllergyMutate = vi.fn().mockResolvedValueOnce({});
-      const { useAllergiesList, useAddAllergy, useUpdateAllergy, useDeleteAllergy } = await import('../src/hooks/useAllergies');
+  test('shows AI breed risk alerts with age, breed, recommendations, and warning', async () => {
+    const user = userEvent.setup();
 
-      useAllergiesList.mockReturnValue({
-        data: [
-          {
-            id: 'alg-1',
-            allergen: 'Polen',
-            category: 'environmental',
-            severity: 'mild',
-            reaction: 'Estornudos',
-            notes: 'En primavera',
-            veterinarian_name: 'Dr. Ruiz',
-          },
-        ],
-        isLoading: false,
-        isError: false,
-      });
-      useAddAllergy.mockReturnValue({ mutateAsync: mockAddAllergyMutate, isPending: false });
-      useUpdateAllergy.mockReturnValue({ mutateAsync: mockUpdateAllergyMutate, isPending: false });
-      useDeleteAllergy.mockReturnValue({ mutateAsync: mockDeleteAllergyMutate, isPending: false });
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-      const user = userEvent.setup();
-      render(
-        <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-          <Routes>
-            <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-          </Routes>
-        </MemoryRouter>
-      );
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
 
-      // Switch to allergies tab
-      await user.click(screen.getByRole('button', { name: /alergias/i }));
-      expect(screen.getByText('Polen')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /alertas de riesgo por raza/i })).toBeInTheDocument();
+    expect(screen.getAllByText('Lola').length).toBeGreaterThan(1);
+    expect(screen.getAllByText('Ninfa').length).toBeGreaterThan(1);
+    expect(screen.getByText(/2 anos, 1 meses, 3 dias/i)).toBeInTheDocument();
+    expect(screen.getByText('Respiratory sensitivity')).toBeInTheDocument();
+    expect(screen.getByText(/Review ventilation and avoid smoke exposure/i)).toBeInTheDocument();
+    expect(screen.getByText('AI guidance is informational and not a diagnosis.')).toBeInTheDocument();
+  });
 
-      // Edit existing allergy
-      await user.click(screen.getByRole('button', { name: /editar/i }));
+  test('lets the veterinarian choose previous AI recommendation versions', async () => {
+    const user = userEvent.setup();
 
-      // Cancel edit
-      await user.click(screen.getByRole('button', { name: /^cancelar$/i }));
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-      // Fill & Add new allergy
-      await user.type(screen.getByLabelText(/alérgeno \*/i), 'Picadura de pulga');
-      await user.selectOptions(screen.getByLabelText(/categoría \*/i), 'environmental');
-      await user.selectOptions(screen.getByLabelText(/severidad \*/i), 'mild');
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+    await user.selectOptions(screen.getByLabelText(/historial de recomendaciones/i), 'previous-recommendation');
 
-      await user.click(screen.getByRole('button', { name: /registrar alergia|agregar alergia/i }));
+    expect(screen.getByText('Previous respiratory note')).toBeInTheDocument();
+    expect(screen.getByText(/Keep monitoring respiratory pattern/i)).toBeInTheDocument();
+    expect(screen.getByText('Previous informational warning.')).toBeInTheDocument();
+  });
 
-      expect(mockAddAllergyMutate).toHaveBeenCalledWith({
-        petId: 'pet-1',
-        allergyData: expect.objectContaining({ allergen: 'Picadura de pulga' }),
-      });
+  test('shows the AI loading state', async () => {
+    breedRiskHookState.result = {
+      data: undefined,
+      isLoading: true,
+      isError: false,
+    };
+    const user = userEvent.setup();
 
-      // Delete existing allergy
-      await user.click(screen.getByRole('button', { name: /eliminar/i }));
-      expect(mockDeleteAllergyMutate).toHaveBeenCalledWith({
-        petId: 'pet-1',
-        allergyId: 'alg-1',
-      });
-    });
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+
+    expect(screen.getByText(/generando alertas de riesgo por raza/i)).toBeInTheDocument();
+  });
+
+  test('shows the AI error state', async () => {
+    breedRiskHookState.result = {
+      data: undefined,
+      isLoading: false,
+      isError: true,
+    };
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
+
+    expect(screen.getByText(/no se pudieron cargar las recomendaciones de ia/i)).toBeInTheDocument();
+  });
 });

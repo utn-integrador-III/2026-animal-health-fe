@@ -39,6 +39,7 @@ import {
 } from '../../hooks/useAllergies';
 import { useAddDiagnosis, useDiagnosesList } from '../../hooks/useDiagnoses';
 import VetDiagnosisForm, { INITIAL_FORM } from '../../components/veterinarian/VetDiagnosisForm';
+import BreedRiskAlertsPanel from '../../components/veterinarian/BreedRiskAlertsPanel';
 import Swal from 'sweetalert2';
 
 const DURATIONS = [
@@ -326,6 +327,7 @@ export default function VetPatientProfile() {
   });
   const [editingAllergy, setEditingAllergy] = useState(null); // null | allergy object
   const allergyFormRef = useRef(null);
+  const activeSectionRef = useRef(null);
 
   const [clinicalForm, setClinicalForm] = useState({
     diagnosis: '',
@@ -358,6 +360,15 @@ export default function VetPatientProfile() {
       setClinicalObservation(appointment.clinical_observation);
     }
   }, [appointment?.clinical_observation]);
+
+  useEffect(() => {
+    if (
+      activeSection !== 'summary'
+      && typeof activeSectionRef.current?.scrollIntoView === 'function'
+    ) {
+      activeSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeSection]);
 
   if (isLoading) return <Loader label={t('vetPatient.loading')} />;
 
@@ -416,7 +427,7 @@ export default function VetPatientProfile() {
     {
       key: 'ai',
       title: t('vetPatient.cards.ai.title'),
-      value: 0,
+      value: language === 'es' ? 'IA' : 'AI',
       detail: t('vetPatient.cards.ai.detail'),
       icon: HiSparkles,
     },
@@ -627,7 +638,7 @@ export default function VetPatientProfile() {
       </section>
 
       {activeSection === 'appointments' && (
-        <section className="vet-current-appointment">
+        <section className="vet-current-appointment" ref={activeSectionRef}>
           <h2>{t('vetPatient.currentAppointmentTitle')}</h2>
           <dl>
             <div><dt>{t('vetPatient.pet')}</dt><dd>{appointment.pet_name}</dd></div>
@@ -661,7 +672,7 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'diagnostics' && (
-        <section className="vet-current-appointment">
+        <section className="vet-current-appointment" ref={activeSectionRef}>
           <VetDiagnosisForm
             pet={{
               id: appointment?.pet_id,
@@ -729,7 +740,7 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'medications' && (
-        <section className="vet-current-appointment">
+        <section className="vet-current-appointment" ref={activeSectionRef}>
           <h2>{t('medications.title')}</h2>
           <p className="page-subtitle">{t('medications.activeTreatments')}</p>
 
@@ -837,7 +848,10 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'allergies' && (
-        <section className="vet-current-appointment" ref={allergyFormRef}>
+        <section className="vet-current-appointment" ref={(node) => {
+          allergyFormRef.current = node;
+          activeSectionRef.current = node;
+        }}>
           <h2>{t('allergies.title')}</h2>
           <p className="text-sm text-slate-500 mt-1 mb-6">{t('allergies.subtitle')}</p>
 
@@ -1044,6 +1058,12 @@ export default function VetPatientProfile() {
             )}
           </div>
         </section>
+      )}
+
+      {activeSection === 'ai' && (
+        <div ref={activeSectionRef}>
+          <BreedRiskAlertsPanel petId={appointment.pet_id} language={language} />
+        </div>
       )}
 
       <FollowUpModal
