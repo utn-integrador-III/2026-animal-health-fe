@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { HiDocumentText, HiPlus, HiX, HiClipboardList } from 'react-icons/hi';
+import { HiPlus, HiX, HiClipboardList } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 
 import { ROUTES } from '../../../constants/routes';
@@ -12,38 +12,9 @@ import { useDiagnosesList, useAddDiagnosis } from '../../../hooks/useDiagnoses';
 import VetDiagnosisForm from '../../../components/veterinarian/VetDiagnosisForm';
 import DiagnosisSummaryCard from '../../../components/cards/DiagnosisSummaryCard';
 
-const EMPTY_FORM = {
-  diagnosis: '',
-  presumptive_diagnosis: '',
-  differential_diagnoses: '',
-  status: 'Presuntivo',
-  treatment: '',
-  notes: '',
-  consultation_date: new Date().toISOString().split('T')[0],
-  reason: '',
-  symptoms: '',
-  physical_exam: '',
-  clinical_plan: '',
-  owner_instructions: '',
-  follow_up: '',
-};
-
-function formatDate(value, locale) {
-  if (!value) return '--';
-  try {
-    return new Intl.DateTimeFormat(locale, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(new Date(value));
-  } catch {
-    return value;
-  }
-}
-
 export default function DiagnosisPage() {
   const [searchParams] = useSearchParams();
-  const { language, t } = useTranslation();
+  const { t } = useTranslation();
   const petId = searchParams.get('petId');
   const user = useAuthStore((state) => state.user);
   const isVet = user?.role === 'veterinarian';
@@ -56,49 +27,12 @@ export default function DiagnosisPage() {
   } = useDiagnosesList(petId);
   const addDiagnosisMutation = useAddDiagnosis();
 
-  const [form, setForm] = useState(EMPTY_FORM);
   const [showForm, setShowForm] = useState(false);
 
   const petName = pet?.name ?? t('allergies.petFallback');
   const backToDashboard = isVet
     ? ROUTES.VET.DASHBOARD
     : (petId ? `${ROUTES.CLIENT.DASHBOARD}?petId=${encodeURIComponent(petId)}` : ROUTES.CLIENT.DASHBOARD);
-
-  const updateField = (field) => (event) => {
-    setForm((current) => ({ ...current, [field]: event.target.value }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!form.diagnosis.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: t('diagnoses.diagnosisRequired'),
-        showConfirmButton: false,
-        timer: 2000,
-      });
-      return;
-    }
-    try {
-      await addDiagnosisMutation.mutateAsync({ petId, diagnosisData: form });
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: t('diagnoses.saveSuccess'),
-        showConfirmButton: false,
-        timer: 2500,
-      });
-      setForm(EMPTY_FORM);
-      setShowForm(false);
-    } catch {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: t('diagnoses.saveError'),
-      });
-    }
-  };
 
   const isLoading = loadingPet || loadingDiagnoses;
   const isError = errorPet || errorDiagnoses;

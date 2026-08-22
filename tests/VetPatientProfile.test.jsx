@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -6,6 +6,10 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import VetPatientProfile from '../src/pages/veterinarian/VetPatientProfile';
 import useAuthStore from '../src/stores/useAuthStore';
 import useLanguageStore from '../src/stores/useLanguageStore';
+
+vi.mock('sweetalert2', () => ({
+  default: { fire: vi.fn().mockResolvedValue({ isConfirmed: true }) },
+}));
 
 const mutateAsync = vi.fn();
 const completeAppointment = vi.fn();
@@ -221,4 +225,160 @@ describe('VetPatientProfile', () => {
     });
     expect(await screen.findByText(/cita finalizada correctamente/i)).toBeInTheDocument();
   });
+
+  test('submits diagnosis form and handles success and error in VetPatientProfile', async () => {
+    const mockAddDiagnosisMutate = vi.fn();
+    const { useAddDiagnosis } = await import('../src/hooks/useDiagnoses');
+    useAddDiagnosis.mockReturnValue({ mutateAsync: mockAddDiagnosisMutate, isPending: false });
+
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    // Open diagnoses section by clicking its clinical card
+    await user.click(screen.getByRole('button', { name: /diagnosticos|diagnósticos/i }));
+
+    const diagnosisInput = screen.getByLabelText(/diagnóstico definitivo \*/i);
+    await user.type(diagnosisInput, 'Traumatismo leve');
+
+    // Submit diagnosis form
+    mockAddDiagnosisMutate.mockResolvedValueOnce({});
+    const submitBtn = screen.getByRole('button', { name: /completar consulta/i });
+    await user.click(submitBtn);
+
+    expect(mockAddDiagnosisMutate).toHaveBeenCalledWith({
+      petId: 'pet-1',
+      diagnosisData: expect.objectContaining({ diagnosis: 'Traumatismo leve' }),
+    });
+
+    // Test rejection
+    mockAddDiagnosisMutate.mockRejectedValueOnce(new Error('Save failed'));
+    await user.click(submitBtn);
+  });
+
+    beforeEach(() => {
+      window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    });
+
+    test('handles medications section (prescribing medication)', async () => {
+      const mockAddMedicationMutate = vi.fn().mockResolvedValueOnce({});
+      const { useAddMedication, useMedicationsList } = await import('../src/hooks/useMedical');
+      useAddMedication.mockReturnValue({ mutateAsync: mockAddMedicationMutate, isPending: false });
+      useMedicationsList.mockReturnValue({
+        data: [
+          {
+            id: 'm1',
+            name: 'Amoxicilina',
+            dosage: '250mg',
+            frequency: 'Cada 12 horas',
+            status: 'active',
+            start_date: '2026-08-01',
+            end_date: '2026-08-10',
+            veterinarian_name: 'Dr. Ruiz',
+            notes: 'Con comida',
+          },
+        ],
+        isLoading: false,
+        isError: false,
+      });
+
+      const user = userEvent.setup();
+      render(
+        <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+          <Routes>
+            <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+          </Routes>
+        </MemoryRouter>
+      );
+
+      // Click medications tab
+      const medTab = screen.getByRole('button', { name: /medicamentos|tratamientos/i });
+      await user.click(medTab);
+
+      expect(screen.getByText('Amoxicilina')).toBeInTheDocument();
+
+      // Fill form
+      await user.type(screen.getByPlaceholderText('ej. Amoxicilina'), 'Cefalexina');
+      await user.type(screen.getByPlaceholderText('ej. 1/2 tableta'), '500mg');
+      await user.type(screen.getByPlaceholderText('ej. Cada 12 horas'), 'Cada 8 horas');
+      fireEvent.change(screen.getByLabelText(/hora de administración/i), { target: { value: '08:00' } });
+      fireEvent.change(screen.getByLabelText(/fecha inicio/i), { target: { value: '2026-08-22' } });
+      fireEvent.change(screen.getByLabelText(/fecha fin/i), { target: { value: '2026-08-29' } });
+
+      await user.click(screen.getByRole('button', { name: /recetar medicamento/i }));
+
+      expect(mockAddMedicationMutate).toHaveBeenCalledWith({
+        petId: 'pet-1',
+        medicationData: expect.objectContaining({ name: 'Cefalexina', dosage: '500mg' }),
+      });
+    });
+
+    test('handles allergies section (add, edit, cancel edit, delete)', async () => {
+      const mockAddAllergyMutate = vi.fn().mockResolvedValueOnce({});
+      const mockUpdateAllergyMutate = vi.fn().mockResolvedValueOnce({});
+      const mockDeleteAllergyMutate = vi.fn().mockResolvedValueOnce({});
+      const { useAllergiesList, useAddAllergy, useUpdateAllergy, useDeleteAllergy } = await import('../src/hooks/useAllergies');
+
+      useAllergiesList.mockReturnValue({
+        data: [
+          {
+            id: 'alg-1',
+            allergen: 'Polen',
+            category: 'environmental',
+            severity: 'mild',
+            reaction: 'Estornudos',
+            notes: 'En primavera',
+            veterinarian_name: 'Dr. Ruiz',
+          },
+        ],
+        isLoading: false,
+        isError: false,
+      });
+      useAddAllergy.mockReturnValue({ mutateAsync: mockAddAllergyMutate, isPending: false });
+      useUpdateAllergy.mockReturnValue({ mutateAsync: mockUpdateAllergyMutate, isPending: false });
+      useDeleteAllergy.mockReturnValue({ mutateAsync: mockDeleteAllergyMutate, isPending: false });
+
+      const user = userEvent.setup();
+      render(
+        <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+          <Routes>
+            <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+          </Routes>
+        </MemoryRouter>
+      );
+
+      // Switch to allergies tab
+      await user.click(screen.getByRole('button', { name: /alergias/i }));
+      expect(screen.getByText('Polen')).toBeInTheDocument();
+
+      // Edit existing allergy
+      await user.click(screen.getByRole('button', { name: /editar/i }));
+
+      // Cancel edit
+      await user.click(screen.getByRole('button', { name: /^cancelar$/i }));
+
+      // Fill & Add new allergy
+      await user.type(screen.getByLabelText(/alérgeno \*/i), 'Picadura de pulga');
+      await user.selectOptions(screen.getByLabelText(/categoría \*/i), 'environmental');
+      await user.selectOptions(screen.getByLabelText(/severidad \*/i), 'mild');
+
+      await user.click(screen.getByRole('button', { name: /registrar alergia|agregar alergia/i }));
+
+      expect(mockAddAllergyMutate).toHaveBeenCalledWith({
+        petId: 'pet-1',
+        allergyData: expect.objectContaining({ allergen: 'Picadura de pulga' }),
+      });
+
+      // Delete existing allergy
+      await user.click(screen.getByRole('button', { name: /eliminar/i }));
+      expect(mockDeleteAllergyMutate).toHaveBeenCalledWith({
+        petId: 'pet-1',
+        allergyId: 'alg-1',
+      });
+    });
 });
