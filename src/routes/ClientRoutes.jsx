@@ -15,6 +15,8 @@ import MedicationReminder from '../pages/client/medications/MedicationReminder';
 import DiagnosisPage from '../pages/client/diagnoses/DiagnosisPage';
 import PetCareRecommendations from '../pages/client/ai/PetCareRecommendations';
 import { ROUTES } from '../constants/routes';
+import LabResultsPage from '../pages/client/LabResultsPage';
+
 /* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */
 export default function ClientRoutes() {
   return (
@@ -48,9 +50,10 @@ export default function ClientRoutes() {
       />
 
       <Route
-        path={ROUTES.CLIENT.LAB_RESULTS}
-        element={<HealthSection title="Lab results" description="Laboratory results and follow-up information for the selected pet." />}
-      />
+  path={ROUTES.CLIENT.LAB_RESULTS}
+  element={<LabResultsPage />}
+/>
+      
       <Route
         path={ROUTES.CLIENT.RECOMMENDATIONS}
         element={<PetCareRecommendations />}
