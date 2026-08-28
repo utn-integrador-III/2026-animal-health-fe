@@ -9,12 +9,26 @@ import useTranslation from '../../../hooks/useTranslation';
 import { useVaccinesList } from '../../../hooks/useVaccines';
 
 function formatDate(value, locale) {
-  if (!value) return '--';
-  return new Intl.DateTimeFormat(locale, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(`${value}T00:00:00`));
+  if (!value) return null;
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(new Date(`${value}T00:00:00`));
+  } catch {
+    return value;
+  }
+}
+
+function VaccineDetailRow({ label, value }) {
+  if (!value) return null;
+  return (
+    <p style={{ fontSize: '0.82rem', color: '#374151', margin: '0.15rem 0' }}>
+      <strong style={{ color: '#0f766e' }}>{label}:</strong>{' '}
+      <span>{value}</span>
+    </p>
+  );
 }
 
 export default function VaccinesPage() {
@@ -83,12 +97,14 @@ export default function VaccinesPage() {
                           <span className="vaccine-status vaccine-status-upcoming">{t('vaccines.upcoming')}</span>
                         </div>
                         <p className="vaccine-card-type">{vaccine.type}</p>
-                        <div className="vaccine-card-meta">
-                          <span>
-                            <HiCalendar aria-hidden="true" />
-                            {formatDate(vaccine.scheduled_date, language)}
-                          </span>
-                        </div>
+                        <VaccineDetailRow label={t('vaccines.date')} value={formatDate(vaccine.scheduled_date, language)} />
+                        <VaccineDetailRow label={t('vaccines.brand')} value={vaccine.brand} />
+                        <VaccineDetailRow label={t('vaccines.dose')} value={vaccine.dose ? `${vaccine.dose} ${vaccine.unit ?? ''}`.trim() : null} />
+                        <VaccineDetailRow label={t('vaccines.route')} value={vaccine.administration_route} />
+                        <VaccineDetailRow label={t('vaccines.nextDose')} value={formatDate(vaccine.next_dose, language)} />
+                        <VaccineDetailRow label={t('vaccines.expiration')} value={formatDate(vaccine.expiration_date, language)} />
+                        <VaccineDetailRow label={t('vaccines.batch')} value={vaccine.batch_number} />
+                        <VaccineDetailRow label={t('vaccines.veterinarian')} value={vaccine.veterinarian_name} />
                         {vaccine.notes && <p className="vaccine-card-notes">{vaccine.notes}</p>}
                       </div>
                     </article>
@@ -124,12 +140,14 @@ export default function VaccinesPage() {
                           <span className="vaccine-status">{t('vaccines.history')}</span>
                         </div>
                         <p className="vaccine-card-type">{vaccine.type}</p>
-                        <div className="vaccine-card-meta">
-                          <span>
-                            <HiCalendar aria-hidden="true" />
-                            {formatDate(vaccine.scheduled_date, language)}
-                          </span>
-                        </div>
+                        <VaccineDetailRow label={t('vaccines.date')} value={formatDate(vaccine.scheduled_date, language)} />
+                        <VaccineDetailRow label={t('vaccines.brand')} value={vaccine.brand} />
+                        <VaccineDetailRow label={t('vaccines.dose')} value={vaccine.dose ? `${vaccine.dose} ${vaccine.unit ?? ''}`.trim() : null} />
+                        <VaccineDetailRow label={t('vaccines.route')} value={vaccine.administration_route} />
+                        <VaccineDetailRow label={t('vaccines.nextDose')} value={formatDate(vaccine.next_dose, language)} />
+                        <VaccineDetailRow label={t('vaccines.expiration')} value={formatDate(vaccine.expiration_date, language)} />
+                        <VaccineDetailRow label={t('vaccines.batch')} value={vaccine.batch_number} />
+                        <VaccineDetailRow label={t('vaccines.veterinarian')} value={vaccine.veterinarian_name} />
                         {vaccine.notes && <p className="vaccine-card-notes">{vaccine.notes}</p>}
                       </div>
                     </article>
