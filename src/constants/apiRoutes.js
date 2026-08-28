@@ -20,7 +20,7 @@ export const API_ROUTES = {
       SPECIFIC: (petId, id) => `/api/pets/${petId}/diagnoses/${id}`,
     },
     VACCINES: (petId) => `/api/pets/${petId}/vaccines`,
-    LAB_RESULTS: (petId) => `/api/lab-results/pet/${petId}`,
+    LAB_RESULTS: (petId) => `/api/pets/${petId}/lab-results`,
   },
   LAB_RESULTS: {
     BASE: '/api/lab-results',
