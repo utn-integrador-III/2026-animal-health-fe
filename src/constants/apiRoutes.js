@@ -46,6 +46,10 @@ export const API_ROUTES = {
   CONTACT: {
     BASE: '/api/contact',
   },
+  AI: {
+    BREED_RISK_ALERTS: (petId) => `/api/ai/pets/${petId}/breed-risk-alerts`,
+    CARE_RECOMMENDATIONS: (petId) => `/api/ai/pets/${petId}/care-recommendations`,
+  },
   CONSULTATIONS: {
     CLIENTS: '/api/consultations/clients',
     WALK_IN: '/api/consultations/walk-in',

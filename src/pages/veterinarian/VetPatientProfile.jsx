@@ -51,6 +51,7 @@ import {
   useUpdateLabResult,
   useDeleteLabResult,
 } from '../../hooks/useLabResults';
+import BreedRiskAlertsPanel from '../../components/veterinarian/BreedRiskAlertsPanel';
 import Swal from 'sweetalert2';
 
 const DURATIONS = [
@@ -605,6 +606,7 @@ export default function VetPatientProfile() {
   });
   const [editingAllergy, setEditingAllergy] = useState(null); // null | allergy object
   const allergyFormRef = useRef(null);
+  const activeSectionRef = useRef(null);
 
   const [clinicalForm, setClinicalForm] = useState({
     diagnosis: '',
@@ -637,6 +639,15 @@ export default function VetPatientProfile() {
       setClinicalObservation(appointment.clinical_observation);
     }
   }, [appointment?.clinical_observation]);
+
+  useEffect(() => {
+    if (
+      activeSection !== 'summary'
+      && typeof activeSectionRef.current?.scrollIntoView === 'function'
+    ) {
+      activeSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeSection]);
 
   if (isLoading) return <Loader label={t('vetPatient.loading')} />;
 
@@ -690,7 +701,7 @@ export default function VetPatientProfile() {
     {
       key: 'ai',
       title: t('vetPatient.cards.ai.title'),
-      value: 0,
+      value: language === 'es' ? 'IA' : 'AI',
       detail: t('vetPatient.cards.ai.detail'),
       icon: HiSparkles,
     },
@@ -1595,6 +1606,12 @@ export default function VetPatientProfile() {
             )}
           </div>
         </section>
+      )}
+
+      {activeSection === 'ai' && (
+        <div ref={activeSectionRef}>
+          <BreedRiskAlertsPanel petId={appointment.pet_id} language={language} />
+        </div>
       )}
 
       <RequestLabModal

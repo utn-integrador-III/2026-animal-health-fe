@@ -1,7 +1,6 @@
 import { Route } from 'react-router-dom';
 import ClientLayout from '../components/layout/ClientLayout';
 import Dashboard from '../pages/client/Dashboard';
-import HealthSection from '../pages/client/HealthSection';
 import Profile from '../pages/client/Profile';
 import AppointmentCalendar from '../pages/client/appointments/AppointmentCalendar';
 import PetList from '../pages/client/pets/PetList';
@@ -12,6 +11,9 @@ import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
 import MedicationReminder from '../pages/client/medications/MedicationReminder';
 import AllergiesPage from '../pages/client/allergies/AllergiesPage';
+import DiagnosisPage from '../pages/client/diagnoses/DiagnosisPage';
+import PetCareRecommendations from '../pages/client/ai/PetCareRecommendations';
+import NotificationsPage from '../pages/NotificationsPage';
 import LabResultsPage from '../pages/client/laboratory/LabResultsPage';
 import { ROUTES } from '../constants/routes';
 
@@ -39,7 +41,7 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.DIAGNOSTICS}
-        element={<PetMedicalHistory />}
+        element={<DiagnosisPage />}
       />
       <Route
         path={ROUTES.CLIENT.ALLERGIES}
@@ -51,7 +53,11 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.RECOMMENDATIONS}
-        element={<HealthSection title="Preventive recommendations" description="Care suggestions and preventive health guidance." />}
+        element={<PetCareRecommendations />}
+      />
+      <Route
+        path={ROUTES.SHARED.NOTIFICATIONS}
+        element={<NotificationsPage />}
       />
       <Route path={ROUTES.CLIENT.PET_DETAIL} element={<PetDetails />} />
       <Route path={ROUTES.CLIENT.PET_EDIT} element={<EditPet />} />

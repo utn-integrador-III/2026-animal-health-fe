@@ -5,6 +5,7 @@ import VetPatientProfile from '../pages/veterinarian/VetPatientProfile';
 import VetVaccines from '../pages/veterinarian/VetVaccines';
 import CreateConsultation from '../pages/veterinarian/consultations/CreateConsultation';
 import ClinicalReports from '../pages/veterinarian/reports/ClinicalReports';
+import NotificationsPage from '../pages/NotificationsPage';
 import { ROUTES } from '../constants/routes';
 
 export default function VetRoutes() {
@@ -15,6 +16,7 @@ export default function VetRoutes() {
       <Route path={ROUTES.VET.VACCINES} element={<VetVaccines />} />
       <Route path={ROUTES.VET.CONSULTATION} element={<CreateConsultation />} />
       <Route path={ROUTES.VET.REPORTS} element={<ClinicalReports />} />
+      <Route path={ROUTES.SHARED.NOTIFICATIONS} element={<NotificationsPage />} />
     </Route>
   );
 }
