@@ -4,7 +4,6 @@ import Dashboard from '../pages/client/Dashboard';
 import HealthSection from '../pages/client/HealthSection';
 import Profile from '../pages/client/Profile';
 import AppointmentCalendar from '../pages/client/appointments/AppointmentCalendar';
-import AllergiesPage from '../pages/client/allergies/AllergiesPage';
 import PetList from '../pages/client/pets/PetList';
 import PetDetails from '../pages/client/pets/PetDetails';
 import EditPet from '../pages/client/pets/EditPet';
@@ -12,12 +11,10 @@ import PetMedicalHistory from '../pages/client/pets/PetMedicalHistory';
 import VaccinesPage from '../pages/client/vaccines/VaccinesPage';
 import MedicationsPage from '../pages/client/medications/MedicationsPage';
 import MedicationReminder from '../pages/client/medications/MedicationReminder';
-import DiagnosisPage from '../pages/client/diagnoses/DiagnosisPage';
-import PetCareRecommendations from '../pages/client/ai/PetCareRecommendations';
+import AllergiesPage from '../pages/client/allergies/AllergiesPage';
+import LabResultsPage from '../pages/client/laboratory/LabResultsPage';
 import { ROUTES } from '../constants/routes';
-import LabResultsPage from '../pages/client/LabResultsPage';
 
-/* <Route path={ROUTES.CLIENT.ALLERGIES} element={<AllergiesPage />} /> */
 export default function ClientRoutes() {
   return (
     <Route element={<ClientLayout />}>
@@ -42,21 +39,19 @@ export default function ClientRoutes() {
       />
       <Route
         path={ROUTES.CLIENT.DIAGNOSTICS}
-        element={<DiagnosisPage />}
+        element={<PetMedicalHistory />}
       />
       <Route
         path={ROUTES.CLIENT.ALLERGIES}
         element={<AllergiesPage />}
       />
-
       <Route
-  path={ROUTES.CLIENT.LAB_RESULTS}
-  element={<LabResultsPage />}
-/>
-      
+        path={ROUTES.CLIENT.LAB_RESULTS}
+        element={<LabResultsPage />}
+      />
       <Route
         path={ROUTES.CLIENT.RECOMMENDATIONS}
-        element={<PetCareRecommendations />}
+        element={<HealthSection title="Preventive recommendations" description="Care suggestions and preventive health guidance." />}
       />
       <Route path={ROUTES.CLIENT.PET_DETAIL} element={<PetDetails />} />
       <Route path={ROUTES.CLIENT.PET_EDIT} element={<EditPet />} />

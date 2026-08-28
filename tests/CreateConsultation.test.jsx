@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import CreateConsultation from '../src/pages/veterinarian/consultations/CreateConsultation';
 import useLanguageStore from '../src/stores/useLanguageStore';
@@ -9,17 +8,6 @@ import useLanguageStore from '../src/stores/useLanguageStore';
 const findClient = vi.fn();
 const createConsultation = vi.fn();
 const createDiagnosis = vi.fn();
-
-function renderConsultation() {
-  return render(
-    <MemoryRouter initialEntries={['/vet/consultation']}>
-      <Routes>
-        <Route path="/vet/consultation" element={<CreateConsultation />} />
-        <Route path="/vet/patients/:appointmentId" element={<h1>Veterinary patient profile</h1>} />
-      </Routes>
-    </MemoryRouter>,
-  );
-}
 
 vi.mock('../src/hooks/useConsultations', () => ({
   useFindClientByEmail: vi.fn(() => ({
@@ -71,7 +59,7 @@ describe('CreateConsultation', () => {
       reason: 'Consulta presencial por caida de plumas',
     });
 
-    renderConsultation();
+    render(<CreateConsultation />);
 
     await user.type(screen.getByLabelText(/correo del cliente/i), 'abby@example.com');
     await user.click(screen.getByRole('button', { name: /buscar cliente/i }));
@@ -88,19 +76,27 @@ describe('CreateConsultation', () => {
       pet_weight_kg: 0.085,
       reason: 'Consulta presencial por caida de plumas',
     }));
-    expect(await screen.findByRole('heading', { name: /veterinary patient profile/i })).toBeInTheDocument();
+    expect(await screen.findByText(/consulta externa creada/i)).toBeInTheDocument();
   });
 
-  test('sends mixed-breed and new-client provisioning data, then opens the patient profile', async () => {
+  test('saves a diagnosis after creating the walk-in consultation', async () => {
     const user = userEvent.setup();
     createConsultation.mockResolvedValueOnce({
-      appointment_id: 'appointment-2',
+      id: 'consultation-1',
       pet_id: 'pet-2',
       pet_name: 'Milo',
       owner_name: 'Samuel Romero',
       reason: 'Revision externa',
     });
-    renderConsultation();
+    createDiagnosis.mockResolvedValueOnce({
+      id: 'diagnosis-1',
+      consultation_id: 'consultation-1',
+      pet_id: 'pet-2',
+      diagnosis: 'Dermatitis',
+      clinical_notes: 'Se observa irritacion leve.',
+    });
+
+    render(<CreateConsultation />);
 
     await user.type(screen.getByLabelText(/correo del cliente/i), 'samuel@example.com');
     await user.type(screen.getByLabelText(/nombre completo/i), 'Samuel Romero');
@@ -109,53 +105,23 @@ describe('CreateConsultation', () => {
     await user.selectOptions(screen.getByLabelText(/especie/i), 'Dog');
     await user.selectOptions(screen.getByLabelText(/sexo/i), 'Male');
     await user.type(screen.getByLabelText(/raza principal/i), 'Mestizo');
-    await user.click(screen.getByLabelText(/mascota mestiza/i));
-    await user.type(screen.getByLabelText(/^raza secundaria/i), 'Labrador');
     await user.type(screen.getByLabelText(/peso/i), '12.5');
     await user.type(screen.getByLabelText(/motivo de la visita/i), 'Revision externa');
     await user.click(screen.getByRole('button', { name: /crear consulta/i }));
 
-    expect(createConsultation).toHaveBeenCalledWith(expect.objectContaining({
-      client_id: '',
-      create_client_account: true,
-      send_temporary_password: true,
-      pet_breed_primary: 'Mestizo',
-      pet_breed_secondary: 'Labrador',
-      pet_mixed_breed: true,
-    }));
-    expect(await screen.findByRole('heading', { name: /veterinary patient profile/i })).toBeInTheDocument();
-  });
+    await user.type(await screen.findByLabelText(/diagn.stico/i), 'Dermatitis');
+    await user.type(screen.getByLabelText(/notas clinicas/i), 'Se observa irritacion leve.');
+    await user.click(screen.getByRole('button', { name: /guardar diagnostico/i }));
 
-  test('clears a previously selected client when the email changes', async () => {
-    const user = userEvent.setup();
-    findClient.mockResolvedValueOnce({
-      client: {
-        id: 'miguel-1',
-        full_name: 'Miguel Vargas',
-        email: 'miguel@example.com',
-        phone: '8888-8888',
+    expect(createDiagnosis).toHaveBeenCalledWith({
+      consultationId: 'consultation-1',
+      diagnosisData: {
+        consultation_id: 'consultation-1',
+        pet_id: 'pet-2',
+        diagnosis: 'Dermatitis',
+        clinical_notes: 'Se observa irritacion leve.',
       },
-      pets: [{
-        id: 'nino-1',
-        name: 'Nino',
-        birth_date: '2023-01-10',
-        species: 'Dog',
-        sex: 'Male',
-        breed_primary: 'Poodle',
-        weight_kg: 8,
-      }],
     });
-
-    renderConsultation();
-    const email = screen.getByLabelText(/correo del cliente/i);
-    await user.type(email, 'miguel@example.com');
-    await user.click(screen.getByRole('button', { name: /buscar cliente/i }));
-    expect(await screen.findByLabelText(/mascota registrada/i)).toBeInTheDocument();
-
-    await user.clear(email);
-    await user.type(email, 'carmen@example.com');
-
-    expect(screen.queryByLabelText(/mascota registrada/i)).not.toBeInTheDocument();
-    expect(screen.getByLabelText(/nombre de la mascota/i)).toHaveValue('');
+    expect(await screen.findByText(/diagnostico guardado/i)).toBeInTheDocument();
   });
 });

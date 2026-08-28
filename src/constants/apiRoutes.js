@@ -11,7 +11,6 @@ export const API_ROUTES = {
     CLINICAL_RECORDS: (petId) => `/api/pets/${petId}/clinical-records`,
     MEDICATIONS: (petId) => `/api/pets/${petId}/medications`,
     MEDICATIONS_TOGGLE: (petId, medicationId) => `/api/pets/${petId}/medications/${medicationId}/toggle-check`,
-    LAB_RESULTS: (petId) => `/api/pets/${petId}/lab-results`,
     ALLERGIES: {
       BY_PET: (petId) => `/api/pets/${petId}/allergies`,
       SPECIFIC: (petId, id) => `/api/pets/${petId}/allergies/${id}`,
@@ -21,6 +20,13 @@ export const API_ROUTES = {
       SPECIFIC: (petId, id) => `/api/pets/${petId}/diagnoses/${id}`,
     },
     VACCINES: (petId) => `/api/pets/${petId}/vaccines`,
+    LAB_RESULTS: (petId) => `/api/lab-results/pet/${petId}`,
+  },
+  LAB_RESULTS: {
+    BASE: '/api/lab-results',
+    BY_PET: (petId) => `/api/lab-results/pet/${petId}`,
+    BY_ID: (id) => `/api/lab-results/${id}`,
+    UPLOAD: (id) => `/api/lab-results/${id}/upload`,
   },
   APPOINTMENTS: {
     BASE: '/api/appointments',
@@ -39,10 +45,6 @@ export const API_ROUTES = {
   },
   CONTACT: {
     BASE: '/api/contact',
-  },
-  AI: {
-    BREED_RISK_ALERTS: (petId) => `/api/ai/pets/${petId}/breed-risk-alerts`,
-    CARE_RECOMMENDATIONS: (petId) => `/api/ai/pets/${petId}/care-recommendations`,
   },
   CONSULTATIONS: {
     CLIENTS: '/api/consultations/clients',

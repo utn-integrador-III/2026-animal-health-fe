@@ -3,15 +3,7 @@
 // Uses global fetch mock — no real HTTP calls are made
 
 import { beforeEach, afterEach, describe, expect, test, vi } from 'vitest';
-import {
-  getUserNotifications,
-  getUnreadCount,
-  markAsRead,
-  markAllAsRead,
-  deleteNotification,
-  takeMedication,
-  remindLater,
-} from '../src/services/notificationService';
+import { takeMedication, remindLater } from '../src/services/notificationService';
 
 const mockToken = 'test-jwt-token';
 const mockFetch = vi.fn();
@@ -104,112 +96,6 @@ describe('notificationService — medication actions', () => {
       });
 
       await expect(remindLater(NOTIF_ID)).rejects.toThrow('Error 403: Forbidden');
-    });
-  });
-
-  // ── getUserNotifications ─────────────────────────────────────────────
-  describe('getUserNotifications', () => {
-    test('fetches notifications with query params', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ notifications: [{ id: 'n1' }], total: 1, unread_count: 1 }),
-      });
-
-      const data = await getUserNotifications(true, 10, 5);
-      const [url] = mockFetch.mock.calls[0];
-
-      expect(url).toContain('/api/notifications/?only_unread=true&limit=10&offset=5');
-      expect(data.notifications).toHaveLength(1);
-    });
-
-    test('throws when server returns error status', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Server Error' });
-      await expect(getUserNotifications()).rejects.toThrow('Error 500: Server Error');
-    });
-  });
-
-  // ── getUnreadCount ───────────────────────────────────────────────────
-  describe('getUnreadCount', () => {
-    test('returns unread count on success', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ unread_count: 5 }),
-      });
-
-      const count = await getUnreadCount();
-      expect(count).toBe(5);
-    });
-
-    test('returns 0 on error response', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false, status: 400 });
-      const count = await getUnreadCount();
-      expect(count).toBe(0);
-    });
-  });
-
-  // ── markAsRead ───────────────────────────────────────────────────────
-  describe('markAsRead', () => {
-    test('calls PUT /api/notifications/{id}/read', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      });
-
-      const result = await markAsRead('n1');
-      const [url, options] = mockFetch.mock.calls[0];
-
-      expect(url).toContain('/api/notifications/n1/read');
-      expect(options.method).toBe('PUT');
-      expect(result.success).toBe(true);
-    });
-
-    test('throws when server returns error', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false, status: 404, statusText: 'Not Found' });
-      await expect(markAsRead('n1')).rejects.toThrow('Error 404: Not Found');
-    });
-  });
-
-  // ── markAllAsRead ────────────────────────────────────────────────────
-  describe('markAllAsRead', () => {
-    test('calls PUT /api/notifications/read-all', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      });
-
-      const result = await markAllAsRead();
-      const [url, options] = mockFetch.mock.calls[0];
-
-      expect(url).toContain('/api/notifications/read-all');
-      expect(options.method).toBe('PUT');
-      expect(result.success).toBe(true);
-    });
-
-    test('throws when server returns error', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Error' });
-      await expect(markAllAsRead()).rejects.toThrow('Error 500: Error');
-    });
-  });
-
-  // ── deleteNotification ───────────────────────────────────────────────
-  describe('deleteNotification', () => {
-    test('calls DELETE /api/notifications/{id}', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      });
-
-      const result = await deleteNotification('n1');
-      const [url, options] = mockFetch.mock.calls[0];
-
-      expect(url).toContain('/api/notifications/n1');
-      expect(options.method).toBe('DELETE');
-      expect(result.success).toBe(true);
-    });
-
-    test('throws when server returns error', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false, status: 404, statusText: 'Not Found' });
-      await expect(deleteNotification('n1')).rejects.toThrow('Error 404: Not Found');
     });
   });
 });

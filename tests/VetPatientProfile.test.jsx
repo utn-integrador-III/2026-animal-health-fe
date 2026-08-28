@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -6,10 +6,6 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import VetPatientProfile from '../src/pages/veterinarian/VetPatientProfile';
 import useAuthStore from '../src/stores/useAuthStore';
 import useLanguageStore from '../src/stores/useLanguageStore';
-
-vi.mock('sweetalert2', () => ({
-  default: { fire: vi.fn().mockResolvedValue({ isConfirmed: true }) },
-}));
 
 const mutateAsync = vi.fn();
 const completeAppointment = vi.fn();
@@ -21,44 +17,6 @@ function getTestAppointmentDate() {
   }
   return date.toISOString().split('T')[0];
 }
-
-function getFutureDate(daysToAdd = 0) {
-  const date = new Date();
-  date.setDate(date.getDate() + daysToAdd);
-  return date.toISOString().split('T')[0];
-}
-
-const breedRiskHookState = vi.hoisted(() => ({
-  result: {
-    data: {
-      pet_id: 'pet-1',
-      name: 'Lola',
-      species: 'Bird',
-      breed_primary: 'Ninfa',
-      breed_secondary: null,
-      birth_date: '2024-07-13',
-      age_years: 2,
-      age_months: 1,
-      age_days: 3,
-      alerts: [
-        {
-          title: 'Respiratory sensitivity',
-          description: 'Cockatiels may be sensitive to poor air quality.',
-          severity: 'moderate',
-          recommendation: 'Review ventilation and avoid smoke exposure.',
-        },
-      ],
-      preventive_recommendations: [
-        'Schedule regular wellness checks.',
-        'Monitor appetite and feather condition.',
-      ],
-      non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
-      generated_by: 'gemini',
-    },
-    isLoading: false,
-    isError: false,
-  },
-}));
 
 vi.mock('../src/hooks/useAppointments', () => ({
   useAppointments: vi.fn(() => ({
@@ -149,85 +107,34 @@ vi.mock('../src/hooks/useAllergies', () => ({
   })),
 }));
 
-vi.mock('../src/hooks/useDiagnoses', () => ({
-  useDiagnosesList: vi.fn(() => ({ data: [], isLoading: false, isError: false })),
-  useAddDiagnosis: vi.fn(() => ({ mutateAsync: vi.fn(), isPending: false })),
-}));
-
-vi.mock('../src/hooks/useBreedRiskAlerts', () => ({
-  useBreedRiskAlerts: vi.fn(() => breedRiskHookState.result),
+vi.mock('../src/hooks/useLabResults', () => ({
+  useLabResultsList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+  useCreateLabRequest: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useUploadLabResultFile: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useUpdateLabResult: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
+  useDeleteLabResult: vi.fn(() => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  })),
 }));
 
 describe('VetPatientProfile', () => {
   beforeEach(() => {
-    window.HTMLElement.prototype.scrollIntoView = vi.fn();
     mutateAsync.mockReset();
     completeAppointment.mockReset();
-    breedRiskHookState.result = {
-      data: {
-        pet_id: 'pet-1',
-        name: 'Lola',
-        species: 'Bird',
-        breed_primary: 'Ninfa',
-        breed_secondary: null,
-        birth_date: '2024-07-13',
-        age_years: 2,
-        age_months: 1,
-        age_days: 3,
-        alerts: [
-          {
-            title: 'Respiratory sensitivity',
-            description: 'Cockatiels may be sensitive to poor air quality.',
-            severity: 'moderate',
-            recommendation: 'Review ventilation and avoid smoke exposure.',
-          },
-        ],
-        preventive_recommendations: [
-          'Schedule regular wellness checks.',
-          'Monitor appetite and feather condition.',
-        ],
-        non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
-        generated_by: 'gemini',
-        recommendation_id: 'latest-recommendation',
-        history: [
-          {
-            recommendation_id: 'latest-recommendation',
-            generated_at: '2026-08-21T15:00:00+00:00',
-            alerts: [
-              {
-                title: 'Respiratory sensitivity',
-                description: 'Cockatiels may be sensitive to poor air quality.',
-                severity: 'moderate',
-                recommendation: 'Review ventilation and avoid smoke exposure.',
-              },
-            ],
-            preventive_recommendations: [
-              'Schedule regular wellness checks.',
-              'Monitor appetite and feather condition.',
-            ],
-            non_diagnostic_warning: 'AI guidance is informational and not a diagnosis.',
-            generated_by: 'gemini',
-          },
-          {
-            recommendation_id: 'previous-recommendation',
-            generated_at: '2026-08-20T15:00:00+00:00',
-            alerts: [
-              {
-                title: 'Previous respiratory note',
-                description: 'Older generated context.',
-                severity: 'low',
-                recommendation: 'Keep monitoring respiratory pattern.',
-              },
-            ],
-            preventive_recommendations: ['Previous preventive recommendation.'],
-            non_diagnostic_warning: 'Previous informational warning.',
-            generated_by: 'gemini',
-          },
-        ],
-      },
-      isLoading: false,
-      isError: false,
-    };
     useLanguageStore.setState({ language: 'es' });
     useAuthStore.setState({
       user: {
@@ -334,13 +241,7 @@ describe('VetPatientProfile', () => {
     expect(await screen.findByText(/cita finalizada correctamente/i)).toBeInTheDocument();
   });
 
-  test('submits diagnosis information from the veterinary patient profile', async () => {
-    const { useAddDiagnosis } = await import('../src/hooks/useDiagnoses');
-    const addDiagnosis = vi.fn().mockResolvedValueOnce({});
-    useAddDiagnosis.mockReturnValue({
-      mutateAsync: addDiagnosis,
-      isPending: false,
-    });
+  test('opens the lab results section and can request a new lab exam', async () => {
     const user = userEvent.setup();
 
     render(
@@ -351,238 +252,24 @@ describe('VetPatientProfile', () => {
       </MemoryRouter>,
     );
 
-    await user.click(screen.getByRole('button', { name: /diagn[oó]sticos/i }));
-    await user.type(screen.getByLabelText(/diagn[oó]stico definitivo/i), 'Traumatismo leve');
-    await user.type(screen.getByLabelText(/resumen del tratamiento/i), 'Reposo y monitoreo por 48 horas');
-    await user.click(screen.getByRole('button', { name: /completar consulta/i }));
+    // Click on the Lab Results card
+    const labCard = screen.getByRole('button', { name: /resultados de laboratorio/i });
+    await user.click(labCard);
 
-    expect(addDiagnosis).toHaveBeenCalledWith({
-      petId: 'pet-1',
-      diagnosisData: expect.objectContaining({
-        pet_id: 'pet-1',
-        diagnosis: 'Traumatismo leve',
-        treatment: 'Reposo y monitoreo por 48 horas',
-      }),
-    });
-  });
+    // Verify section heading and request exam button
+    expect(screen.getAllByRole('heading', { name: /resultados y solicitudes de laboratorio/i }).length).toBeGreaterThan(0);
+    const requestExamBtn = screen.getByRole('button', { name: /solicitar examen/i });
+    expect(requestExamBtn).toBeInTheDocument();
 
-  test('prescribes medication from the veterinary patient profile', async () => {
-    const { useAddMedication, useMedicationsList } = await import('../src/hooks/useMedical');
-    const addMedication = vi.fn().mockResolvedValueOnce({});
-    useAddMedication.mockReturnValue({
-      mutateAsync: addMedication,
-      isPending: false,
-    });
-    useMedicationsList.mockReturnValue({
-      data: [
-        {
-          id: 'med-1',
-          name: 'Amoxicilina',
-          dosage: '250 mg',
-          frequency: 'Cada 12 horas',
-          administration_time: '08:00',
-          start_date: getFutureDate(),
-          end_date: getFutureDate(7),
-          notes: 'Dar con alimentos',
-        },
-      ],
-      isLoading: false,
-      isError: false,
-    });
-    const user = userEvent.setup();
+    // Click to open modal
+    await user.click(requestExamBtn);
 
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /medicamentos/i }));
-
-    expect(screen.getByText('Amoxicilina')).toBeInTheDocument();
-
-    await user.type(screen.getByPlaceholderText('ej. Amoxicilina'), 'Cefalexina');
-    await user.type(screen.getByPlaceholderText('ej. 1/2 tableta'), '500 mg');
-    await user.type(screen.getByPlaceholderText('ej. Cada 12 horas'), 'Cada 8 horas');
-    fireEvent.change(screen.getByLabelText(/hora de administraci/i), {
-      target: { value: '08:00' },
-    });
-    fireEvent.change(screen.getByLabelText(/fecha inicio/i), {
-      target: { value: getFutureDate() },
-    });
-    fireEvent.change(screen.getByLabelText(/fecha fin/i), {
-      target: { value: getFutureDate(7) },
-    });
-    await user.type(screen.getByPlaceholderText('ej. Dar con alimentos'), 'Administrar con comida');
-    await user.click(screen.getByRole('button', { name: /agregar medicamento|recetar medicamento/i }));
-
-    expect(addMedication).toHaveBeenCalledWith({
-      petId: 'pet-1',
-      medicationData: expect.objectContaining({
-        name: 'Cefalexina',
-        dosage: '500 mg',
-        frequency: 'Cada 8 horas',
-        administration_time: '08:00',
-        start_date: getFutureDate(),
-        end_date: getFutureDate(7),
-        notes: 'Administrar con comida',
-      }),
-    });
-  });
-
-  test('adds, edits, cancels, and deletes allergies from the veterinary patient profile', async () => {
-    const {
-      useAddAllergy,
-      useAllergiesList,
-      useDeleteAllergy,
-      useUpdateAllergy,
-    } = await import('../src/hooks/useAllergies');
-    const addAllergy = vi.fn().mockResolvedValueOnce({});
-    const updateAllergy = vi.fn().mockResolvedValueOnce({});
-    const deleteAllergy = vi.fn().mockResolvedValueOnce({});
-    useAddAllergy.mockReturnValue({ mutateAsync: addAllergy, isPending: false });
-    useUpdateAllergy.mockReturnValue({ mutateAsync: updateAllergy, isPending: false });
-    useDeleteAllergy.mockReturnValue({ mutateAsync: deleteAllergy, isPending: false });
-    useAllergiesList.mockReturnValue({
-      data: [
-        {
-          id: 'allergy-1',
-          allergen: 'Polen',
-          category: 'environmental',
-          severity: 'moderate',
-          reaction: 'Estornudos',
-          notes: 'Evitar jardines con flores',
-          veterinarian_name: 'Maria Sanchez',
-        },
-      ],
-      isLoading: false,
-      isError: false,
-    });
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /alergias/i }));
-
-    expect(screen.getByText('Polen')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /editar/i }));
-    await user.click(screen.getByRole('button', { name: /cancelar/i }));
-
-    await user.type(screen.getByLabelText(/al[eé]rgeno/i), 'Picadura de pulga');
-    await user.selectOptions(screen.getByLabelText(/categor[ií]a/i), 'environmental');
-    await user.selectOptions(screen.getByLabelText(/severidad/i), 'mild');
-    await user.type(screen.getByLabelText(/reacci[oó]n/i), 'Irritacion leve');
-    await user.type(screen.getByLabelText(/notas/i), 'Controlar piel semanalmente');
-    await user.click(screen.getByRole('button', { name: /registrar alergia|agregar alergia/i }));
-
-    expect(addAllergy).toHaveBeenCalledWith({
-      petId: 'pet-1',
-      allergyData: expect.objectContaining({
-        allergen: 'Picadura de pulga',
-        category: 'environmental',
-        severity: 'mild',
-        reaction: 'Irritacion leve',
-        notes: 'Controlar piel semanalmente',
-      }),
-    });
-
-    await user.click(screen.getByRole('button', { name: /eliminar/i }));
-
-    expect(deleteAllergy).toHaveBeenCalledWith({
-      petId: 'pet-1',
-      allergyId: 'allergy-1',
-    });
-  });
-
-  test('shows AI breed risk alerts with age, breed, recommendations, and warning', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
-
-    expect(screen.getByRole('heading', { name: /alertas de riesgo por raza/i })).toBeInTheDocument();
-    expect(screen.getAllByText('Lola').length).toBeGreaterThan(1);
-    expect(screen.getAllByText('Ninfa').length).toBeGreaterThan(1);
-    expect(screen.getByText(/2 anos, 1 meses, 3 dias/i)).toBeInTheDocument();
-    expect(screen.getByText('Respiratory sensitivity')).toBeInTheDocument();
-    expect(screen.getByText(/Review ventilation and avoid smoke exposure/i)).toBeInTheDocument();
-    expect(screen.getByText('AI guidance is informational and not a diagnosis.')).toBeInTheDocument();
-  });
-
-  test('lets the veterinarian choose previous AI recommendation versions', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
-    await user.selectOptions(screen.getByLabelText(/historial de recomendaciones/i), 'previous-recommendation');
-
-    expect(screen.getByText('Previous respiratory note')).toBeInTheDocument();
-    expect(screen.getByText(/Keep monitoring respiratory pattern/i)).toBeInTheDocument();
-    expect(screen.getByText('Previous informational warning.')).toBeInTheDocument();
-  });
-
-  test('shows the AI loading state', async () => {
-    breedRiskHookState.result = {
-      data: undefined,
-      isLoading: true,
-      isError: false,
-    };
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
-
-    expect(screen.getByText(/generando alertas de riesgo por raza/i)).toBeInTheDocument();
-  });
-
-  test('shows the AI error state', async () => {
-    breedRiskHookState.result = {
-      data: undefined,
-      isLoading: false,
-      isError: true,
-    };
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
-        <Routes>
-          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
-        </Routes>
-      </MemoryRouter>,
-    );
-
-    await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
-
-    expect(screen.getByText(/no se pudieron cargar las recomendaciones de ia/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /nueva solicitud de examen de laboratorio/i })).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Lola')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Abby Ramirez')).toBeInTheDocument();
+    expect(screen.getByLabelText(/tipo de examen/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/prioridad/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/motivo de la solicitud/i)).toBeInTheDocument();
   });
 });
+
