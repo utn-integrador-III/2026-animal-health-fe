@@ -12,7 +12,7 @@ import {
 } from 'react-icons/hi';
 
 import { ROUTES } from '../../../constants/routes';
-import { usePet } from '../../../hooks/usePets';
+import { usePet, usePetsList } from '../../../hooks/usePets';
 import { DEFAULT_PET_ICON, SPECIES_ICON } from '../../../constants/petConstants';
 import useTranslation from '../../../hooks/useTranslation';
 import { useLabResultsList } from '../../../hooks/useLabResults';
@@ -39,7 +39,10 @@ function formatDate(value, locale) {
 export default function LabResultsPage() {
   const [searchParams] = useSearchParams();
   const { language, t } = useTranslation();
-  const petId = searchParams.get('petId');
+  const rawPetId = searchParams.get('petId');
+  const petsQuery = typeof usePetsList === 'function' ? usePetsList() : null;
+  const pets = petsQuery?.data || [];
+  const petId = rawPetId || pets[0]?.id;
   const { data: pet, isLoading: loadingPet, isError: errorPet } = usePet(petId);
   const {
     data: labResults = [],
@@ -162,7 +165,7 @@ export default function LabResultsPage() {
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-lg font-bold text-slate-900">
-                              {item.test_type}
+                              {item.test_type || item.exam_type || 'Examen de laboratorio'}
                             </h3>
                             {isUrgent && (
                               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">

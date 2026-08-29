@@ -1225,6 +1225,8 @@ export default function VetPatientProfile() {
                     petId: appointment.pet_id,
                     requestData: {
                       ...labRequestForm,
+                      test_type: labRequestForm.exam_type,
+                      exam_type: labRequestForm.exam_type,
                       appointment_id: appointment.id,
                       veterinarian_name: user?.full_name || appointment.veterinarian_name,
                     },

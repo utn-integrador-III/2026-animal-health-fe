@@ -9,6 +9,7 @@ import useLanguageStore from '../src/stores/useLanguageStore';
 
 vi.mock('../src/hooks/usePets', () => ({
   usePet: vi.fn(),
+  usePetsList: vi.fn(() => ({ data: [] })),
 }));
 
 vi.mock('../src/hooks/useLabResults', () => ({
