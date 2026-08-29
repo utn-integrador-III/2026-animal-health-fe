@@ -3,18 +3,12 @@ import { Link, useParams } from 'react-router-dom';
 import {
   HiBeaker,
   HiCalendar,
-  HiCheckCircle,
   HiClipboardList,
-  HiClock,
   HiDocumentText,
-  HiDownload,
   HiExclamation,
-  HiEye,
-  HiInformationCircle,
   HiPlus,
   HiShieldCheck,
   HiSparkles,
-  HiTrash,
   HiX,
 } from 'react-icons/hi';
 
@@ -44,13 +38,14 @@ import {
   useUpdateAllergy,
   useDeleteAllergy,
 } from '../../hooks/useAllergies';
+import { useAddDiagnosis, useDiagnosesList } from '../../hooks/useDiagnoses';
 import {
   useLabResultsList,
   useCreateLabRequest,
   useUploadLabResultFile,
   useUpdateLabResult,
-  useDeleteLabResult,
 } from '../../hooks/useLabResults';
+import VetDiagnosisForm, { INITIAL_FORM } from '../../components/veterinarian/VetDiagnosisForm';
 import BreedRiskAlertsPanel from '../../components/veterinarian/BreedRiskAlertsPanel';
 import Swal from 'sweetalert2';
 
@@ -74,11 +69,17 @@ function normalizeTime(value) {
 
 function formatDate(value, language) {
   if (!value) return '--';
-  return new Intl.DateTimeFormat(language, {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(`${value}T00:00:00`));
+  try {
+    const dateObj = value.includes('T') ? new Date(value) : new Date(`${value}T00:00:00`);
+    if (isNaN(dateObj.getTime())) return value;
+    return new Intl.DateTimeFormat(language, {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(dateObj);
+  } catch {
+    return value;
+  }
 }
 
 function calculateAge(birthDate, t) {
@@ -271,288 +272,6 @@ function CompleteAppointmentModal({
   );
 }
 
-function RequestLabModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  isSaving,
-  appointment,
-  veterinarianName,
-}) {
-  const { t } = useTranslation();
-  const [form, setForm] = useState({
-    test_type: 'Hemograma',
-    custom_test_type: '',
-    priority: 'Normal',
-    reason: '',
-    clinical_observations: '',
-    requested_at: new Date().toISOString().split('T')[0],
-  });
-
-  if (!isOpen) return null;
-
-  const testTypes = [
-    { value: 'Hemograma', label: t('lab.testTypes.hemograma') },
-    { value: 'Química sanguínea', label: t('lab.testTypes.quimica_sanguinea') },
-    { value: 'Coprológico', label: t('lab.testTypes.coprologico') },
-    { value: 'Urianálisis', label: t('lab.testTypes.urianalisis') },
-    { value: 'Radiografía', label: t('lab.testTypes.radiografia') },
-    { value: 'Ecografía', label: t('lab.testTypes.ecografia') },
-    { value: 'Biopsia', label: t('lab.testTypes.biopsia') },
-    { value: 'Cultivo', label: t('lab.testTypes.cultivo') },
-    { value: 'Otro', label: t('lab.testTypes.otro') },
-  ];
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const finalTestType = form.test_type === 'Otro' ? (form.custom_test_type || 'Otro') : form.test_type;
-    onSubmit({
-      test_type: finalTestType,
-      priority: form.priority,
-      reason: form.reason,
-      clinical_observations: form.clinical_observations,
-      requested_at: form.requested_at,
-      status: 'Solicitado',
-    });
-  };
-
-  return (
-    <div className="vet-consultation-modal-backdrop">
-      <section className="vet-consultation-modal" role="dialog" aria-modal="true" aria-label={t('lab.requestExamTitle')}>
-        <button type="button" className="vet-consultation-close" onClick={onClose}>
-          <HiX aria-hidden="true" />
-        </button>
-        <h2>{t('lab.requestExamTitle')}</h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Crea una solicitud u orden médica de laboratorio para {appointment.pet_name}.
-        </p>
-
-        <form className="vet-followup-form" onSubmit={handleSubmit}>
-          <label>
-            {t('lab.pet')}
-            <input type="text" value={appointment.pet_name} disabled className="bg-slate-100 cursor-not-allowed" />
-          </label>
-
-          <label>
-            {t('lab.owner')}
-            <input type="text" value={appointment.owner_name || 'Dueño'} disabled className="bg-slate-100 cursor-not-allowed" />
-          </label>
-
-          <label>
-            {t('lab.requestingVet')}
-            <input type="text" value={veterinarianName || appointment.veterinarian_name || 'Veterinario'} disabled className="bg-slate-100 cursor-not-allowed" />
-          </label>
-
-          <label>
-            {t('lab.requestDate')} *
-            <input
-              required
-              type="date"
-              value={form.requested_at}
-              onChange={(e) => setForm(f => ({ ...f, requested_at: e.target.value }))}
-            />
-          </label>
-
-          <label>
-            {t('lab.testType')} *
-            <select
-              required
-              value={form.test_type}
-              onChange={(e) => setForm(f => ({ ...f, test_type: e.target.value }))}
-            >
-              {testTypes.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {form.test_type === 'Otro' && (
-            <label>
-              Especificar Tipo de Examen *
-              <input
-                required
-                value={form.custom_test_type}
-                onChange={(e) => setForm(f => ({ ...f, custom_test_type: e.target.value }))}
-                placeholder="ej. Panel Hormonal T4"
-              />
-            </label>
-          )}
-
-          <label>
-            {t('lab.priority')} *
-            <select
-              value={form.priority}
-              onChange={(e) => setForm(f => ({ ...f, priority: e.target.value }))}
-            >
-              <option value="Normal">Normal</option>
-              <option value="Urgente">🚨 Urgente</option>
-            </select>
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.reason')} *
-            <textarea
-              required
-              rows={2}
-              value={form.reason}
-              onChange={(e) => setForm(f => ({ ...f, reason: e.target.value }))}
-              placeholder={t('lab.reasonPlaceholder')}
-            />
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.clinicalObservations')}
-            <textarea
-              rows={2}
-              value={form.clinical_observations}
-              onChange={(e) => setForm(f => ({ ...f, clinical_observations: e.target.value }))}
-              placeholder={t('lab.clinicalObservationsPlaceholder')}
-            />
-          </label>
-
-          <div className="vet-followup-actions">
-            <Button type="button" variant="secondary" onClick={onClose} disabled={isSaving}>
-              {t('appointments.cancel')}
-            </Button>
-            <Button type="submit" isLoading={isSaving}>
-              {t('lab.createRequestBtn')}
-            </Button>
-          </div>
-        </form>
-      </section>
-    </div>
-  );
-}
-
-function UploadLabResultModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  isSaving,
-  labItem,
-}) {
-  const { t } = useTranslation();
-  const [resultDate, setResultDate] = useState(
-    labItem?.result_date || new Date().toISOString().split('T')[0]
-  );
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [summary, setSummary] = useState(labItem?.summary || labItem?.result_summary || '');
-  const [observations, setObservations] = useState(labItem?.observations || '');
-  const [recommendation, setRecommendation] = useState(labItem?.recommendation || '');
-
-  useEffect(() => {
-    if (labItem) {
-      setResultDate(labItem.result_date || new Date().toISOString().split('T')[0]);
-      setSummary(labItem.summary || labItem.result_summary || '');
-      setObservations(labItem.observations || '');
-      setRecommendation(labItem.recommendation || '');
-      setSelectedFile(null);
-    }
-  }, [labItem]);
-
-  if (!isOpen || !labItem) return null;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({
-      resultId: labItem.id,
-      file: selectedFile,
-      updateData: {
-        result_date: resultDate,
-        summary,
-        observations,
-        recommendation,
-        status: 'Resultado disponible',
-      },
-    });
-  };
-
-  return (
-    <div className="vet-consultation-modal-backdrop">
-      <section className="vet-consultation-modal" role="dialog" aria-modal="true" aria-label={t('lab.uploadResultTitle')}>
-        <button type="button" className="vet-consultation-close" onClick={onClose}>
-          <HiX aria-hidden="true" />
-        </button>
-        <h2>{t('lab.uploadResultTitle')}</h2>
-        <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4 text-xs">
-          <p><strong>Examen:</strong> {labItem.test_type}</p>
-          <p><strong>Motivo solicitud:</strong> {labItem.reason || 'Sin motivo especificado'}</p>
-        </div>
-
-        <form className="vet-followup-form" onSubmit={handleSubmit}>
-          <label>
-            {t('lab.resultDate')} *
-            <input
-              required
-              type="date"
-              value={resultDate}
-              onChange={(e) => setResultDate(e.target.value)}
-            />
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.file')} {labItem.file_url ? '(Opcional si ya existe archivo)' : '*'}
-            <input
-              type="file"
-              accept=".pdf,image/png,image/jpeg,image/webp"
-              required={!labItem.file_url}
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
-            />
-            {labItem.file_url && !selectedFile && (
-              <span className="text-xs text-green-700 mt-1 block">
-                ✓ Archivo guardado actualmente: {labItem.file_name || 'Archivo adjunto'}
-              </span>
-            )}
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.summary')} *
-            <textarea
-              required
-              rows={2}
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
-              placeholder={t('lab.summaryPlaceholder')}
-            />
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.observations')}
-            <textarea
-              rows={2}
-              value={observations}
-              onChange={(e) => setObservations(e.target.value)}
-              placeholder={t('lab.observationsPlaceholder')}
-            />
-          </label>
-
-          <label className="vet-followup-wide">
-            {t('lab.recommendation')}
-            <textarea
-              rows={2}
-              value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
-              placeholder={t('lab.recommendationPlaceholder')}
-            />
-          </label>
-
-          <div className="vet-followup-actions">
-            <Button type="button" variant="secondary" onClick={onClose} disabled={isSaving}>
-              {t('appointments.cancel')}
-            </Button>
-            <Button type="submit" isLoading={isSaving}>
-              {t('lab.saveResultBtn')}
-            </Button>
-          </div>
-        </form>
-      </section>
-    </div>
-  );
-}
-
 export default function VetPatientProfile() {
   const { appointmentId } = useParams();
   const { language, t } = useTranslation();
@@ -560,12 +279,14 @@ export default function VetPatientProfile() {
   const { data: appointments = [], isLoading, isError } = useAppointments({ enabled: true });
   const createFollowUp = useCreateFollowUpAppointment();
   const completeAppointment = useCompleteAppointment();
+  const addDiagnosis = useAddDiagnosis();
   const [activeSection, setActiveSection] = useState('summary');
   const [isFollowUpOpen, setIsFollowUpOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [clinicalObservation, setClinicalObservation] = useState('');
   const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
+  const [diagnosisForm, setDiagnosisForm] = useState(null);
   const [vaccineForm, setVaccineForm] = useState({
     name: '',
     type: '',
@@ -580,6 +301,22 @@ export default function VetPatientProfile() {
 
   const addClinicalRecord = useAddClinicalRecord();
   const { data: clinicalRecords = [] } = useClinicalRecordsList(appointment?.pet_id);
+  const { data: diagnosesList = [] } = useDiagnosesList(appointment?.pet_id);
+
+  const allRecords = useMemo(() => {
+    const combined = [...diagnosesList, ...clinicalRecords];
+    const uniqueMap = new Map();
+    combined.forEach((item) => {
+      if (item && item.id) {
+        uniqueMap.set(item.id, item);
+      }
+    });
+    return Array.from(uniqueMap.values()).sort((a, b) => {
+      const dateA = new Date(a.consultation_date || a.date || 0);
+      const dateB = new Date(b.consultation_date || b.date || 0);
+      return dateB - dateA;
+    });
+  }, [diagnosesList, clinicalRecords]);
   const addMedication = useAddMedication();
   const { data: medicationsList = [] } = useMedicationsList(appointment?.pet_id);
 
@@ -592,10 +329,15 @@ export default function VetPatientProfile() {
   const createLabRequest = useCreateLabRequest();
   const uploadLabResult = useUploadLabResultFile();
   const updateLabResultMutation = useUpdateLabResult();
-  const deleteLabResultMutation = useDeleteLabResult();
 
-  const [isRequestLabOpen, setIsRequestLabOpen] = useState(false);
-  const [activeUploadLabItem, setActiveUploadLabItem] = useState(null);
+  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
+  const [selectedLabResultForUpload, setSelectedLabResultForUpload] = useState(null);
+  const [labRequestForm, setLabRequestForm] = useState({
+    exam_type: 'Hemograma completo',
+    priority: 'normal',
+    reason: '',
+  });
+  const [labUploadFile, setLabUploadFile] = useState(null);
 
   const [allergyForm, setAllergyForm] = useState({
     allergen: '',
@@ -678,7 +420,7 @@ export default function VetPatientProfile() {
     {
       key: 'diagnostics',
       title: t('vetPatient.cards.diagnostics.title'),
-      value: clinicalRecords.length,
+      value: allRecords.length,
       detail: t('vetPatient.cards.diagnostics.detail'),
       icon: HiClipboardList,
     },
@@ -701,7 +443,7 @@ export default function VetPatientProfile() {
       title: t('vetPatient.cards.labResults.title'),
       value: labResultsList.length,
       detail: labResultsList.length > 0
-        ? `${labResultsList.filter(l => l.status === 'Resultado disponible' || Boolean(l.file_url)).length} ${language === 'es' ? 'disponibles' : 'available'}`
+        ? `${labResultsList.filter((l) => l.status === 'Resultado disponible' || Boolean(l.file_url)).length} ${language === 'es' ? 'disponibles' : 'available'}`
         : t('vetPatient.cards.labResults.detail'),
       icon: HiBeaker,
     },
@@ -743,6 +485,7 @@ export default function VetPatientProfile() {
         clinicalObservation,
       });
       setIsCompleteConfirmOpen(false);
+      setDiagnosisForm(null); // Reset draft diagnosis form on complete consultation
       setMessage(t('vetPatient.completeSuccess'));
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('vetPatient.completeError')));
@@ -890,7 +633,7 @@ export default function VetPatientProfile() {
             return (
               <Link
                 key={card.key}
-                className="vet-clinical-card text-left flex flex-col items-start"
+                className="vet-clinical-card text-left flex flex-col items-start animate-fade-in"
                 to={targetRoute}
               >
                 <span><Icon aria-hidden="true" /></span>
@@ -918,7 +661,7 @@ export default function VetPatientProfile() {
       </section>
 
       {activeSection === 'appointments' && (
-        <section className="vet-current-appointment">
+        <section className="vet-current-appointment" ref={activeSectionRef}>
           <h2>{t('vetPatient.currentAppointmentTitle')}</h2>
           <dl>
             <div><dt>{t('vetPatient.pet')}</dt><dd>{appointment.pet_name}</dd></div>
@@ -952,78 +695,63 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'diagnostics' && (
-        <section className="vet-current-appointment">
-          <h2>{t('diagnostics.title')}</h2>
-          <p className="page-subtitle">{t('vetPatient.cards.diagnostics.detail')}</p>
-
-          <form className="vet-followup-form" onSubmit={handleClinicalSubmit}>
-            <label>
-              {t('diagnostics.table.diagnosis')} *
-              <input
-                required
-                value={clinicalForm.diagnosis}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, diagnosis: event.target.value }))}
-                placeholder="ej. Gastroenteritis"
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.treatment')} *
-              <input
-                required
-                value={clinicalForm.treatment}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, treatment: event.target.value }))}
-                placeholder="ej. Antibióticos por 7 días"
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.weight')} (kg)
-              <input
-                type="number"
-                step="0.01"
-                value={clinicalForm.weight_kg}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, weight_kg: event.target.value }))}
-                placeholder={appointment.pet_weight_kg ? `${appointment.pet_weight_kg}` : "8.5"}
-              />
-            </label>
-            <label>
-              {t('diagnostics.table.date')} *
-              <input
-                required
-                type="date"
-                value={clinicalForm.date}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, date: event.target.value }))}
-              />
-            </label>
-            <label className="vet-followup-wide">
-              {t('diagnostics.table.notes')}
-              <textarea
-                value={clinicalForm.notes}
-                onChange={(event) => setClinicalForm((current) => ({ ...current, notes: event.target.value }))}
-                placeholder="Notas adicionales u observaciones..."
-              />
-            </label>
-            <div className="vet-followup-actions">
-              <Button type="submit" isLoading={addClinicalRecord.isPending}>
-                {t('diagnostics.addRecord')}
-              </Button>
-            </div>
-          </form>
+        <section className="vet-current-appointment" ref={activeSectionRef}>
+          <VetDiagnosisForm
+            pet={{
+              id: appointment?.pet_id,
+              name: appointment?.pet_name,
+              species: appointment?.pet_species,
+              sex: appointment?.pet_sex,
+              weight: appointment?.pet_weight_kg,
+            }}
+            veterinarian={user}
+            isPending={addDiagnosis.isPending}
+            onNavigateToSection={setActiveSection}
+            diagnosisForm={diagnosisForm}
+            setDiagnosisForm={setDiagnosisForm}
+            onSubmit={async (payload) => {
+              try {
+                await addDiagnosis.mutateAsync({
+                  petId: appointment?.pet_id,
+                  diagnosisData: payload,
+                });
+                Swal.fire({
+                  icon: 'success',
+                  title: t('diagnoses.saveSuccess'),
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } catch {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: t('diagnoses.saveError'),
+                });
+              }
+            }}
+          />
 
           {/* History List */}
           <div className="mt-8 border-t border-gray-150 pt-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Historial Médico' : 'Medical History'}</h3>
-            {clinicalRecords.length > 0 ? (
+            <h3 className="text-lg font-bold text-gray-900 mb-4">{language === 'es' ? 'Historial Médico / Diagnósticos' : 'Medical History / Diagnoses'}</h3>
+            {allRecords.length > 0 ? (
               <div className="space-y-4">
-                {clinicalRecords.map((rec) => (
+                {allRecords.map((rec) => (
                   <div key={rec.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-semibold text-gray-900">{formatDate(rec.date, language)}</span>
-                      <span className="text-xs text-gray-500">{rec.veterinarian_name}</span>
+                      <span className="text-sm font-semibold text-gray-900">{formatDate(rec.consultation_date || rec.date, language)}</span>
+                      <span className="text-xs text-gray-500">{rec.veterinarian_name || rec.registered_by || 'Veterinario'}</span>
                     </div>
                     <h4 className="font-bold text-teal-800">{rec.diagnosis}</h4>
-                    <p className="text-sm text-gray-700 mt-1"><strong>Tratamiento:</strong> {rec.treatment}</p>
-                    {rec.weight_kg && <p className="text-xs text-gray-500 mt-1"><strong>Peso:</strong> {rec.weight_kg} kg</p>}
-                    {rec.notes && <p className="text-xs italic text-gray-500 mt-1"><strong>Notas:</strong> {rec.notes}</p>}
+                    {rec.reason && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Motivo:' : 'Reason:'}</strong> {rec.reason}</p>}
+                    {rec.symptoms && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Síntomas:' : 'Symptoms:'}</strong> {rec.symptoms}</p>}
+                    {rec.presumptive_diagnosis && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Diag. Presuntivo:' : 'Presumptive:'}</strong> {rec.presumptive_diagnosis}</p>}
+                    {rec.treatment && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Tratamiento:' : 'Treatment:'}</strong> {rec.treatment}</p>}
+                    {rec.clinical_plan && <p className="text-sm text-teal-700 mt-1"><strong>{language === 'es' ? 'Plan Clínico:' : 'Clinical Plan:'}</strong> {rec.clinical_plan}</p>}
+                    {rec.owner_instructions && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Indicaciones:' : 'Instructions:'}</strong> {rec.owner_instructions}</p>}
+                    {rec.follow_up && <p className="text-sm text-gray-700 mt-1"><strong>{language === 'es' ? 'Seguimiento:' : 'Follow-up:'}</strong> {rec.follow_up}</p>}
+                    {rec.weight_kg && <p className="text-xs text-gray-500 mt-1"><strong>{language === 'es' ? 'Peso:' : 'Weight:'}</strong> {rec.weight_kg} kg</p>}
+                    {(rec.notes || rec.clinical_notes) && <p className="text-xs italic text-gray-500 mt-1"><strong>{language === 'es' ? 'Notas:' : 'Notes:'}</strong> {rec.notes || rec.clinical_notes}</p>}
                   </div>
                 ))}
               </div>
@@ -1035,7 +763,7 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'medications' && (
-        <section className="vet-current-appointment">
+        <section className="vet-current-appointment" ref={activeSectionRef}>
           <h2>{t('medications.title')}</h2>
           <p className="page-subtitle">{t('medications.activeTreatments')}</p>
 
@@ -1143,7 +871,10 @@ export default function VetPatientProfile() {
       )}
 
       {activeSection === 'allergies' && (
-        <section className="vet-current-appointment" ref={allergyFormRef}>
+        <section className="vet-current-appointment" ref={(node) => {
+          allergyFormRef.current = node;
+          activeSectionRef.current = node;
+        }}>
           <h2>{t('allergies.title')}</h2>
           <p className="text-sm text-slate-500 mt-1 mb-6">{t('allergies.subtitle')}</p>
 
@@ -1352,345 +1083,343 @@ export default function VetPatientProfile() {
         </section>
       )}
 
-      {/* ─── Laboratory Section (EDUS Workflow) ────────────────────────── */}
-      {activeSection === 'lab-results' && (
-        <section className="vet-current-appointment">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">{t('lab.title')}</h2>
-              <p className="text-sm text-slate-500 mt-1">
-                {language === 'es'
-                  ? 'Gestión de órdenes médicas, solicitudes y subida de resultados de análisis clínicos.'
-                  : 'Management of medical orders, exam requests, and clinical laboratory results.'}
-              </p>
-            </div>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setIsRequestLabOpen(true)}
-            >
-              <HiPlus aria-hidden="true" />
-              {t('lab.requestExam')}
-            </Button>
-          </div>
-
-          {/* List of Laboratory Orders & Results */}
-          <div className="mt-6 space-y-4">
-            {labResultsList.length > 0 ? (
-              labResultsList.map((item) => {
-                const isAvailable = item.status === 'Resultado disponible' || Boolean(item.file_url);
-                const isUrgent =
-                  item.priority?.toLowerCase() === 'urgente' ||
-                  item.priority?.toLowerCase() === 'urgent';
-
-                return (
-                  <div
-                    key={item.id}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all"
-                    style={{
-                      borderLeft: isAvailable
-                        ? '5px solid #10b981'
-                        : isUrgent
-                        ? '5px solid #ef4444'
-                        : '5px solid #f59e0b',
-                    }}
-                  >
-                    {/* Header */}
-                    <div className="flex flex-wrap items-start justify-between gap-3 pb-3 border-b border-slate-100">
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="text-base font-bold text-slate-900">
-                            {item.test_type}
-                          </h4>
-                          {isUrgent && (
-                            <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">
-                              🚨 {t('lab.priority.urgente')}
-                            </span>
-                          )}
-                          <span
-                            className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                              isAvailable
-                                ? 'bg-green-100 text-green-800'
-                                : item.status === 'Cancelado'
-                                ? 'bg-gray-100 text-gray-700'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {item.status || 'Solicitado'}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-400 mt-1">
-                          <span>
-                            <strong>{t('lab.requestDate')}:</strong>{' '}
-                            {formatDate(item.requested_at || item.test_date || item.created_at, language)}
-                          </span>
-                          {item.veterinarian_name && (
-                            <span className="ml-3">
-                              <strong>{t('lab.requestingVet')}:</strong> {item.veterinarian_name}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-
-                      {/* Top action buttons */}
-                      <div className="flex gap-2 items-center">
-                        {!isAvailable && item.status !== 'Cancelado' && (
-                          <Button
-                            type="button"
-                            variant="primary"
-                            size="sm"
-                            onClick={() => setActiveUploadLabItem(item)}
-                          >
-                            📤 {t('lab.uploadResult')}
-                          </Button>
-                        )}
-                        {isAvailable && (
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setActiveUploadLabItem(item)}
-                          >
-                            ✏️ {t('lab.editResult')}
-                          </Button>
-                        )}
-                        {!isAvailable && item.status !== 'Cancelado' && (
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={async () => {
-                              const result = await Swal.fire({
-                                title: t('lab.cancelConfirmTitle'),
-                                text: t('lab.cancelConfirmText'),
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#dc2626',
-                                confirmButtonText: t('lab.cancelConfirmBtn'),
-                                cancelButtonText: t('allergies.cancelEdit'),
-                              });
-                              if (!result.isConfirmed) return;
-                              try {
-                                await updateLabResultMutation.mutateAsync({
-                                  resultId: item.id,
-                                  updateData: { status: 'Cancelado' },
-                                  petId: appointment.pet_id,
-                                });
-                                Swal.fire({ icon: 'success', title: 'Solicitud cancelada', showConfirmButton: false, timer: 1500 });
-                              } catch (error) {
-                                setErrorMessage(getApiErrorMessage(error, 'Error al cancelar la solicitud'));
-                              }
-                            }}
-                          >
-                            {t('lab.cancelRequest')}
-                          </Button>
-                        )}
-                        <Button
-                          type="button"
-                          variant="danger"
-                          size="sm"
-                          onClick={async () => {
-                            const result = await Swal.fire({
-                              title: '¿Eliminar registro?',
-                              text: 'Esta acción no se puede deshacer.',
-                              icon: 'warning',
-                              showCancelButton: true,
-                              confirmButtonColor: '#dc2626',
-                              confirmButtonText: 'Sí, eliminar',
-                              cancelButtonText: 'Cancelar',
-                            });
-                            if (!result.isConfirmed) return;
-                            try {
-                              await deleteLabResultMutation.mutateAsync({
-                                resultId: item.id,
-                                petId: appointment.pet_id,
-                              });
-                              Swal.fire({ icon: 'success', title: 'Registro eliminado', showConfirmButton: false, timer: 1500 });
-                            } catch (error) {
-                              setErrorMessage(getApiErrorMessage(error, 'Error al eliminar el registro'));
-                            }
-                          }}
-                        >
-                          <HiTrash />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Motivo y Observaciones de la solicitud */}
-                    {(item.reason || item.clinical_observations) && (
-                      <div className="my-3 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        {item.reason && (
-                          <p className="text-slate-700">
-                            <strong>{t('lab.reason')}:</strong> {item.reason}
-                          </p>
-                        )}
-                        {item.clinical_observations && (
-                          <p className="text-slate-600 text-xs mt-1">
-                            <strong>{t('lab.clinicalObservations')}:</strong> {item.clinical_observations}
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Resultado / Detalle si está disponible */}
-                    {isAvailable ? (
-                      <div className="mt-3 p-4 bg-green-50/40 border border-green-200 rounded-xl space-y-2.5">
-                        <div className="flex justify-between items-center flex-wrap gap-2">
-                          <span className="text-xs font-bold text-green-900">
-                            ✅ {t('lab.status.resultado_disponible')}
-                          </span>
-                          {item.result_date && (
-                            <span className="text-xs text-slate-500">
-                              <strong>{t('lab.resultDate')}:</strong> {formatDate(item.result_date, language)}
-                            </span>
-                          )}
-                        </div>
-
-                        {(item.summary || item.result_summary) && (
-                          <div>
-                            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                              {t('lab.summary')}
-                            </p>
-                            <p className="text-sm text-slate-800 mt-0.5">
-                              {item.summary || item.result_summary}
-                            </p>
-                          </div>
-                        )}
-
-                        {item.observations && (
-                          <div>
-                            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                              {t('lab.observations')}
-                            </p>
-                            <p className="text-sm text-slate-700 mt-0.5">
-                              {item.observations}
-                            </p>
-                          </div>
-                        )}
-
-                        {item.recommendation && (
-                          <div>
-                            <p className="text-xs font-bold text-teal-700 uppercase tracking-wider">
-                              {t('lab.recommendation')}
-                            </p>
-                            <p className="text-sm text-teal-900 font-medium mt-0.5">
-                              {item.recommendation}
-                            </p>
-                          </div>
-                        )}
-
-                        {item.file_url && (
-                          <div className="pt-2 flex items-center gap-3 border-t border-green-200/60">
-                            <a
-                              href={item.file_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn btn-primary inline-flex items-center gap-1.5 text-xs py-1.5 px-3 rounded-lg"
-                            >
-                              <HiEye className="text-sm" />
-                              {t('lab.viewResult')}
-                            </a>
-                            <a
-                              href={item.file_url}
-                              download={item.file_name || `resultado_${item.test_type}.pdf`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn btn-secondary inline-flex items-center gap-1.5 text-xs py-1.5 px-3 rounded-lg"
-                            >
-                              <HiDownload className="text-sm" />
-                              {t('lab.downloadPdf')}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    ) : item.status !== 'Cancelado' ? (
-                      <div className="mt-3 p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center gap-3">
-                        <HiInformationCircle className="text-xl text-amber-600 flex-shrink-0" />
-                        <p className="text-xs font-medium text-amber-800">
-                          {t('lab.pendingResultNotice')}
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              })
-            ) : (
-              <div className="vaccines-empty-state py-12 flex flex-col items-center justify-center text-slate-400">
-                <HiDocumentText className="text-5xl mb-2 text-slate-300" aria-hidden="true" />
-                <h3 className="text-lg font-semibold text-slate-700">{t('lab.title')}</h3>
-                <p className="text-sm mt-1">{t('lab.noResults')}</p>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
       {activeSection === 'ai' && (
         <div ref={activeSectionRef}>
           <BreedRiskAlertsPanel petId={appointment.pet_id} language={language} />
         </div>
       )}
 
-      <RequestLabModal
-        isOpen={isRequestLabOpen}
-        onClose={() => setIsRequestLabOpen(false)}
-        onSubmit={async (requestData) => {
-          try {
-            await createLabRequest.mutateAsync({
-              petId: appointment.pet_id,
-              requestData,
-            });
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'success',
-              title: t('lab.saveRequestSuccess'),
-              showConfirmButton: false,
-              timer: 2500,
-            });
-            setIsRequestLabOpen(false);
-          } catch (error) {
-            setErrorMessage(getApiErrorMessage(error, 'Error al crear la solicitud de examen'));
-          }
-        }}
-        isSaving={createLabRequest.isPending}
-        appointment={appointment}
-        veterinarianName={user?.full_name}
-      />
+      {activeSection === 'lab-results' && (
+        <section className="vet-current-appointment" ref={activeSectionRef}>
+          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">
+                {language === 'es' ? 'Resultados y solicitudes de laboratorio' : 'Laboratory Results & Requests'}
+              </h2>
+              <p className="text-sm text-slate-500 mt-0.5">
+                {language === 'es'
+                  ? 'Gestiona órdenes de análisis clínicos y carga de archivos PDF de resultados.'
+                  : 'Manage lab orders and upload PDF result files.'}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setIsLabModalOpen(true)}
+            >
+              <HiPlus className="w-5 h-5 mr-1" />
+              {language === 'es' ? 'Solicitar examen' : 'Request Exam'}
+            </Button>
+          </div>
 
-      <UploadLabResultModal
-        isOpen={Boolean(activeUploadLabItem)}
-        onClose={() => setActiveUploadLabItem(null)}
-        onSubmit={async ({ resultId, file, updateData }) => {
-          try {
-            if (file) {
-              await uploadLabResult.mutateAsync({
-                resultId,
-                file,
-                petId: appointment.pet_id,
-              });
-            }
-            await updateLabResultMutation.mutateAsync({
-              resultId,
-              updateData,
-              petId: appointment.pet_id,
-            });
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'success',
-              title: t('lab.uploadSuccess'),
-              showConfirmButton: false,
-              timer: 2500,
-            });
-            setActiveUploadLabItem(null);
-          } catch (error) {
-            setErrorMessage(getApiErrorMessage(error, 'Error al subir o actualizar el resultado'));
-          }
-        }}
-        isSaving={uploadLabResult.isPending || updateLabResultMutation.isPending}
-        labItem={activeUploadLabItem}
-      />
+          {labResultsList.length > 0 ? (
+            <div className="space-y-4">
+              {labResultsList.map((res) => (
+                <div
+                  key={res.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start flex-wrap gap-3">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-slate-900 text-lg">
+                          {res.exam_type}
+                        </span>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                            res.status === 'Resultado disponible' || res.file_url
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : res.status === 'En proceso'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {res.status || (language === 'es' ? 'Solicitado' : 'Requested')}
+                        </span>
+                        {res.priority === 'urgent' && (
+                          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700 animate-pulse">
+                            {language === 'es' ? 'Urgente' : 'Urgent'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1">
+                        {language === 'es' ? 'Solicitado el:' : 'Requested:'} {formatDate(res.created_at, language)}
+                        {res.veterinarian_name && ` • Dr(a). ${res.veterinarian_name}`}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {res.file_url ? (
+                        <a
+                          href={res.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 transition-colors"
+                        >
+                          <HiDocumentText className="w-4 h-4" />
+                          {language === 'es' ? 'Ver Resultado' : 'View Result'}
+                        </a>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setSelectedLabResultForUpload(res)}
+                        >
+                          <HiPlus className="w-4 h-4 mr-1" />
+                          {language === 'es' ? 'Cargar PDF' : 'Upload PDF'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {res.reason && (
+                    <div className="mt-3 text-sm text-slate-600 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                      <strong>{language === 'es' ? 'Motivo:' : 'Reason:'}</strong> {res.reason}
+                    </div>
+                  )}
+
+                  {res.notes && (
+                    <div className="mt-2 text-xs italic text-slate-500">
+                      <strong>{language === 'es' ? 'Notas:' : 'Notes:'}</strong> {res.notes}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
+              <HiBeaker className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-500 text-sm font-medium">
+                {language === 'es'
+                  ? 'No hay solicitudes de laboratorio registradas para este paciente.'
+                  : 'No lab requests registered for this patient.'}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Modal: Solicitar Examen */}
+      {isLabModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-slate-900">
+                {language === 'es' ? 'Nueva solicitud de examen de laboratorio' : 'New Lab Exam Request'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsLabModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await createLabRequest.mutateAsync({
+                    petId: appointment.pet_id,
+                    requestData: {
+                      ...labRequestForm,
+                      appointment_id: appointment.id,
+                      veterinarian_name: user?.full_name || appointment.veterinarian_name,
+                    },
+                  });
+                  setIsLabModalOpen(false);
+                  setLabRequestForm({ exam_type: 'Hemograma completo', priority: 'normal', reason: '' });
+                  Swal.fire({
+                    icon: 'success',
+                    title: language === 'es' ? 'Solicitud creada con éxito' : 'Request created successfully',
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                } catch (error) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: getApiErrorMessage(error, language === 'es' ? 'No se pudo crear la solicitud' : 'Failed to create request'),
+                  });
+                }
+              }}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <label className="block text-xs font-semibold text-slate-600">
+                  {language === 'es' ? 'Paciente' : 'Patient'}
+                  <input
+                    disabled
+                    value={appointment?.pet_name || ''}
+                    className="mt-1 w-full bg-slate-100 text-slate-600 rounded-xl px-3 py-2 text-sm border border-slate-200"
+                  />
+                </label>
+                <label className="block text-xs font-semibold text-slate-600">
+                  {language === 'es' ? 'Propietario' : 'Owner'}
+                  <input
+                    disabled
+                    value={appointment?.owner_name || ''}
+                    className="mt-1 w-full bg-slate-100 text-slate-600 rounded-xl px-3 py-2 text-sm border border-slate-200"
+                  />
+                </label>
+              </div>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Tipo de examen' : 'Exam Type'} *
+                <select
+                  required
+                  value={labRequestForm.exam_type}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, exam_type: e.target.value }))}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                >
+                  <option value="Hemograma completo">Hemograma completo</option>
+                  <option value="Perfil bioquímico">Perfil bioquímico</option>
+                  <option value="Urianálisis">Urianálisis</option>
+                  <option value="Coprológico">Coprológico</option>
+                  <option value="Radiografía">Radiografía</option>
+                  <option value="Ecografía">Ecografía</option>
+                  <option value="Citología">Citología</option>
+                  <option value="Cultivo y antibiograma">Cultivo y antibiograma</option>
+                  <option value="Otro">Otro examen</option>
+                </select>
+              </label>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Prioridad' : 'Priority'} *
+                <select
+                  required
+                  value={labRequestForm.priority}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, priority: e.target.value }))}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                >
+                  <option value="normal">{language === 'es' ? 'Normal' : 'Normal'}</option>
+                  <option value="urgent">{language === 'es' ? 'Urgente' : 'Urgent'}</option>
+                </select>
+              </label>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Motivo de la solicitud' : 'Reason for request'} *
+                <textarea
+                  required
+                  rows={3}
+                  value={labRequestForm.reason}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, reason: e.target.value }))}
+                  placeholder={language === 'es' ? 'Describa el motivo clínico o sospecha diagnóstica...' : 'Describe clinical reason or diagnostic suspicion...'}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                />
+              </label>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setIsLabModalOpen(false)}
+                >
+                  {language === 'es' ? 'Cancelar' : 'Cancel'}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={createLabRequest.isPending}
+                >
+                  {language === 'es' ? 'Enviar solicitud' : 'Submit Request'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Cargar Archivo PDF */}
+      {selectedLabResultForUpload && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-slate-900">
+                {language === 'es' ? 'Cargar Resultado de Laboratorio' : 'Upload Lab Result'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setSelectedLabResultForUpload(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!labUploadFile) {
+                  Swal.fire({ icon: 'warning', title: language === 'es' ? 'Selecciona un archivo PDF' : 'Select a PDF file' });
+                  return;
+                }
+                try {
+                  await uploadLabResult.mutateAsync({
+                    resultId: selectedLabResultForUpload.id,
+                    file: labUploadFile,
+                    petId: appointment.pet_id,
+                  });
+                  setSelectedLabResultForUpload(null);
+                  setLabUploadFile(null);
+                  Swal.fire({
+                    icon: 'success',
+                    title: language === 'es' ? 'Resultado cargado exitosamente' : 'Result uploaded successfully',
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                } catch (error) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: getApiErrorMessage(error, language === 'es' ? 'No se pudo cargar el archivo' : 'Failed to upload file'),
+                  });
+                }
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <p className="text-sm font-semibold text-slate-800">
+                  {selectedLabResultForUpload.exam_type}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {selectedLabResultForUpload.reason}
+                </p>
+              </div>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Archivo PDF del resultado' : 'Result PDF file'} *
+                <input
+                  type="file"
+                  required
+                  accept="application/pdf"
+                  onChange={(e) => setLabUploadFile(e.target.files[0])}
+                  className="mt-1 w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                />
+              </label>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSelectedLabResultForUpload(null)}
+                >
+                  {language === 'es' ? 'Cancelar' : 'Cancel'}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={uploadLabResult.isPending}
+                >
+                  {language === 'es' ? 'Guardar y Publicar' : 'Save & Publish'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <FollowUpModal
         appointment={appointment}
@@ -1710,4 +1439,3 @@ export default function VetPatientProfile() {
     </main>
   );
 }
-

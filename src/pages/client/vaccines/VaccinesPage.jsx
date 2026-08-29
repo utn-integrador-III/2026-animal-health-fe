@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { HiCalendar, HiShieldCheck } from 'react-icons/hi';
+import { HiCalendar, HiShieldCheck, HiInformationCircle } from 'react-icons/hi';
 
 import { ROUTES } from '../../../constants/routes';
 import { usePet } from '../../../hooks/usePets';
@@ -75,6 +75,7 @@ export default function VaccinesPage() {
 
         {!isLoading && !isError && (
           <div className="vaccines-content-grid">
+            {/* Upcoming vaccines */}
             <section className="vaccines-panel">
               <div className="vaccines-panel-header">
                 <div>
@@ -118,6 +119,7 @@ export default function VaccinesPage() {
               </div>
             </section>
 
+            {/* Vaccination history */}
             <section className="vaccines-panel">
               <div className="vaccines-panel-header">
                 <div>
@@ -166,3 +168,5 @@ export default function VaccinesPage() {
     </main>
   );
 }
+
+
