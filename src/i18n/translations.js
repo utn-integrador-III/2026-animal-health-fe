@@ -102,6 +102,7 @@ export const translations = {
     'walkIn.createConsultation': 'Create consultation',
     'walkIn.consultationCreated': 'Walk-in consultation created. You can now save the diagnosis.',
     'walkIn.consultationError': 'The walk-in consultation could not be created.',
+    'walkIn.missingAppointmentId': 'The consultation was saved, but the server did not return the appointment identifier.',
     'walkIn.diagnosisSection': 'Diagnosis record',
     'walkIn.clinicalNotes': 'Clinical notes',
     'walkIn.saveDiagnosis': 'Save diagnosis',
@@ -394,7 +395,7 @@ export const translations = {
     'vetPatient.cards.labResults.title': 'Lab results',
     'vetPatient.cards.labResults.detail': 'No latest result',
     'vetPatient.cards.ai.title': 'AI Recommendations',
-    'vetPatient.cards.ai.detail': 'View latest',
+    'vetPatient.cards.ai.detail': 'Breed and age alerts',
 
     'vetDashboard.loading': "Loading today's patients...",
     'vetDashboard.doctorFallback': 'Doctor',
@@ -796,6 +797,7 @@ export const translations = {
     'walkIn.createConsultation': 'Crear consulta',
     'walkIn.consultationCreated': 'Consulta externa creada. Ahora puedes guardar el diagnostico.',
     'walkIn.consultationError': 'No se pudo crear la consulta externa.',
+    'walkIn.missingAppointmentId': 'La consulta fue guardada, pero el servidor no devolvió el identificador de la cita.',
     'walkIn.diagnosisSection': 'Registro de diagnostico',
     'walkIn.clinicalNotes': 'Notas clinicas',
     'walkIn.saveDiagnosis': 'Guardar diagnostico',
@@ -1088,7 +1090,7 @@ export const translations = {
     'vetPatient.cards.labResults.title': 'Resultados de laboratorio',
     'vetPatient.cards.labResults.detail': 'Sin resultado reciente',
     'vetPatient.cards.ai.title': 'Recomendaciones IA',
-    'vetPatient.cards.ai.detail': 'Ver mas reciente',
+    'vetPatient.cards.ai.detail': 'Alertas por raza y edad',
 
     'vetDashboard.loading': 'Cargando pacientes de hoy...',
     'vetDashboard.doctorFallback': 'Doctor',
