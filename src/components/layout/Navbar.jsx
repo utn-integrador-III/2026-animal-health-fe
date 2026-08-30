@@ -22,10 +22,10 @@ export default function Navbar() {
   const setLanguage = useLanguageStore((state) => state.setLanguage);
   const { language, t } = useTranslation();
   const isAuthenticated = authStatus === 'authenticated';
-  const isClientArea = location.pathname.startsWith('/client');
-  const isVetArea = location.pathname.startsWith('/vet');
-  const isAdminArea = location.pathname.startsWith('/admin');
-  const isAppArea = isClientArea || isVetArea || isAdminArea;
+  const isClientArea = location.pathname.startsWith('/client') || (role === 'client' && location.pathname === ROUTES.SHARED.NOTIFICATIONS);
+  const isVetArea = location.pathname.startsWith('/vet') || (role === 'veterinarian' && location.pathname === ROUTES.SHARED.NOTIFICATIONS);
+  const isAdminArea = location.pathname.startsWith('/admin') || (role === 'admin' && location.pathname === ROUTES.SHARED.NOTIFICATIONS);
+  const isAppArea = isClientArea || isVetArea || isAdminArea || location.pathname === ROUTES.SHARED.NOTIFICATIONS;
   const homeRoute = role === 'veterinarian'
     ? ROUTES.VET.DASHBOARD
     : role === 'admin'
@@ -169,13 +169,16 @@ export default function Navbar() {
         )}
 
         {isAuthenticated && role !== 'client' && (isVetArea || isAdminArea) && (
-          <button
-            type="button"
-            onClick={handleLogout}
-            className={role === 'veterinarian' ? 'vet-signout-button' : 'font-medium text-teal-700'}
-          >
-            {t('nav.signOut')}
-          </button>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <button
+              type="button"
+              onClick={handleLogout}
+              className={role === 'veterinarian' ? 'vet-signout-button' : 'font-medium text-teal-700'}
+            >
+              {t('nav.signOut')}
+            </button>
+          </div>
         )}
 
         {isAuthenticated && role === 'client' && isClientArea && (
