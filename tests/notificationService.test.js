@@ -4,13 +4,13 @@
 
 import { beforeEach, afterEach, describe, expect, test, vi } from 'vitest';
 import {
+  takeMedication,
+  remindLater,
   getUserNotifications,
   getUnreadCount,
   markAsRead,
   markAllAsRead,
   deleteNotification,
-  takeMedication,
-  remindLater,
 } from '../src/services/notificationService';
 
 const mockToken = 'test-jwt-token';

@@ -1,10 +1,15 @@
 // src/pages/NotificationsPage.jsx
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../hooks/useNotifications';
 import NotificationItem from '../components/notifications/NotificationItem';
+import useAuthStore from '../stores/useAuthStore';
+import { ROUTES } from '../constants/routes';
 
 const NotificationsPage = () => {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
   const [filter, setFilter] = useState('all');
   const {
     notifications,
@@ -21,6 +26,15 @@ const NotificationsPage = () => {
     loadNotifications(newFilter === 'unread');
   };
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      const fallback = user?.role === 'veterinarian' ? ROUTES.VET.DASHBOARD : ROUTES.CLIENT.DASHBOARD;
+      navigate(fallback);
+    }
+  };
+
   if (loading && notifications.length === 0) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -31,6 +45,15 @@ const NotificationsPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      {/* Botón de volver */}
+      <button
+        type="button"
+        onClick={handleBack}
+        className="pet-dashboard-back mb-4 inline-flex items-center gap-2 text-sm font-semibold text-teal-700 hover:text-teal-900 transition-colors"
+      >
+        ← Volver
+      </button>
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">🔔 Notificaciones</h1>

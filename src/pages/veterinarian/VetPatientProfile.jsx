@@ -4,6 +4,7 @@ import {
   HiBeaker,
   HiCalendar,
   HiClipboardList,
+  HiDocumentText,
   HiExclamation,
   HiPlus,
   HiShieldCheck,
@@ -38,6 +39,12 @@ import {
   useDeleteAllergy,
 } from '../../hooks/useAllergies';
 import { useAddDiagnosis, useDiagnosesList } from '../../hooks/useDiagnoses';
+import {
+  useLabResultsList,
+  useCreateLabRequest,
+  useUploadLabResultFile,
+  useUpdateLabResult,
+} from '../../hooks/useLabResults';
 import VetDiagnosisForm, { INITIAL_FORM } from '../../components/veterinarian/VetDiagnosisForm';
 import BreedRiskAlertsPanel from '../../components/veterinarian/BreedRiskAlertsPanel';
 import Swal from 'sweetalert2';
@@ -318,6 +325,20 @@ export default function VetPatientProfile() {
   const deleteAllergyMutation = useDeleteAllergy();
   const { data: allergiesList = [] } = useAllergiesList(appointment?.pet_id);
 
+  const { data: labResultsList = [] } = useLabResultsList(appointment?.pet_id);
+  const createLabRequest = useCreateLabRequest();
+  const uploadLabResult = useUploadLabResultFile();
+  const updateLabResultMutation = useUpdateLabResult();
+
+  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
+  const [selectedLabResultForUpload, setSelectedLabResultForUpload] = useState(null);
+  const [labRequestForm, setLabRequestForm] = useState({
+    exam_type: 'Hemograma completo',
+    priority: 'normal',
+    reason: '',
+  });
+  const [labUploadFile, setLabUploadFile] = useState(null);
+
   const [allergyForm, setAllergyForm] = useState({
     allergen: '',
     category: '',
@@ -420,8 +441,10 @@ export default function VetPatientProfile() {
     {
       key: 'lab-results',
       title: t('vetPatient.cards.labResults.title'),
-      value: 0,
-      detail: t('vetPatient.cards.labResults.detail'),
+      value: labResultsList.length,
+      detail: labResultsList.length > 0
+        ? `${labResultsList.filter((l) => l.status === 'Resultado disponible' || Boolean(l.file_url)).length} ${language === 'es' ? 'disponibles' : 'available'}`
+        : t('vetPatient.cards.labResults.detail'),
       icon: HiBeaker,
     },
     {
@@ -1063,6 +1086,340 @@ export default function VetPatientProfile() {
       {activeSection === 'ai' && (
         <div ref={activeSectionRef}>
           <BreedRiskAlertsPanel petId={appointment.pet_id} language={language} />
+        </div>
+      )}
+
+      {activeSection === 'lab-results' && (
+        <section className="vet-current-appointment" ref={activeSectionRef}>
+          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">
+                {language === 'es' ? 'Resultados y solicitudes de laboratorio' : 'Laboratory Results & Requests'}
+              </h2>
+              <p className="text-sm text-slate-500 mt-0.5">
+                {language === 'es'
+                  ? 'Gestiona órdenes de análisis clínicos y carga de archivos PDF de resultados.'
+                  : 'Manage lab orders and upload PDF result files.'}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setIsLabModalOpen(true)}
+            >
+              <HiPlus className="w-5 h-5 mr-1" />
+              {language === 'es' ? 'Solicitar examen' : 'Request Exam'}
+            </Button>
+          </div>
+
+          {labResultsList.length > 0 ? (
+            <div className="space-y-4">
+              {labResultsList.map((res) => (
+                <div
+                  key={res.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start flex-wrap gap-3">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-slate-900 text-lg">
+                          {res.exam_type}
+                        </span>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                            res.status === 'Resultado disponible' || res.file_url
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : res.status === 'En proceso'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {res.status || (language === 'es' ? 'Solicitado' : 'Requested')}
+                        </span>
+                        {res.priority === 'urgent' && (
+                          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700 animate-pulse">
+                            {language === 'es' ? 'Urgente' : 'Urgent'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1">
+                        {language === 'es' ? 'Solicitado el:' : 'Requested:'} {formatDate(res.created_at, language)}
+                        {res.veterinarian_name && ` • Dr(a). ${res.veterinarian_name}`}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {res.file_url ? (
+                        <a
+                          href={res.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 transition-colors"
+                        >
+                          <HiDocumentText className="w-4 h-4" />
+                          {language === 'es' ? 'Ver Resultado' : 'View Result'}
+                        </a>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setSelectedLabResultForUpload(res)}
+                        >
+                          <HiPlus className="w-4 h-4 mr-1" />
+                          {language === 'es' ? 'Cargar PDF' : 'Upload PDF'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {res.reason && (
+                    <div className="mt-3 text-sm text-slate-600 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                      <strong>{language === 'es' ? 'Motivo:' : 'Reason:'}</strong> {res.reason}
+                    </div>
+                  )}
+
+                  {res.notes && (
+                    <div className="mt-2 text-xs italic text-slate-500">
+                      <strong>{language === 'es' ? 'Notas:' : 'Notes:'}</strong> {res.notes}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
+              <HiBeaker className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-500 text-sm font-medium">
+                {language === 'es'
+                  ? 'No hay solicitudes de laboratorio registradas para este paciente.'
+                  : 'No lab requests registered for this patient.'}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Modal: Solicitar Examen */}
+      {isLabModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-slate-900">
+                {language === 'es' ? 'Nueva solicitud de examen de laboratorio' : 'New Lab Exam Request'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsLabModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await createLabRequest.mutateAsync({
+                    petId: appointment.pet_id,
+                    requestData: {
+                      ...labRequestForm,
+                      test_type: labRequestForm.exam_type,
+                      exam_type: labRequestForm.exam_type,
+                      appointment_id: appointment.id,
+                      veterinarian_name: user?.full_name || appointment.veterinarian_name,
+                    },
+                  });
+                  setIsLabModalOpen(false);
+                  setLabRequestForm({ exam_type: 'Hemograma completo', priority: 'normal', reason: '' });
+                  Swal.fire({
+                    icon: 'success',
+                    title: language === 'es' ? 'Solicitud creada con éxito' : 'Request created successfully',
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                } catch (error) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: getApiErrorMessage(error, language === 'es' ? 'No se pudo crear la solicitud' : 'Failed to create request'),
+                  });
+                }
+              }}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <label className="block text-xs font-semibold text-slate-600">
+                  {language === 'es' ? 'Paciente' : 'Patient'}
+                  <input
+                    disabled
+                    value={appointment?.pet_name || ''}
+                    className="mt-1 w-full bg-slate-100 text-slate-600 rounded-xl px-3 py-2 text-sm border border-slate-200"
+                  />
+                </label>
+                <label className="block text-xs font-semibold text-slate-600">
+                  {language === 'es' ? 'Propietario' : 'Owner'}
+                  <input
+                    disabled
+                    value={appointment?.owner_name || ''}
+                    className="mt-1 w-full bg-slate-100 text-slate-600 rounded-xl px-3 py-2 text-sm border border-slate-200"
+                  />
+                </label>
+              </div>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Tipo de examen' : 'Exam Type'} *
+                <select
+                  required
+                  value={labRequestForm.exam_type}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, exam_type: e.target.value }))}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                >
+                  <option value="Hemograma completo">Hemograma completo</option>
+                  <option value="Perfil bioquímico">Perfil bioquímico</option>
+                  <option value="Urianálisis">Urianálisis</option>
+                  <option value="Coprológico">Coprológico</option>
+                  <option value="Radiografía">Radiografía</option>
+                  <option value="Ecografía">Ecografía</option>
+                  <option value="Citología">Citología</option>
+                  <option value="Cultivo y antibiograma">Cultivo y antibiograma</option>
+                  <option value="Otro">Otro examen</option>
+                </select>
+              </label>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Prioridad' : 'Priority'} *
+                <select
+                  required
+                  value={labRequestForm.priority}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, priority: e.target.value }))}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                >
+                  <option value="normal">{language === 'es' ? 'Normal' : 'Normal'}</option>
+                  <option value="urgent">{language === 'es' ? 'Urgente' : 'Urgent'}</option>
+                </select>
+              </label>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Motivo de la solicitud' : 'Reason for request'} *
+                <textarea
+                  required
+                  rows={3}
+                  value={labRequestForm.reason}
+                  onChange={(e) => setLabRequestForm((f) => ({ ...f, reason: e.target.value }))}
+                  placeholder={language === 'es' ? 'Describa el motivo clínico o sospecha diagnóstica...' : 'Describe clinical reason or diagnostic suspicion...'}
+                  className="mt-1 w-full rounded-xl px-3 py-2 text-sm border border-slate-300 focus:ring-teal-500 focus:border-teal-500"
+                />
+              </label>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setIsLabModalOpen(false)}
+                >
+                  {language === 'es' ? 'Cancelar' : 'Cancel'}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={createLabRequest.isPending}
+                >
+                  {language === 'es' ? 'Enviar solicitud' : 'Submit Request'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Cargar Archivo PDF */}
+      {selectedLabResultForUpload && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-slate-900">
+                {language === 'es' ? 'Cargar Resultado de Laboratorio' : 'Upload Lab Result'}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setSelectedLabResultForUpload(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!labUploadFile) {
+                  Swal.fire({ icon: 'warning', title: language === 'es' ? 'Selecciona un archivo PDF' : 'Select a PDF file' });
+                  return;
+                }
+                try {
+                  await uploadLabResult.mutateAsync({
+                    resultId: selectedLabResultForUpload.id,
+                    file: labUploadFile,
+                    petId: appointment.pet_id,
+                  });
+                  setSelectedLabResultForUpload(null);
+                  setLabUploadFile(null);
+                  Swal.fire({
+                    icon: 'success',
+                    title: language === 'es' ? 'Resultado cargado exitosamente' : 'Result uploaded successfully',
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                } catch (error) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: getApiErrorMessage(error, language === 'es' ? 'No se pudo cargar el archivo' : 'Failed to upload file'),
+                  });
+                }
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <p className="text-sm font-semibold text-slate-800">
+                  {selectedLabResultForUpload.exam_type}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {selectedLabResultForUpload.reason}
+                </p>
+              </div>
+
+              <label className="block text-xs font-semibold text-slate-600">
+                {language === 'es' ? 'Archivo PDF del resultado' : 'Result PDF file'} *
+                <input
+                  type="file"
+                  required
+                  accept="application/pdf"
+                  onChange={(e) => setLabUploadFile(e.target.files[0])}
+                  className="mt-1 w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                />
+              </label>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSelectedLabResultForUpload(null)}
+                >
+                  {language === 'es' ? 'Cancelar' : 'Cancel'}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={uploadLabResult.isPending}
+                >
+                  {language === 'es' ? 'Guardar y Publicar' : 'Save & Publish'}
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 

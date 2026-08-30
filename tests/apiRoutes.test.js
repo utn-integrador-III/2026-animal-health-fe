@@ -56,4 +56,13 @@ describe('API_ROUTES constants', () => {
   test('returns correct endpoint strings for admin routes', () => {
     expect(API_ROUTES.ADMIN.VETERINARIANS).toBe('/api/admin/veterinarians');
   });
+
+  test('returns correct dynamic URL paths for AI routes', () => {
+    expect(API_ROUTES.AI.BREED_RISK_ALERTS('pet-123')).toBe(
+      '/api/ai/pets/pet-123/breed-risk-alerts'
+    );
+    expect(API_ROUTES.AI.CARE_RECOMMENDATIONS('pet-123')).toBe(
+      '/api/ai/pets/pet-123/care-recommendations'
+    );
+  });
 });

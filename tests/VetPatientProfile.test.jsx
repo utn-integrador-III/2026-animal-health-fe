@@ -158,6 +158,35 @@ vi.mock('../src/hooks/useBreedRiskAlerts', () => ({
   useBreedRiskAlerts: vi.fn(() => breedRiskHookState.result),
 }));
 
+vi.mock('../src/hooks/useLabResults', () => ({
+  useLabResultsList: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  })),
+  useLabResult: vi.fn(() => ({
+    data: null,
+    isLoading: false,
+    isError: false,
+  })),
+  useCreateLabRequest: vi.fn(() => ({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    isPending: false,
+  })),
+  useUploadLabResultFile: vi.fn(() => ({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    isPending: false,
+  })),
+  useUpdateLabResult: vi.fn(() => ({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    isPending: false,
+  })),
+  useDeleteLabResult: vi.fn(() => ({
+    mutateAsync: vi.fn().mockResolvedValue({}),
+    isPending: false,
+  })),
+}));
+
 describe('VetPatientProfile', () => {
   beforeEach(() => {
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
@@ -584,5 +613,36 @@ describe('VetPatientProfile', () => {
     await user.click(screen.getByRole('button', { name: /recomendaciones ia/i }));
 
     expect(screen.getByText(/no se pudieron cargar las recomendaciones de ia/i)).toBeInTheDocument();
+  });
+
+  test('opens laboratory request modal from the veterinary patient profile', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/vet/patients/appointment-1']}>
+        <Routes>
+          <Route path="/vet/patients/:appointmentId" element={<VetPatientProfile />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    // Find and click on the laboratory results card
+    const labCard = screen.getByRole('button', { name: /laboratorio|exámenes de laboratorio/i });
+    await user.click(labCard);
+
+    // Verify section heading and request exam button
+    expect(screen.getAllByRole('heading', { name: /resultados y solicitudes de laboratorio/i }).length).toBeGreaterThan(0);
+    const requestExamBtn = screen.getByRole('button', { name: /solicitar examen/i });
+    expect(requestExamBtn).toBeInTheDocument();
+
+    // Click to open modal
+    await user.click(requestExamBtn);
+
+    expect(screen.getByRole('heading', { name: /nueva solicitud de examen de laboratorio/i })).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Lola')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Abby Ramirez')).toBeInTheDocument();
+    expect(screen.getByLabelText(/tipo de examen/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/prioridad/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/motivo de la solicitud/i)).toBeInTheDocument();
   });
 });
