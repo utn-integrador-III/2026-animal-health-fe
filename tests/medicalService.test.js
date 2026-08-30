@@ -3,6 +3,8 @@
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  getClinicalRecords,
+  addClinicalRecord,
   getMedications,
   addMedication,
   toggleMedicationCheck,
@@ -38,6 +40,30 @@ const MOCK_MEDICATION = {
 describe('medicalService', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+  });
+
+  describe('getClinicalRecords', () => {
+    test('calls GET /api/pets/{petId}/clinical-records and returns data', async () => {
+      const mockRecords = [{ id: 'rec-1', diagnosis: 'Gastritis' }];
+      api.get.mockResolvedValueOnce({ data: mockRecords });
+
+      const result = await getClinicalRecords(PET_ID);
+
+      expect(api.get).toHaveBeenCalledWith(`/api/pets/${PET_ID}/clinical-records`);
+      expect(result).toEqual(mockRecords);
+    });
+  });
+
+  describe('addClinicalRecord', () => {
+    test('calls POST /api/pets/{petId}/clinical-records and returns data', async () => {
+      const payload = { diagnosis: 'Otitis' };
+      api.post.mockResolvedValueOnce({ data: { id: 'rec-2', ...payload } });
+
+      const result = await addClinicalRecord(PET_ID, payload);
+
+      expect(api.post).toHaveBeenCalledWith(`/api/pets/${PET_ID}/clinical-records`, payload);
+      expect(result).toEqual({ id: 'rec-2', diagnosis: 'Otitis' });
+    });
   });
 
   describe('getMedications', () => {

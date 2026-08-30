@@ -3,7 +3,16 @@ import useAuthStore from '../stores/useAuthStore';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const getAuthToken = () => {
-  return useAuthStore.getState().token || localStorage.getItem('token') || localStorage.getItem('access_token');
+  const storeToken = useAuthStore.getState().token;
+  if (storeToken) return storeToken;
+  const rawToken = localStorage.getItem('token') || localStorage.getItem('access_token');
+  if (rawToken) return rawToken;
+  try {
+    const session = JSON.parse(localStorage.getItem('auth_session'));
+    return session?.token || null;
+  } catch {
+    return null;
+  }
 };
 
 const getHeaders = async () => {
