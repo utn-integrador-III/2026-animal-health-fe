@@ -1,0 +1,1536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1787412146702" clover="3.2.0">
+  <project timestamp="1787412146702" name="All files">
+    <metrics statements="1293" coveredstatements="1150" conditionals="1264" coveredconditionals="924" methods="457" coveredmethods="400" elements="3014" coveredelements="2474" complexity="0" loc="1293" ncloc="1293" packages="27" files="52" classes="52"/>
+    <package name="assets.images">
+      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="all-pets.png" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\assets\images\all-pets.png">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="mtajmr-animals-7862112.jpg" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\assets\images\mtajmr-animals-7862112.jpg">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="tylijura-veterinarian-8859098.jpg" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\assets\images\tylijura-veterinarian-8859098.jpg">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+    </package>
+    <package name="assets.logos">
+      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="LogoAnimalHealth.png" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\assets\logos\LogoAnimalHealth.png">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+    </package>
+    <package name="components.cards">
+      <metrics statements="75" coveredstatements="72" conditionals="165" coveredconditionals="131" methods="7" coveredmethods="7"/>
+      <file name="DiagnosisSummaryCard.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\cards\DiagnosisSummaryCard.jsx">
+        <metrics statements="75" coveredstatements="72" conditionals="165" coveredconditionals="131" methods="7" coveredmethods="7"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="19" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="24" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="35" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="39" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="43" count="3" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="50" count="3" type="stmt"/>
+        <line num="51" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="54" count="3" type="cond" truecount="1" falsecount="2"/>
+        <line num="55" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="56" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="57" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="60" count="3" type="stmt"/>
+        <line num="61" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="64" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="65" count="3" type="stmt"/>
+        <line num="67" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="72" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="73" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="74" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="75" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="77" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="79" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="80" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="83" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="84" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="85" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="87" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="88" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="89" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="91" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="93" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="98" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="99" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="101" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="104" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="107" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="108" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="109" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="111" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="112" count="1" type="stmt"/>
+        <line num="113" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="115" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="116" count="1" type="cond" truecount="2" falsecount="3"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="121" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="125" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="126" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="128" count="3" type="stmt"/>
+        <line num="200" count="7" type="stmt"/>
+        <line num="264" count="33" type="stmt"/>
+        <line num="266" count="33" type="cond" truecount="5" falsecount="0"/>
+        <line num="269" count="33" type="cond" truecount="1" falsecount="1"/>
+        <line num="270" count="33" type="cond" truecount="2" falsecount="0"/>
+        <line num="274" count="33" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.common">
+      <metrics statements="22" coveredstatements="22" conditionals="53" coveredconditionals="53" methods="10" coveredmethods="10"/>
+      <file name="Button.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\common\Button.jsx">
+        <metrics statements="3" coveredstatements="3" conditionals="9" coveredconditionals="9" methods="1" coveredmethods="1"/>
+        <line num="7" count="8" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
+        <line num="42" count="1551" type="stmt"/>
+      </file>
+      <file name="Input.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\common\Input.jsx">
+        <metrics statements="2" coveredstatements="2" conditionals="14" coveredconditionals="14" methods="1" coveredmethods="1"/>
+        <line num="3" count="4" type="stmt"/>
+        <line num="16" count="291" type="stmt"/>
+      </file>
+      <file name="Loader.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\common\Loader.jsx">
+        <metrics statements="1" coveredstatements="1" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="2" count="3" type="stmt"/>
+      </file>
+      <file name="Modal.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\common\Modal.jsx">
+        <metrics statements="13" coveredstatements="13" conditionals="13" coveredconditionals="13" methods="5" coveredmethods="5"/>
+        <line num="24" count="19" type="stmt"/>
+        <line num="27" count="19" type="stmt"/>
+        <line num="28" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="11" type="stmt"/>
+        <line num="31" count="65" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="11" type="stmt"/>
+        <line num="36" count="11" type="stmt"/>
+        <line num="38" count="11" type="stmt"/>
+        <line num="39" count="11" type="stmt"/>
+        <line num="40" count="11" type="stmt"/>
+        <line num="44" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="11" type="stmt"/>
+        <line num="55" count="24" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="Select.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\common\Select.jsx">
+        <metrics statements="3" coveredstatements="3" conditionals="16" coveredconditionals="16" methods="2" coveredmethods="2"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="18" count="52" type="stmt"/>
+        <line num="44" count="390" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.forms">
+      <metrics statements="33" coveredstatements="33" conditionals="33" coveredconditionals="31" methods="11" coveredmethods="11"/>
+      <file name="PetForm.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\forms\PetForm.jsx">
+        <metrics statements="33" coveredstatements="33" conditionals="33" coveredconditionals="31" methods="11" coveredmethods="11"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="30" count="3" type="stmt"/>
+        <line num="39" count="26" type="stmt"/>
+        <line num="40" count="26" type="stmt"/>
+        <line num="41" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="42" count="26" type="stmt"/>
+        <line num="43" count="26" type="stmt"/>
+        <line num="63" count="26" type="stmt"/>
+        <line num="68" count="26" type="stmt"/>
+        <line num="69" count="338" type="stmt"/>
+        <line num="73" count="52" type="stmt"/>
+        <line num="77" count="26" type="stmt"/>
+        <line num="78" count="159" type="cond" truecount="2" falsecount="0"/>
+        <line num="79" count="6" type="stmt"/>
+        <line num="80" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="83" count="26" type="stmt"/>
+        <line num="84" count="9" type="stmt"/>
+        <line num="87" count="26" type="stmt"/>
+        <line num="88" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="89" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="90" count="9" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="94" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="99" count="26" type="stmt"/>
+        <line num="100" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="101" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="104" count="26" type="stmt"/>
+        <line num="105" count="3" type="stmt"/>
+        <line num="106" count="3" type="stmt"/>
+        <line num="114" count="26" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+        <line num="118" count="26" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.layout">
+      <metrics statements="43" coveredstatements="30" conditionals="70" coveredconditionals="39" methods="25" coveredmethods="13"/>
+      <file name="Footer.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\layout\Footer.jsx">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="2" count="326" type="stmt"/>
+      </file>
+      <file name="Navbar.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\layout\Navbar.jsx">
+        <metrics statements="42" coveredstatements="29" conditionals="70" coveredconditionals="39" methods="24" coveredmethods="12"/>
+        <line num="14" count="524" type="stmt"/>
+        <line num="15" count="524" type="stmt"/>
+        <line num="16" count="524" type="stmt"/>
+        <line num="17" count="524" type="stmt"/>
+        <line num="18" count="1575" type="stmt"/>
+        <line num="19" count="1575" type="stmt"/>
+        <line num="20" count="1575" type="stmt"/>
+        <line num="21" count="1575" type="stmt"/>
+        <line num="22" count="1572" type="stmt"/>
+        <line num="23" count="524" type="stmt"/>
+        <line num="24" count="524" type="stmt"/>
+        <line num="25" count="524" type="stmt"/>
+        <line num="26" count="524" type="stmt"/>
+        <line num="27" count="524" type="stmt"/>
+        <line num="28" count="524" type="cond" truecount="3" falsecount="0"/>
+        <line num="29" count="524" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="524" type="cond" truecount="4" falsecount="0"/>
+        <line num="36" count="524" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="524" type="cond" truecount="1" falsecount="1"/>
+        <line num="39" count="524" type="stmt"/>
+        <line num="40" count="10" type="stmt"/>
+        <line num="41" count="58" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="49" count="10" type="stmt"/>
+        <line num="50" count="10" type="stmt"/>
+        <line num="53" count="524" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="58" count="524" type="stmt"/>
+        <line num="76" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="82" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="88" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="94" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="105" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="111" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="117" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="140" count="524" type="cond" truecount="1" falsecount="1"/>
+        <line num="146" count="524" type="cond" truecount="1" falsecount="1"/>
+        <line num="152" count="524" type="cond" truecount="2" falsecount="0"/>
+        <line num="190" count="0" type="stmt"/>
+        <line num="217" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.modals">
+      <metrics statements="10" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="4"/>
+      <file name="AddPetModal.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\modals\AddPetModal.jsx">
+        <metrics statements="10" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="4"/>
+        <line num="21" count="11" type="stmt"/>
+        <line num="22" count="11" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="67" count="11" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.notifications">
+      <metrics statements="62" coveredstatements="26" conditionals="65" coveredconditionals="25" methods="14" coveredmethods="4"/>
+      <file name="MedicationReminderCard.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\notifications\MedicationReminderCard.jsx">
+        <metrics statements="25" coveredstatements="23" conditionals="29" coveredconditionals="25" methods="4" coveredmethods="4"/>
+        <line num="21" count="19" type="stmt"/>
+        <line num="22" count="19" type="stmt"/>
+        <line num="32" count="19" type="stmt"/>
+        <line num="34" count="19" type="cond" truecount="2" falsecount="1"/>
+        <line num="35" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="19" type="stmt"/>
+        <line num="40" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="50" count="19" type="stmt"/>
+        <line num="51" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="62" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="78" count="17" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+      </file>
+      <file name="NotificationBell.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\notifications\NotificationBell.jsx">
+        <metrics statements="9" coveredstatements="1" conditionals="8" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+      </file>
+      <file name="NotificationDropdown.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\notifications\NotificationDropdown.jsx">
+        <metrics statements="3" coveredstatements="1" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+      </file>
+      <file name="NotificationItem.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\notifications\NotificationItem.jsx">
+        <metrics statements="25" coveredstatements="1" conditionals="24" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="31" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="32" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="33" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.veterinarian">
+      <metrics statements="115" coveredstatements="112" conditionals="100" coveredconditionals="89" methods="66" coveredmethods="64"/>
+      <file name="BreedRiskAlertsPanel.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\veterinarian\BreedRiskAlertsPanel.jsx">
+        <metrics statements="26" coveredstatements="24" conditionals="34" coveredconditionals="27" methods="11" coveredmethods="10"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="23" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="25" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="28" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="7" type="stmt"/>
+        <line num="32" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="37" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="46" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="55" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="64" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="65" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="67" count="7" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="96" count="10" type="stmt"/>
+        <line num="122" count="5" type="stmt"/>
+        <line num="141" count="9" type="stmt"/>
+      </file>
+      <file name="VetDiagnosisForm.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\components\veterinarian\VetDiagnosisForm.jsx">
+        <metrics statements="89" coveredstatements="88" conditionals="66" coveredconditionals="62" methods="55" coveredmethods="54"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="69" count="33" type="stmt"/>
+        <line num="70" count="33" type="stmt"/>
+        <line num="106" count="347" type="stmt"/>
+        <line num="107" count="347" type="stmt"/>
+        <line num="109" count="347" type="stmt"/>
+        <line num="115" count="347" type="cond" truecount="2" falsecount="0"/>
+        <line num="117" count="347" type="stmt"/>
+        <line num="118" count="329" type="cond" truecount="2" falsecount="0"/>
+        <line num="119" count="49" type="stmt"/>
+        <line num="120" count="49" type="cond" truecount="2" falsecount="0"/>
+        <line num="121" count="49" type="cond" truecount="2" falsecount="0"/>
+        <line num="124" count="329" type="stmt"/>
+        <line num="127" count="347" type="stmt"/>
+        <line num="128" count="368" type="stmt"/>
+        <line num="131" count="347" type="stmt"/>
+        <line num="132" count="3" type="stmt"/>
+        <line num="141" count="347" type="stmt"/>
+        <line num="142" count="2" type="stmt"/>
+        <line num="154" count="347" type="stmt"/>
+        <line num="155" count="4" type="stmt"/>
+        <line num="162" count="347" type="stmt"/>
+        <line num="163" count="5" type="stmt"/>
+        <line num="164" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="165" count="1" type="stmt"/>
+        <line num="170" count="1" type="stmt"/>
+        <line num="173" count="4" type="stmt"/>
+        <line num="176" count="44" type="cond" truecount="2" falsecount="0"/>
+        <line num="179" count="4" type="stmt"/>
+        <line num="190" count="28" type="stmt"/>
+        <line num="191" count="1" type="stmt"/>
+        <line num="208" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="209" count="4" type="stmt"/>
+        <line num="210" count="4" type="stmt"/>
+        <line num="214" count="347" type="stmt"/>
+        <line num="215" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="216" count="1" type="stmt"/>
+        <line num="218" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="219" count="3" type="stmt"/>
+        <line num="223" count="347" type="stmt"/>
+        <line num="224" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="225" count="1" type="stmt"/>
+        <line num="227" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="228" count="3" type="stmt"/>
+        <line num="232" count="347" type="stmt"/>
+        <line num="233" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="234" count="1" type="stmt"/>
+        <line num="236" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="237" count="3" type="stmt"/>
+        <line num="241" count="347" type="stmt"/>
+        <line num="260" count="1" type="stmt"/>
+        <line num="269" count="1" type="stmt"/>
+        <line num="277" count="0" type="stmt"/>
+        <line num="288" count="8" type="stmt"/>
+        <line num="297" count="1" type="stmt"/>
+        <line num="322" count="18" type="stmt"/>
+        <line num="333" count="1" type="stmt"/>
+        <line num="342" count="6" type="stmt"/>
+        <line num="351" count="1" type="stmt"/>
+        <line num="364" count="1041" type="stmt"/>
+        <line num="370" count="1" type="stmt"/>
+        <line num="397" count="2082" type="stmt"/>
+        <line num="401" count="1" type="stmt"/>
+        <line num="420" count="2082" type="stmt"/>
+        <line num="424" count="1" type="stmt"/>
+        <line num="447" count="1" type="stmt"/>
+        <line num="456" count="4" type="stmt"/>
+        <line num="466" count="3" type="stmt"/>
+        <line num="476" count="2" type="stmt"/>
+        <line num="485" count="1" type="stmt"/>
+        <line num="499" count="1" type="stmt"/>
+        <line num="515" count="3817" type="stmt"/>
+        <line num="516" count="3817" type="stmt"/>
+        <line num="523" count="1" type="stmt"/>
+        <line num="541" count="1" type="stmt"/>
+        <line num="564" count="67" type="stmt"/>
+        <line num="574" count="19" type="stmt"/>
+        <line num="585" count="17" type="stmt"/>
+        <line num="595" count="1" type="stmt"/>
+        <line num="624" count="2082" type="stmt"/>
+        <line num="628" count="1" type="stmt"/>
+        <line num="640" count="73" type="stmt"/>
+        <line num="729" count="22" type="stmt"/>
+        <line num="739" count="17" type="stmt"/>
+        <line num="755" count="2" type="stmt"/>
+        <line num="777" count="1" type="stmt"/>
+        <line num="786" count="29" type="stmt"/>
+        <line num="804" count="22" type="stmt"/>
+      </file>
+    </package>
+    <package name="constants">
+      <metrics statements="26" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="16" coveredmethods="14"/>
+      <file name="apiRoutes.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\constants\apiRoutes.js">
+        <metrics statements="17" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="16" coveredmethods="14"/>
+        <line num="1" count="4" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="16" count="4" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+      </file>
+      <file name="petConstants.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\constants\petConstants.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="8" count="12" type="stmt"/>
+        <line num="25" count="12" type="stmt"/>
+        <line num="34" count="12" type="stmt"/>
+        <line num="45" count="12" type="stmt"/>
+        <line num="48" count="12" type="stmt"/>
+      </file>
+      <file name="routes.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\constants\routes.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="15" type="stmt"/>
+      </file>
+      <file name="swalConfig.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\constants\swalConfig.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="3" type="stmt"/>
+      </file>
+      <file name="userRoles.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\constants\userRoles.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="hooks">
+      <metrics statements="73" coveredstatements="72" conditionals="22" coveredconditionals="17" methods="29" coveredmethods="29"/>
+      <file name="useNotifications.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\hooks\useNotifications.js">
+        <metrics statements="66" coveredstatements="65" conditionals="16" coveredconditionals="12" methods="25" coveredmethods="25"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="15" count="41" type="stmt"/>
+        <line num="16" count="41" type="stmt"/>
+        <line num="17" count="41" type="stmt"/>
+        <line num="18" count="41" type="stmt"/>
+        <line num="19" count="41" type="stmt"/>
+        <line num="21" count="41" type="cond" truecount="3" falsecount="0"/>
+        <line num="22" count="12" type="stmt"/>
+        <line num="23" count="12" type="stmt"/>
+        <line num="24" count="12" type="stmt"/>
+        <line num="25" count="12" type="stmt"/>
+        <line num="26" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="27" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="28" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="33" count="12" type="stmt"/>
+        <line num="37" count="41" type="stmt"/>
+        <line num="38" count="12" type="stmt"/>
+        <line num="39" count="12" type="stmt"/>
+        <line num="40" count="12" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="46" count="41" type="stmt"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="48" count="2" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="59" count="41" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="61" count="2" type="stmt"/>
+        <line num="62" count="2" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="70" count="41" type="stmt"/>
+        <line num="71" count="2" type="stmt"/>
+        <line num="72" count="2" type="stmt"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="75" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="84" count="41" type="stmt"/>
+        <line num="85" count="2" type="stmt"/>
+        <line num="86" count="2" type="stmt"/>
+        <line num="88" count="2" type="stmt"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="96" count="41" type="cond" truecount="1" falsecount="0"/>
+        <line num="97" count="2" type="stmt"/>
+        <line num="98" count="2" type="stmt"/>
+        <line num="100" count="2" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="109" count="41" type="stmt"/>
+        <line num="110" count="12" type="stmt"/>
+        <line num="111" count="12" type="stmt"/>
+        <line num="112" count="12" type="stmt"/>
+        <line num="116" count="41" type="stmt"/>
+      </file>
+      <file name="useTranslation.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\hooks\useTranslation.js">
+        <metrics statements="7" coveredstatements="7" conditionals="6" coveredconditionals="5" methods="4" coveredmethods="4"/>
+        <line num="5" count="6983" type="stmt"/>
+        <line num="6" count="2330" type="cond" truecount="1" falsecount="1"/>
+        <line num="8" count="2330" type="cond" truecount="1" falsecount="0"/>
+        <line num="9" count="66928" type="cond" truecount="3" falsecount="0"/>
+        <line num="11" count="66928" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="17" count="2330" type="stmt"/>
+      </file>
+    </package>
+    <package name="i18n">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="translations.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\i18n\translations.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="20" type="stmt"/>
+        <line num="6" count="20" type="stmt"/>
+        <line num="11" count="20" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.auth">
+      <metrics statements="83" coveredstatements="76" conditionals="59" coveredconditionals="52" methods="21" coveredmethods="17"/>
+      <file name="Login.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\auth\Login.jsx">
+        <metrics statements="20" coveredstatements="20" conditionals="2" coveredconditionals="2" methods="6" coveredmethods="6"/>
+        <line num="18" count="92" type="stmt"/>
+        <line num="19" count="278" type="stmt"/>
+        <line num="20" count="92" type="stmt"/>
+        <line num="21" count="92" type="stmt"/>
+        <line num="22" count="92" type="stmt"/>
+        <line num="23" count="92" type="stmt"/>
+        <line num="25" count="184" type="stmt"/>
+        <line num="26" count="82" type="stmt"/>
+        <line num="27" count="82" type="stmt"/>
+        <line num="30" count="92" type="stmt"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="49" count="92" type="stmt"/>
+      </file>
+      <file name="RegisterClient.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\auth\RegisterClient.jsx">
+        <metrics statements="63" coveredstatements="56" conditionals="57" coveredconditionals="50" methods="15" coveredmethods="11"/>
+        <line num="17" count="2561" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="197" type="stmt"/>
+        <line num="30" count="592" type="stmt"/>
+        <line num="32" count="197" type="stmt"/>
+        <line num="50" count="197" type="stmt"/>
+        <line num="51" count="197" type="stmt"/>
+        <line num="52" count="197" type="stmt"/>
+        <line num="53" count="197" type="stmt"/>
+        <line num="54" count="197" type="stmt"/>
+        <line num="56" count="3152" type="stmt"/>
+        <line num="57" count="187" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="187" type="stmt"/>
+        <line num="59" count="187" type="stmt"/>
+        <line num="62" count="197" type="stmt"/>
+        <line num="63" count="4" type="stmt"/>
+        <line num="64" count="4" type="stmt"/>
+        <line num="65" count="4" type="stmt"/>
+        <line num="66" count="4" type="stmt"/>
+        <line num="79" count="4" type="stmt"/>
+        <line num="80" count="44" type="cond" truecount="2" falsecount="0"/>
+        <line num="82" count="4" type="cond" truecount="5" falsecount="0"/>
+        <line num="83" count="2" type="stmt"/>
+        <line num="85" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="88" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="91" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="94" count="4" type="stmt"/>
+        <line num="95" count="4" type="cond" truecount="5" falsecount="0"/>
+        <line num="96" count="2" type="stmt"/>
+        <line num="98" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="99" count="2" type="stmt"/>
+        <line num="101" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="102" count="2" type="stmt"/>
+        <line num="103" count="2" type="stmt"/>
+        <line num="107" count="2" type="stmt"/>
+        <line num="108" count="2" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+        <line num="110" count="2" type="cond" truecount="5" falsecount="1"/>
+        <line num="111" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="114" count="2" type="stmt"/>
+        <line num="115" count="2" type="stmt"/>
+        <line num="116" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="123" count="0" type="stmt"/>
+        <line num="126" count="0" type="stmt"/>
+        <line num="129" count="2" type="stmt"/>
+        <line num="130" count="2" type="stmt"/>
+        <line num="131" count="2" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="149" count="1" type="stmt"/>
+        <line num="151" count="1" type="stmt"/>
+        <line num="156" count="1" type="stmt"/>
+        <line num="158" count="1" type="stmt"/>
+        <line num="163" count="2" type="stmt"/>
+        <line num="169" count="197" type="stmt"/>
+        <line num="170" count="197" type="stmt"/>
+        <line num="171" count="197" type="stmt"/>
+        <line num="311" count="2561" type="stmt"/>
+        <line num="322" count="394" type="stmt"/>
+        <line num="364" count="0" type="stmt"/>
+        <line num="378" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.client.ai">
+      <metrics statements="31" coveredstatements="30" conditionals="36" coveredconditionals="27" methods="11" coveredmethods="11"/>
+      <file name="PetCareRecommendations.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\ai\PetCareRecommendations.jsx">
+        <metrics statements="31" coveredstatements="30" conditionals="36" coveredconditionals="27" methods="11" coveredmethods="11"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="14" count="21" type="stmt"/>
+        <line num="22" count="21" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="32" count="11" type="stmt"/>
+        <line num="33" count="11" type="stmt"/>
+        <line num="34" count="11" type="stmt"/>
+        <line num="42" count="11" type="stmt"/>
+        <line num="44" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="11" type="stmt"/>
+        <line num="46" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="49" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="11" type="stmt"/>
+        <line num="53" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="4" type="stmt"/>
+        <line num="58" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="70" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="79" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="88" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="97" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="98" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="99" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="101" count="11" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+        <line num="131" count="1" type="stmt"/>
+        <line num="134" count="14" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.client.allergies">
+      <metrics statements="45" coveredstatements="45" conditionals="52" coveredconditionals="49" methods="12" coveredmethods="12"/>
+      <file name="AllergiesPage.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\allergies\AllergiesPage.jsx">
+        <metrics statements="45" coveredstatements="45" conditionals="52" coveredconditionals="49" methods="12" coveredmethods="12"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="30" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="43" count="68" type="stmt"/>
+        <line num="44" count="68" type="stmt"/>
+        <line num="45" count="68" type="stmt"/>
+        <line num="46" count="68" type="stmt"/>
+        <line num="51" count="68" type="stmt"/>
+        <line num="52" count="68" type="stmt"/>
+        <line num="54" count="68" type="stmt"/>
+        <line num="55" count="68" type="stmt"/>
+        <line num="57" count="68" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="68" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="285" type="stmt"/>
+        <line num="63" count="53" type="stmt"/>
+        <line num="66" count="68" type="stmt"/>
+        <line num="67" count="5" type="stmt"/>
+        <line num="68" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="72" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="76" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="80" count="2" type="stmt"/>
+        <line num="81" count="2" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="101" count="68" type="cond" truecount="2" falsecount="0"/>
+        <line num="102" count="68" type="cond" truecount="2" falsecount="0"/>
+        <line num="104" count="68" type="stmt"/>
+        <line num="142" count="4" type="stmt"/>
+        <line num="183" count="228" type="stmt"/>
+        <line num="200" count="171" type="stmt"/>
+        <line num="231" count="1" type="stmt"/>
+        <line num="261" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.client.appointments">
+      <metrics statements="90" coveredstatements="74" conditionals="90" coveredconditionals="60" methods="33" coveredmethods="26"/>
+      <file name="AppointmentCalendar.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\appointments\AppointmentCalendar.jsx">
+        <metrics statements="90" coveredstatements="74" conditionals="90" coveredconditionals="60" methods="33" coveredmethods="26"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="75" count="21" type="stmt"/>
+        <line num="83" count="49" type="cond" truecount="2" falsecount="0"/>
+        <line num="87" count="28" type="cond" truecount="1" falsecount="3"/>
+        <line num="91" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="96" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="97" count="0" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="117" count="34" type="stmt"/>
+        <line num="118" count="34" type="stmt"/>
+        <line num="119" count="34" type="stmt"/>
+        <line num="120" count="34" type="stmt"/>
+        <line num="126" count="34" type="stmt"/>
+        <line num="127" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="128" count="1" type="stmt"/>
+        <line num="129" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="34" type="cond" truecount="2" falsecount="0"/>
+        <line num="142" count="140" type="stmt"/>
+        <line num="143" count="26" type="stmt"/>
+        <line num="144" count="26" type="stmt"/>
+        <line num="145" count="26" type="stmt"/>
+        <line num="146" count="26" type="cond" truecount="5" falsecount="0"/>
+        <line num="147" count="2" type="stmt"/>
+        <line num="149" count="26" type="stmt"/>
+        <line num="153" count="28" type="stmt"/>
+        <line num="154" count="1" type="stmt"/>
+        <line num="155" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="156" count="0" type="stmt"/>
+        <line num="157" count="0" type="stmt"/>
+        <line num="159" count="1" type="stmt"/>
+        <line num="166" count="28" type="cond" truecount="1" falsecount="1"/>
+        <line num="167" count="34" type="cond" truecount="1" falsecount="1"/>
+        <line num="168" count="34" type="stmt"/>
+        <line num="169" count="34" type="cond" truecount="3" falsecount="1"/>
+        <line num="172" count="34" type="cond" truecount="1" falsecount="1"/>
+        <line num="173" count="28" type="stmt"/>
+        <line num="176" count="34" type="stmt"/>
+        <line num="192" count="112" type="stmt"/>
+        <line num="220" count="112" type="stmt"/>
+        <line num="235" count="28" type="stmt"/>
+        <line num="251" count="84" type="stmt"/>
+        <line num="280" count="7" type="stmt"/>
+        <line num="281" count="7" type="stmt"/>
+        <line num="282" count="7" type="stmt"/>
+        <line num="283" count="7" type="stmt"/>
+        <line num="284" count="7" type="stmt"/>
+        <line num="285" count="7" type="stmt"/>
+        <line num="286" count="7" type="stmt"/>
+        <line num="287" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="288" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="289" count="7" type="stmt"/>
+        <line num="290" count="7" type="stmt"/>
+        <line num="291" count="7" type="stmt"/>
+        <line num="293" count="7" type="stmt"/>
+        <line num="294" count="7" type="stmt"/>
+        <line num="295" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="302" count="7" type="stmt"/>
+        <line num="303" count="14" type="stmt"/>
+        <line num="304" count="0" type="stmt"/>
+        <line num="306" count="7" type="cond" truecount="3" falsecount="1"/>
+        <line num="308" count="7" type="stmt"/>
+        <line num="309" count="1" type="stmt"/>
+        <line num="310" count="1" type="stmt"/>
+        <line num="313" count="7" type="stmt"/>
+        <line num="314" count="0" type="stmt"/>
+        <line num="315" count="0" type="stmt"/>
+        <line num="318" count="7" type="stmt"/>
+        <line num="319" count="1" type="stmt"/>
+        <line num="320" count="1" type="stmt"/>
+        <line num="323" count="7" type="stmt"/>
+        <line num="324" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="325" count="0" type="stmt"/>
+        <line num="330" count="1" type="stmt"/>
+        <line num="332" count="1" type="stmt"/>
+        <line num="335" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="337" count="7" type="stmt"/>
+        <line num="396" count="0" type="stmt"/>
+        <line num="398" count="14" type="stmt"/>
+        <line num="403" count="1" type="stmt"/>
+        <line num="424" count="7" type="stmt"/>
+        <line num="457" count="0" type="stmt"/>
+        <line num="462" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.client.diagnoses">
+      <metrics statements="22" coveredstatements="22" conditionals="37" coveredconditionals="36" methods="7" coveredmethods="7"/>
+      <file name="DiagnosisPage.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\diagnoses\DiagnosisPage.jsx">
+        <metrics statements="22" coveredstatements="22" conditionals="37" coveredconditionals="36" methods="7" coveredmethods="7"/>
+        <line num="16" count="25" type="stmt"/>
+        <line num="17" count="25" type="stmt"/>
+        <line num="18" count="25" type="stmt"/>
+        <line num="19" count="75" type="stmt"/>
+        <line num="20" count="25" type="stmt"/>
+        <line num="22" count="25" type="stmt"/>
+        <line num="27" count="25" type="stmt"/>
+        <line num="28" count="25" type="stmt"/>
+        <line num="30" count="25" type="stmt"/>
+        <line num="32" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="38" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="25" type="stmt"/>
+        <line num="79" count="7" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="97" count="2" type="stmt"/>
+        <line num="98" count="2" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="133" count="2" type="cond" truecount="1" falsecount="1"/>
+      </file>
+    </package>
+    <package name="pages.client.pets">
+      <metrics statements="27" coveredstatements="24" conditionals="39" coveredconditionals="31" methods="14" coveredmethods="11"/>
+      <file name="PetList.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\pets\PetList.jsx">
+        <metrics statements="27" coveredstatements="24" conditionals="39" coveredconditionals="31" methods="14" coveredmethods="11"/>
+        <line num="26" count="21" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="75" count="7" type="stmt"/>
+        <line num="76" count="7" type="stmt"/>
+        <line num="77" count="7" type="stmt"/>
+        <line num="78" count="7" type="stmt"/>
+        <line num="79" count="7" type="stmt"/>
+        <line num="80" count="21" type="stmt"/>
+        <line num="81" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="83" count="7" type="stmt"/>
+        <line num="84" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="88" count="7" type="cond" truecount="3" falsecount="0"/>
+        <line num="92" count="7" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="94" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="97" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="99" count="6" type="stmt"/>
+        <line num="127" count="3" type="stmt"/>
+        <line num="128" count="3" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="188" count="12" type="stmt"/>
+        <line num="192" count="0" type="stmt"/>
+        <line num="207" count="0" type="stmt"/>
+        <line num="215" count="21" type="stmt"/>
+        <line num="216" count="21" type="stmt"/>
+        <line num="217" count="21" type="stmt"/>
+        <line num="245" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.client.vaccines">
+      <metrics statements="18" coveredstatements="17" conditionals="38" coveredconditionals="30" methods="7" coveredmethods="7"/>
+      <file name="VaccinesPage.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\client\vaccines\VaccinesPage.jsx">
+        <metrics statements="18" coveredstatements="17" conditionals="38" coveredconditionals="30" methods="7" coveredmethods="7"/>
+        <line num="12" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="11" type="stmt"/>
+        <line num="14" count="11" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="25" count="40" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="36" type="stmt"/>
+        <line num="35" count="7" type="stmt"/>
+        <line num="36" count="7" type="stmt"/>
+        <line num="37" count="7" type="stmt"/>
+        <line num="38" count="7" type="stmt"/>
+        <line num="40" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="41" count="7" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+        <line num="43" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="7" type="stmt"/>
+        <line num="91" count="2" type="stmt"/>
+        <line num="135" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.public">
+      <metrics statements="21" coveredstatements="21" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
+      <file name="Contact.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\public\Contact.jsx">
+        <metrics statements="21" coveredstatements="21" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="234" type="stmt"/>
+        <line num="23" count="234" type="stmt"/>
+        <line num="24" count="234" type="stmt"/>
+        <line num="25" count="234" type="stmt"/>
+        <line num="27" count="1170" type="stmt"/>
+        <line num="28" count="228" type="stmt"/>
+        <line num="29" count="228" type="stmt"/>
+        <line num="32" count="234" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="45" count="2" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="58" count="234" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.veterinarian">
+      <metrics statements="266" coveredstatements="217" conditionals="281" coveredconditionals="144" methods="96" coveredmethods="80"/>
+      <file name="DashboardVet.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\veterinarian\DashboardVet.jsx">
+        <metrics statements="65" coveredstatements="57" conditionals="43" coveredconditionals="29" methods="26" coveredmethods="18"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="28" count="33" type="stmt"/>
+        <line num="32" count="31" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="40" count="2" type="stmt"/>
+        <line num="44" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="77" count="6" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="80" count="31" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="86" count="3" type="stmt"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="88" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="91" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="93" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="105" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="118" count="1" type="stmt"/>
+        <line num="119" count="0" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="123" count="0" type="stmt"/>
+        <line num="124" count="0" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="128" count="1" type="stmt"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+        <line num="180" count="7" type="stmt"/>
+        <line num="185" count="37" type="cond" truecount="2" falsecount="0"/>
+        <line num="186" count="6" type="stmt"/>
+        <line num="188" count="31" type="stmt"/>
+        <line num="189" count="31" type="cond" truecount="2" falsecount="0"/>
+        <line num="190" count="37" type="stmt"/>
+        <line num="191" count="37" type="stmt"/>
+        <line num="192" count="37" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="245" count="1" type="stmt"/>
+      </file>
+      <file name="VetPatientProfile.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\veterinarian\VetPatientProfile.jsx">
+        <metrics statements="201" coveredstatements="160" conditionals="238" coveredconditionals="115" methods="70" coveredmethods="62"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="60" count="54" type="cond" truecount="1" falsecount="1"/>
+        <line num="64" count="164" type="cond" truecount="1" falsecount="1"/>
+        <line num="65" count="164" type="stmt"/>
+        <line num="66" count="164" type="cond" truecount="1" falsecount="1"/>
+        <line num="67" count="164" type="cond" truecount="1" falsecount="1"/>
+        <line num="68" count="164" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="79" count="239" type="cond" truecount="1" falsecount="1"/>
+        <line num="80" count="239" type="stmt"/>
+        <line num="81" count="239" type="stmt"/>
+        <line num="82" count="239" type="stmt"/>
+        <line num="83" count="239" type="stmt"/>
+        <line num="84" count="239" type="stmt"/>
+        <line num="86" count="239" type="cond" truecount="1" falsecount="1"/>
+        <line num="87" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="91" count="239" type="cond" truecount="1" falsecount="1"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="96" count="239" type="stmt"/>
+        <line num="110" count="258" type="stmt"/>
+        <line num="111" count="258" type="stmt"/>
+        <line num="112" count="258" type="stmt"/>
+        <line num="118" count="258" type="cond" truecount="2" falsecount="0"/>
+        <line num="120" count="24" type="cond" truecount="1" falsecount="1"/>
+        <line num="121" count="258" type="stmt"/>
+        <line num="122" count="23" type="stmt"/>
+        <line num="131" count="258" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="142" count="258" type="stmt"/>
+        <line num="171" count="96" type="stmt"/>
+        <line num="190" count="48" type="stmt"/>
+        <line num="227" count="235" type="stmt"/>
+        <line num="229" count="235" type="cond" truecount="2" falsecount="0"/>
+        <line num="231" count="1" type="stmt"/>
+        <line num="269" count="239" type="stmt"/>
+        <line num="270" count="239" type="stmt"/>
+        <line num="271" count="713" type="stmt"/>
+        <line num="272" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="273" count="239" type="stmt"/>
+        <line num="274" count="239" type="stmt"/>
+        <line num="275" count="239" type="stmt"/>
+        <line num="276" count="239" type="stmt"/>
+        <line num="277" count="239" type="stmt"/>
+        <line num="278" count="239" type="stmt"/>
+        <line num="279" count="239" type="stmt"/>
+        <line num="280" count="239" type="stmt"/>
+        <line num="281" count="239" type="stmt"/>
+        <line num="282" count="239" type="stmt"/>
+        <line num="283" count="239" type="stmt"/>
+        <line num="291" count="239" type="stmt"/>
+        <line num="292" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="293" count="239" type="stmt"/>
+        <line num="295" count="239" type="stmt"/>
+        <line num="296" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="297" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="299" count="239" type="stmt"/>
+        <line num="300" count="239" type="stmt"/>
+        <line num="301" count="239" type="stmt"/>
+        <line num="302" count="239" type="stmt"/>
+        <line num="303" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="304" count="0" type="stmt"/>
+        <line num="307" count="239" type="stmt"/>
+        <line num="308" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="309" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="310" count="0" type="stmt"/>
+        <line num="313" count="239" type="stmt"/>
+        <line num="314" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="316" count="239" type="stmt"/>
+        <line num="317" count="239" type="stmt"/>
+        <line num="318" count="239" type="stmt"/>
+        <line num="319" count="239" type="cond" truecount="1" falsecount="0"/>
+        <line num="321" count="239" type="stmt"/>
+        <line num="328" count="239" type="stmt"/>
+        <line num="329" count="239" type="stmt"/>
+        <line num="330" count="239" type="stmt"/>
+        <line num="332" count="239" type="stmt"/>
+        <line num="340" count="239" type="stmt"/>
+        <line num="349" count="239" type="stmt"/>
+        <line num="350" count="239" type="cond" truecount="1" falsecount="1"/>
+        <line num="351" count="239" type="stmt"/>
+        <line num="354" count="239" type="stmt"/>
+        <line num="355" count="239" type="stmt"/>
+        <line num="358" count="239" type="stmt"/>
+        <line num="359" count="10" type="cond" truecount="1" falsecount="1"/>
+        <line num="360" count="0" type="stmt"/>
+        <line num="364" count="239" type="stmt"/>
+        <line num="365" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="369" count="10" type="stmt"/>
+        <line num="373" count="239" type="cond" truecount="1" falsecount="1"/>
+        <line num="375" count="239" type="cond" truecount="3" falsecount="1"/>
+        <line num="376" count="0" type="stmt"/>
+        <line num="384" count="239" type="stmt"/>
+        <line num="443" count="239" type="stmt"/>
+        <line num="444" count="1" type="stmt"/>
+        <line num="445" count="1" type="stmt"/>
+        <line num="446" count="1" type="stmt"/>
+        <line num="447" count="1" type="stmt"/>
+        <line num="448" count="1" type="stmt"/>
+        <line num="449" count="1" type="stmt"/>
+        <line num="450" count="1" type="stmt"/>
+        <line num="452" count="0" type="stmt"/>
+        <line num="456" count="239" type="stmt"/>
+        <line num="457" count="1" type="stmt"/>
+        <line num="458" count="1" type="stmt"/>
+        <line num="459" count="1" type="stmt"/>
+        <line num="460" count="1" type="stmt"/>
+        <line num="464" count="1" type="stmt"/>
+        <line num="465" count="1" type="stmt"/>
+        <line num="466" count="1" type="stmt"/>
+        <line num="468" count="0" type="stmt"/>
+        <line num="472" count="239" type="stmt"/>
+        <line num="473" count="0" type="stmt"/>
+        <line num="474" count="0" type="cond" truecount="0" falsecount="5"/>
+        <line num="475" count="0" type="stmt"/>
+        <line num="476" count="0" type="stmt"/>
+        <line num="478" count="0" type="stmt"/>
+        <line num="479" count="0" type="stmt"/>
+        <line num="480" count="0" type="stmt"/>
+        <line num="481" count="0" type="stmt"/>
+        <line num="488" count="0" type="stmt"/>
+        <line num="494" count="0" type="stmt"/>
+        <line num="502" count="0" type="stmt"/>
+        <line num="506" count="239" type="stmt"/>
+        <line num="507" count="1" type="stmt"/>
+        <line num="508" count="1" type="cond" truecount="6" falsecount="1"/>
+        <line num="509" count="0" type="stmt"/>
+        <line num="510" count="0" type="stmt"/>
+        <line num="512" count="1" type="stmt"/>
+        <line num="513" count="1" type="stmt"/>
+        <line num="514" count="1" type="stmt"/>
+        <line num="515" count="1" type="stmt"/>
+        <line num="519" count="1" type="stmt"/>
+        <line num="525" count="1" type="stmt"/>
+        <line num="535" count="0" type="stmt"/>
+        <line num="539" count="239" type="stmt"/>
+        <line num="588" count="1" type="stmt"/>
+        <line num="594" count="1" type="stmt"/>
+        <line num="605" count="1912" type="stmt"/>
+        <line num="606" count="1912" type="cond" truecount="4" falsecount="0"/>
+        <line num="607" count="478" type="cond" truecount="2" falsecount="0"/>
+        <line num="610" count="478" type="stmt"/>
+        <line num="623" count="1434" type="stmt"/>
+        <line num="628" count="9" type="stmt"/>
+        <line num="652" count="108" type="stmt"/>
+        <line num="666" count="47" type="stmt"/>
+        <line num="690" count="1" type="stmt"/>
+        <line num="691" count="1" type="stmt"/>
+        <line num="695" count="1" type="stmt"/>
+        <line num="702" count="0" type="stmt"/>
+        <line num="717" count="0" type="stmt"/>
+        <line num="753" count="10" type="stmt"/>
+        <line num="762" count="6" type="stmt"/>
+        <line num="771" count="12" type="stmt"/>
+        <line num="781" count="1" type="stmt"/>
+        <line num="790" count="0" type="stmt"/>
+        <line num="799" count="1" type="stmt"/>
+        <line num="806" count="22" type="stmt"/>
+        <line num="823" count="55" type="stmt"/>
+        <line num="852" count="130" type="stmt"/>
+        <line num="853" count="130" type="stmt"/>
+        <line num="862" count="1" type="stmt"/>
+        <line num="863" count="1" type="cond" truecount="5" falsecount="1"/>
+        <line num="864" count="0" type="stmt"/>
+        <line num="865" count="0" type="stmt"/>
+        <line num="867" count="1" type="stmt"/>
+        <line num="868" count="1" type="stmt"/>
+        <line num="869" count="1" type="stmt"/>
+        <line num="870" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="871" count="0" type="stmt"/>
+        <line num="876" count="0" type="stmt"/>
+        <line num="877" count="0" type="stmt"/>
+        <line num="879" count="1" type="stmt"/>
+        <line num="883" count="1" type="stmt"/>
+        <line num="885" count="1" type="stmt"/>
+        <line num="887" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="896" count="17" type="stmt"/>
+        <line num="905" count="1" type="stmt"/>
+        <line num="909" count="264" type="stmt"/>
+        <line num="918" count="1" type="stmt"/>
+        <line num="922" count="198" type="stmt"/>
+        <line num="930" count="15" type="stmt"/>
+        <line num="938" count="27" type="stmt"/>
+        <line num="949" count="1" type="stmt"/>
+        <line num="950" count="1" type="stmt"/>
+        <line num="975" count="66" type="stmt"/>
+        <line num="995" count="1" type="stmt"/>
+        <line num="996" count="1" type="stmt"/>
+        <line num="1003" count="1" type="stmt"/>
+        <line num="1013" count="1" type="stmt"/>
+        <line num="1022" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="1023" count="1" type="stmt"/>
+        <line num="1024" count="1" type="stmt"/>
+        <line num="1028" count="1" type="stmt"/>
+        <line num="1030" count="0" type="stmt"/>
+        <line num="1072" count="0" type="stmt"/>
+        <line num="1080" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="pages.veterinarian.consultations">
+      <metrics statements="62" coveredstatements="54" conditionals="39" coveredconditionals="31" methods="15" coveredmethods="14"/>
+      <file name="CreateConsultation.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\pages\veterinarian\consultations\CreateConsultation.jsx">
+        <metrics statements="62" coveredstatements="54" conditionals="39" coveredconditionals="31" methods="15" coveredmethods="14"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="34" count="175" type="stmt"/>
+        <line num="35" count="175" type="stmt"/>
+        <line num="36" count="175" type="stmt"/>
+        <line num="37" count="175" type="stmt"/>
+        <line num="39" count="175" type="stmt"/>
+        <line num="40" count="175" type="stmt"/>
+        <line num="41" count="175" type="stmt"/>
+        <line num="42" count="175" type="stmt"/>
+        <line num="43" count="175" type="stmt"/>
+        <line num="44" count="175" type="stmt"/>
+        <line num="46" count="525" type="stmt"/>
+        <line num="47" count="84" type="stmt"/>
+        <line num="48" count="84" type="stmt"/>
+        <line num="53" count="84" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="71" type="stmt"/>
+        <line num="55" count="71" type="stmt"/>
+        <line num="56" count="71" type="stmt"/>
+        <line num="60" count="1297" type="stmt"/>
+        <line num="61" count="27" type="stmt"/>
+        <line num="62" count="27" type="stmt"/>
+        <line num="63" count="27" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="72" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="75" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="91" count="175" type="stmt"/>
+        <line num="92" count="2" type="stmt"/>
+        <line num="93" count="2" type="stmt"/>
+        <line num="94" count="2" type="stmt"/>
+        <line num="95" count="2" type="stmt"/>
+        <line num="96" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="97" count="0" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="104" count="2" type="stmt"/>
+        <line num="110" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="111" count="2" type="stmt"/>
+        <line num="112" count="2" type="stmt"/>
+        <line num="114" count="0" type="stmt"/>
+        <line num="118" count="175" type="stmt"/>
+        <line num="119" count="2" type="stmt"/>
+        <line num="120" count="2" type="stmt"/>
+        <line num="121" count="2" type="stmt"/>
+        <line num="122" count="2" type="stmt"/>
+        <line num="123" count="2" type="stmt"/>
+        <line num="136" count="2" type="stmt"/>
+        <line num="137" count="2" type="cond" truecount="3" falsecount="0"/>
+        <line num="139" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="143" count="2" type="stmt"/>
+        <line num="147" count="0" type="stmt"/>
+        <line num="151" count="175" type="stmt"/>
+        <line num="208" count="43" type="stmt"/>
+        <line num="229" count="2275" type="stmt"/>
+        <line num="240" count="350" type="stmt"/>
+        <line num="279" count="55" type="stmt"/>
+      </file>
+    </package>
+    <package name="routes">
+      <metrics statements="8" coveredstatements="8" conditionals="8" coveredconditionals="7" methods="5" coveredmethods="5"/>
+      <file name="ProtectedRoute.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\routes\ProtectedRoute.jsx">
+        <metrics statements="4" coveredstatements="4" conditionals="6" coveredconditionals="5" methods="3" coveredmethods="3"/>
+        <line num="11" count="15" type="stmt"/>
+        <line num="12" count="15" type="stmt"/>
+        <line num="14" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="15" count="5" type="cond" truecount="4" falsecount="0"/>
+      </file>
+      <file name="RoleGuard.jsx" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\routes\RoleGuard.jsx">
+        <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="6" count="12" type="stmt"/>
+        <line num="8" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="services">
+      <metrics statements="103" coveredstatements="103" conditionals="34" coveredconditionals="31" methods="26" coveredmethods="26"/>
+      <file name="allergyService.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\allergyService.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="56" count="1" type="stmt"/>
+      </file>
+      <file name="apiError.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\apiError.js">
+        <metrics statements="4" coveredstatements="4" conditionals="7" coveredconditionals="7" methods="2" coveredmethods="2"/>
+        <line num="2" count="9" type="stmt"/>
+        <line num="3" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="6" count="8" type="cond" truecount="4" falsecount="0"/>
+      </file>
+      <file name="diagnosisService.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\diagnosisService.js">
+        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+      </file>
+      <file name="medicalService.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\medicalService.js">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+      </file>
+      <file name="notificationService.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\notificationService.js">
+        <metrics statements="71" coveredstatements="71" conditionals="27" coveredconditionals="24" methods="9" coveredmethods="9"/>
+        <line num="3" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="6" count="16" type="cond" truecount="3" falsecount="0"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="16" type="stmt"/>
+        <line num="11" count="16" type="stmt"/>
+        <line num="17" count="5" type="cond" truecount="3" falsecount="0"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="23" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="39" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="51" count="5" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="59" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="71" count="2" type="stmt"/>
+        <line num="72" count="2" type="stmt"/>
+        <line num="73" count="2" type="stmt"/>
+        <line num="78" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="89" count="5" type="stmt"/>
+        <line num="90" count="2" type="stmt"/>
+        <line num="91" count="2" type="stmt"/>
+        <line num="92" count="2" type="stmt"/>
+        <line num="97" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="112" count="5" type="stmt"/>
+        <line num="113" count="3" type="stmt"/>
+        <line num="114" count="3" type="stmt"/>
+        <line num="115" count="3" type="stmt"/>
+        <line num="120" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="121" count="1" type="stmt"/>
+        <line num="124" count="1" type="stmt"/>
+        <line num="126" count="2" type="stmt"/>
+        <line num="127" count="2" type="stmt"/>
+        <line num="135" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="136" count="3" type="stmt"/>
+        <line num="137" count="3" type="stmt"/>
+        <line num="138" count="3" type="stmt"/>
+        <line num="146" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="147" count="1" type="stmt"/>
+        <line num="150" count="2" type="stmt"/>
+        <line num="152" count="1" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+      </file>
+      <file name="vaccineService.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\services\vaccineService.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="stores">
+      <metrics statements="40" coveredstatements="40" conditionals="22" coveredconditionals="22" methods="13" coveredmethods="13"/>
+      <file name="useAuthStore.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\stores\useAuthStore.js">
+        <metrics statements="32" coveredstatements="32" conditionals="18" coveredconditionals="18" methods="10" coveredmethods="10"/>
+        <line num="3" count="14" type="stmt"/>
+        <line num="4" count="14" type="stmt"/>
+        <line num="5" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="11" count="14" type="stmt"/>
+        <line num="17" count="14" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="36" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="49" count="4" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="56" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="70" count="14" type="stmt"/>
+        <line num="71" count="14" type="stmt"/>
+        <line num="72" count="14" type="stmt"/>
+      </file>
+      <file name="useLanguageStore.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\stores\useLanguageStore.js">
+        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <line num="5" count="20" type="stmt"/>
+        <line num="8" count="20" type="stmt"/>
+        <line num="9" count="20" type="cond" truecount="4" falsecount="0"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="19" type="stmt"/>
+        <line num="15" count="20" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
+        <line num="19" count="8" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
+      <file name="roleRedirect.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\utils\roleRedirect.js">
+        <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
+        <line num="5" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="7" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="validations">
+      <metrics statements="12" coveredstatements="12" conditionals="9" coveredconditionals="9" methods="9" coveredmethods="9"/>
+      <file name="petSchema.js" path="C:\Users\Edieth\Documents\Proyecto integrador III Desarrollo de Software II\2026-animal-health-fe\src\validations\petSchema.js">
+        <metrics statements="12" coveredstatements="12" conditionals="9" coveredconditionals="9" methods="9" coveredmethods="9"/>
+        <line num="7" count="4" type="stmt"/>
+        <line num="17" count="9" type="stmt"/>
+        <line num="21" count="9" type="stmt"/>
+        <line num="29" count="9" type="stmt"/>
+        <line num="39" count="9" type="stmt"/>
+        <line num="53" count="9" type="cond" truecount="5" falsecount="0"/>
+        <line num="54" count="8" type="stmt"/>
+        <line num="56" count="9" type="stmt"/>
+        <line num="57" count="9" type="stmt"/>
+        <line num="58" count="9" type="stmt"/>
+        <line num="60" count="9" type="cond" truecount="4" falsecount="0"/>
+        <line num="61" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
