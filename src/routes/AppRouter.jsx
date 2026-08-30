@@ -41,7 +41,7 @@ export default function AppRouter() {
         <Route path={ROUTES.SHARED.NOTIFICATIONS} element={<NotificationsPage />} />
       </Route>
 
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Navigate to={ROUTES.PUBLIC.ABOUT} replace />} />
       <Route path="*" element={<Navigate to={ROUTES.AUTH.LOGIN} replace />} />
     </Routes>
   );
